@@ -1,0 +1,638 @@
+main {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(auto-fit, auto);
+    grid-row-gap: 30px;
+    max-width: 830px;
+    padding: 15px;
+    margin: 20px auto 0 auto;
+}
+.search {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto;
+    grid-column-gap: 20px;
+    min-height: 50px;
+}
+.search__back-button {
+    display: flex;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff;
+    box-shadow: 0px 0px 10px #00000016;
+    width: 60px;
+    height: 60px;   
+    border: none;
+    outline: none;
+    border-radius: 20px; 
+    transition: .2s ease;
+}
+.search__back-button--img {
+    width: 50px;
+    height: 60px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("../svg/back_icon.svg");
+}
+.search__back-button:hover,
+.search__back-button:focus {
+    cursor: pointer;
+    box-shadow: 0px 0px 18px #0000001f;
+    transform: translateX(-3px);
+}
+.search__input-conteiner {
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    background: #ffffff;
+    box-shadow: 0px 0px 10px #00000016;
+    height: 60px;
+    border: none;
+    border-radius: 20px; 
+    padding: 5px;
+    transition: .2s ease;
+    box-sizing: border-box;
+}
+.search__input-conteiner:hover,
+.add-new-town__town-input:hover {
+    box-shadow: 0px 0px 18px #0000001f;
+}
+.search__input {
+    padding: 0 10px;
+    box-sizing: border-box;
+    background: none;
+    border: none;
+    outline: none;
+    text-align: center;
+    color: #000000d7;
+    font-family: "Roboto", sans-serif;
+    font-size: 21px;
+}
+.search__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff;
+    width: 50px;
+    height: 50px;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    transition: .2s ease;
+}
+.search__button--img {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="50px" height="50px" viewBox="0 0 50 50" %3E%3Cpath fill-rule="nonzero" fill="rgb(40, 40, 40)" d="M 21 3 C 11.601563 3 4 10.601563 4 20 C 4 29.398438 11.601563 37 21 37 C 24.355469 37 27.460938 36.015625 30.09375 34.34375 L 42.375 46.625 L 46.625 42.375 L 34.5 30.28125 C 36.679688 27.421875 38 23.878906 38 20 C 38 10.601563 30.398438 3 21 3 Z M 21 7 C 28.199219 7 34 12.800781 34 20 C 34 27.199219 28.199219 33 21 33 C 13.800781 33 8 27.199219 8 20 C 8 12.800781 13.800781 7 21 7 Z" /%3E%3C/svg%3E');
+    width: 35px;
+    height: 35px;
+}
+.search__button:hover,
+.search__button:focus {
+    cursor: pointer;
+    background: #00000013;
+}
+.latest-towns {
+    display: grid;
+    grid-template-rows: min-content 1fr;
+    grid-row-gap: 25px;
+    display: none;
+}
+.latest-towns__label,
+.recommend-towns__label {
+    background: #0000000c;
+    color: #000000af;
+    width: max-content;
+    padding: 10px;
+    border-radius: 20px;
+    font-size: 18px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+}
+.latest-towns__label::first-letter,
+.recommend-towns__label::first-letter,
+.recommend-towns__town-button-name::first-letter,
+.weather-main__status::first-letter,
+.recommend-towns__add-button--content::first-letter,
+.weather-other__label::first-letter,
+.add-new-town__button--text::first-letter {
+    text-transform: uppercase;
+}
+.recommend-towns {
+    display: grid;
+    grid-template-rows: min-content 1fr min-content;
+    grid-row-gap: 25px;
+}
+.recommend-towns__content-conteiner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(auto-fit, auto);
+    grid-gap: 20px;
+    padding: 0 0 0 20px;
+}
+.recommend-towns__button {
+    position: relative;
+    min-height: 45px;
+    background: #ffffff;
+    box-shadow: 0px 0px 10px #00000016;
+    padding: 10px;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    transition: .2s ease;
+    box-sizing: border-box;
+}
+.recommend-towns__town-button-name {
+    height: 100%;
+    width: calc(100% - 30px);
+    margin: 0 30px 0 0px;
+    border: none;
+    outline: none;
+    background: none;
+    color: #000000d7;
+    text-align: left;
+    font-size: 18px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+}
+.recommend-towns__close-button {
+    display: flex;
+    justify-self: center;
+    align-items: center;
+    position: absolute;
+    top: 10px;
+    left: calc(100% - 35px);
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: none;
+    outline: none;
+    border-radius: 100%;
+    background: #00000010;
+    opacity: 0;
+    transition: .2s ease;
+}
+.recommend-towns__close-button--img {
+    position: relative;
+    left: 7px;
+    width: 10px;
+    height: 10px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("../svg/close_icon.svg");
+}
+.recommend-towns__button:hover {
+    cursor: pointer;
+    box-shadow: 0px 3px 18px #0000001f;
+    transform: translateY(-3px);
+}
+.recommend-towns__button--active {
+    box-shadow: 0px 3px 18px #0000001f;
+    transform: translateY(-3px);
+}
+.recommend-towns__button:hover .recommend-towns__close-button {
+    opacity: 1;
+}
+.recommend-towns__town-button-name:hover {
+    cursor: pointer;
+} 
+.recommend-towns__close-button:hover,
+.recommend-towns__close-button:focus {
+    cursor: pointer;
+    background: #0000001c;
+    opacity: 1;
+}
+.recommend-towns__close-button:hover .recommend-towns__button {
+    background: #ff8a8a69;
+} 
+.recommend-towns__add-button--center-conteiner {
+    display: flex;
+    justify-content: center;
+    padding: 0 0 0 20px;
+    transition: .2s ease;
+}
+.recommend-towns__add-button {
+    position: relative;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    min-height: 45px;
+    padding: 10px 15px 10px 45px;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0px 0px 10px #00000016;
+    transition: .2s ease;
+}
+.recommend-towns__add-button--content {
+    position: relative;
+    color: #000000af;
+    text-align: right;
+    font-size: 16px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+}
+.recommend-towns__add-button-before {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 11px;
+    top: calc(50% - 12px);
+    width: 24px;
+    height: 24px;
+    border-radius: 100%;
+    background: #00000016;
+    font-size: 20px;
+    line-height: 10px;
+    font-weight: 500;
+    color: #000000af;
+}
+.recommend-towns__add-button:hover,
+.recommend-towns__add-button:focus,
+.add-new-town__button:hover,
+.add-new-town__button:focus {
+    cursor: pointer;
+    box-shadow: 0px 3px 18px #0000001f;
+    transform: translateY(-3px);
+}
+.weather-template {
+    display: grid;
+    display: none;
+    grid-template-rows: repeat(2, auto);
+    grid-row-gap: 50px;
+    opacity: 0;
+    transform: translateY(15px);
+    transition: 0s;
+    transition-delay: 0s;
+}
+.weather-template--active {
+    opacity: 1;
+    transition: .2s ease;
+    transition-delay: .1s;
+    transform: translateY(0px);
+}
+.weather-main {
+    display: grid;
+    grid-template-rows: min-content 1fr;
+}
+.weather-main__temp-conteiner,
+.weather-main__status-conteiner {
+    display: flex;
+    justify-content: center;
+}
+.weather-main__temp {
+    position: relative;
+    color: #000000af;
+    font-size: 180px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+}
+.weather-main__temp::after {
+    position: absolute;
+    top: 10px;
+    content: "℃";
+    font-size: 70px;
+}
+.weather-main__status {
+    background: #0000000c;
+    color: #000000af;
+    width: max-content;
+    padding: 10px 30px;
+    border-radius: 40px;
+    font-size: 50px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+}
+.weather-other {
+    display: grid;
+    grid-template-rows: repeat(3, auto);
+    grid-row-gap: 20px;
+}
+.weather-other__data-block {
+    display: grid;
+    grid-template-columns: 1fr .4fr;
+    grid-column-gap: 20px;
+}
+.weather-other__label {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: #0000000c;
+    color: #000000af;
+    padding: 10px;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 18px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+}
+.weather-other__data {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff0c;
+    border: 2px solid #0000000c;
+    color: #000000af;
+    padding: 10px;
+    border-radius: 20px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 18px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    box-sizing: border-box;
+}
+.wind__data {
+    margin: 0 30px 0 0;
+}
+.wind__data::after {
+    position: absolute;
+    content: "м/с";
+}
+.min_max_temp__data {
+    margin: 0 20px 0 0;
+}
+.min_max_temp__data:after {
+    position: absolute;
+    content: "℃";
+}
+.humidity__data {
+    margin: 0 15px 0 0;
+}
+.humidity__data:after {
+    position: absolute;
+    content: "%";
+}
+.animation {
+    display: inline-block;
+    position: relative;
+    width: 80px;
+    height: 80px;
+  }
+.animation span {
+    box-sizing: border-box;
+    display: block;
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border: 8px solid #fff;
+    border-radius: 50%;
+    animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+    border-color: rgb(107, 107, 107) transparent transparent transparent;
+}
+.add-new-town__button--active .add-new-town__animation {
+    width: 30px;
+    height: 30px;
+}
+.add-new-town__button--active .add-new-town__animation span {
+    width: 30px;
+    height: 30px;
+    border: 4px solid #fff;
+    margin: 0px;
+    border-color: rgb(107, 107, 107) transparent transparent transparent;
+}
+.search__animation-conteiner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 75px;
+    left: calc(50% - 25px);
+    width: 45px;
+    height: 45px;
+    padding: 7px;
+    border-radius: 100%;
+    box-shadow: 0px 0px 10px #0000001f;
+    background: #ffffff;
+    z-index: -1;
+    pointer-events: none;
+    transition: .2s ease;
+    transform: scale(1);
+}
+.search__animation-conteiner .animation {
+    top: -3px;
+    left: -4px;
+    width: 50px;
+    height: 50px;
+}
+.search__animation-conteiner .animation span {
+    width: 40px;
+    height: 40px;
+    margin: 7px;
+    border: 5px solid #fff;
+    border-radius: 50%;
+    border-color: rgb(107, 107, 107) transparent transparent transparent;
+}
+.search__animation-conteiner--disactive {
+    top: 20px;
+    opacity: 0;
+    transform: scale(.5);
+}
+.animation span:nth-child(1) {
+    animation-delay: -0.45s;
+}
+.animation span:nth-child(2) {
+    animation-delay: -0.3s;
+}
+.animation span:nth-child(3) {
+    animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+0% {
+    transform: rotate(0deg);
+}
+100% {
+    transform: rotate(360deg);
+}
+}
+.add-new-town {
+    display: flex;
+    justify-content: center;
+    margin: -10px 0 0 0;
+    opacity: 0;
+    transform: translateX(15px);
+    transition: .2s ease;
+} 
+.add-new-town--disactive {
+    display: none;
+}
+.add-new-town__content {
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    width: 100%;
+}
+.add-new-town__town-input,
+.add-new-town__button {
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0px 0px 10px #00000016;
+    color: #000000af;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    transition: .2s ease;
+}
+.add-new-town__town-input {
+    min-height: 30px;
+    padding: 10px;
+    margin: 0 0 20px 0;
+    font-size: 18px;
+}
+.add-new-town__center-conteiner {
+    display: flex;
+    justify-content: center;
+}
+.add-new-town__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 45px;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+.add-new-town__button .add-new-town__animation {
+    display: none;
+}
+.add-new-town__button--active .add-new-town__animation {
+    display: inline-block;
+}
+.add-new-town__button--active .add-new-town__button--text {
+    display: none;
+}
+.add-new-town__button--active {
+    padding: 10px;
+    border-radius: 100%;
+}
+.add-new-town__button--active:hover,
+.add-new-town__button--active:focus {
+    box-shadow: 0px 0px 10px #00000016;
+    transform: translateX(0px);
+}
+.no-connection-notification,
+.town-not-found-notification {
+    position: absolute;
+    top: 120px;
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    padding: 140px 0 0 0;
+    margin: 0 auto;
+    transition: .2s ease;
+    transition-delay: .1s;
+}
+.no-connection-notification__icon,
+.town-not-found-notification__icon {
+    position: absolute;
+    left: calc(50% - 100px);
+    top: -30px;
+    height: 200px;
+    width: 200px;
+    margin: 0 auto;
+    background-position: -25px -25px;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+.no-connection-notification__icon {
+    background-image: url("../svg/no_connection.svg");
+}
+.town-not-found-notification__icon {
+    background-position: 40px 45px;
+    background-image: url("../svg/not_found_icon.svg");
+}
+.no-connection-notification__label,
+.town-not-found-notification__label {
+    margin: 20px auto 0 auto;
+    max-width: 600px;
+    padding: 0;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    font-size: 25px;
+    font-weight: 600;
+    color: #000000af;
+}
+.town-not-found-notification__label {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    column-gap: 8px;
+}
+.town-not-found-notification__label--content {
+    display: block;
+    max-width: 600px;
+    word-wrap: break-word;
+}
+.no-connection-notification__buttons-menu,
+.town-not-found-notification__buttons-menu {
+    display: flex;
+    flex-direction: column;
+}
+.no-connection-notification__refresh-button,
+.town-not-found-notification__home-button {
+    display: flex;
+    align-items: center;
+    min-height: 45px;
+    padding: 10px 20px 10px 45px;
+    margin: 25px auto 0 auto;
+    font-size: 16px;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0px 0px 10px #00000016;
+    color: #000000af;
+    text-align: right;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    transition: .2s ease;
+}
+.no-connection-notification__refresh-button-text,
+.town-not-found-notification__home-button-text {
+    position: relative;
+}
+.no-connection-notification__refresh-button-text::before,
+.town-not-found-notification__home-button-text::before {
+    position: absolute;
+    content: "";
+    top: calc(50% - 12px);
+    left: -35px;
+    width: 24px;
+    height: 24px;
+    border-radius: 100%;
+    background: #00000016;
+    background-position: center;
+    background-size: 16px 16px;
+    background-repeat: no-repeat;
+}
+.no-connection-notification__refresh-button-text::before {
+    background-image: url("../svg/refresh_icon.svg");
+}
+.town-not-found-notification__home-button-text::before {
+    background-position: 4px 5px;
+    background-image: url("../svg/home_icon.svg");
+}
+.no-connection-notification__refresh-button:hover,
+.no-connection-notification__refresh-button:focus,
+.town-not-found-notification__home-button:hover,
+.town-not-found-notification__home-button:focus {
+    cursor: pointer;
+    box-shadow: 0px 3px 18px #0000001f;
+    transform: translateY(-3px);
+}
+.no-connection-notification--disabled,
+.town-not-found-notification--disabled {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(15px);
+    transition: 0s ease;
+    transition-delay: 0s;
+}

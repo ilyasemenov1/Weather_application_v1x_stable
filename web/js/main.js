@@ -314,7 +314,7 @@ function add_last_town(town) {
         last_town_buttons = document.querySelectorAll(".latest-towns__town-button");
     }
 
-    town_name_button_event([last_town_buttons[last_town_buttons.length - 1]]);
+    town_name_button_event([last_town_buttons[0]]);
 }
 
 function town_button_event_focus(focus_button_arr, town_button_arr, close_button_arr, event) {

@@ -139,27 +139,31 @@
                 </div>
             </div>
         </section>
-        <section class="no-connection-notification no-connection-notification--disabled">
-            <span class="no-connection-notification__icon"></span>
-            <h1 class="no-connection-notification__label">Нет подключения к интернету</h1>
-            <div class="no-connection-notification__buttons-menu">
-                <button class="no-connection-notification__refresh-button" id="refresh_button">
+        <section class="town-notification no-connection-notification no-connection-notification--disabled">
+            <span class="town-notification__icon no-connection-notification__icon"></span>
+            <h1 class="town-notification__label no-connection-notification__label">Нет подключения к интернету</h1>
+            <div class="town-notification__buttons-menu no-connection-notification__buttons-menu">
+                <button class="town-notification__button no-connection-notification__refresh-button" id="refresh_button">
                     <span class="no-connection-notification__refresh-button-text">Повторить</span>
                 </button>
             </div>
         </section>
-        <section class="town-not-found-notification town-not-found-notification--disabled">
-            <span class="town-not-found-notification__icon"></span>
-            <h1 class="town-not-found-notification__label">
+        <section class="town-notification town-not-found-notification town-not-found-notification--disabled">
+            <span class="town-notification__icon town-not-found-notification__icon"></span>
+            <h1 class="town-notification__label town-not-found-notification__label">
                 <span class="town-not-found-notification__label--before">Город </span>
                 <span class="town-not-found-notification__label--content"  id="town_not_found_label"></span>
                 <span class="town-not-found-notification__label--after"> не был найден</span>
             </h1>
-            <div class="town-not-found-notification__buttons-menu">
-                <button class="town-not-found-notification__home-button" id="home_button">
+            <div class="town-notification__buttons-menu town-not-found-notification__buttons-menu">
+                <button class="town-notification__button town-not-found-notification__home-button" id="home_button">
                     <span class="town-not-found-notification__home-button-text">Вернуться на главную страницу</span>
                 </button>
             </div>
+        </section>
+        <section class="town-notification enter-town-notification enter-town-notification--disabled">
+            <span class="town-notification__icon enter-town-notification__icon"></span>
+            <h1 class="town-notification__label enter-town-notification__label">Введите название города</h1>
         </section>
     </main>
     <script src="js/main.js"></script>

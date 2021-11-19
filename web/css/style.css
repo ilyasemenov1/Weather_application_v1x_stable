@@ -1,9 +1,12 @@
+body {
+    margin: 0;
+    padding: 0;
+}
 main {
     position: relative;
     display: grid;
-    grid-template-columns: 1fr;
     grid-template-rows: repeat(auto-fit, auto);
-    grid-row-gap: 30px;
+    grid-row-gap: clamp(20px, 5vw, 30px);
     max-width: 830px;
     padding: 15px;
     margin: 20px auto 0 auto;
@@ -61,6 +64,7 @@ main {
     box-shadow: 0px 0px 18px #0000001f;
 }
 .search__input {
+    min-width: 100px;
     padding: 0 10px;
     box-sizing: border-box;
     background: none;
@@ -69,7 +73,7 @@ main {
     text-align: center;
     color: #000000d7;
     font-family: "Roboto", sans-serif;
-    font-size: 21px;
+    font-size: clamp(18px, 4vw, 21px);
 }
 .search__button {
     display: flex;
@@ -99,7 +103,7 @@ main {
 .latest-towns {
     display: grid;
     grid-template-rows: min-content 1fr;
-    grid-row-gap: 25px;
+    grid-row-gap: clamp(10px, 5vw, 20px);
     display: none;
 }
 .latest-towns__label,
@@ -108,8 +112,9 @@ main {
     color: #000000af;
     width: max-content;
     padding: 10px;
+    margin: 10px 0 clamp(3px, 1vw, 7px) 0;
     border-radius: 20px;
-    font-size: 18px;
+    font-size: clamp(17px, 4vw, 18px);
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
 }
@@ -125,7 +130,7 @@ main {
 .recommend-towns {
     display: grid;
     grid-template-rows: min-content 1fr min-content;
-    grid-row-gap: 25px;
+    grid-row-gap: clamp(10px, 5vw, 20px);
 }
 .recommend-towns__content-conteiner,
 .latest-towns__content-conteiner {
@@ -155,7 +160,7 @@ main {
     background: none;
     color: #000000d7;
     text-align: left;
-    font-size: 18px;
+    font-size: clamp(17px, 4vw, 18px);
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
 }
@@ -168,7 +173,7 @@ main {
     background: none;
     color: #000000d7;
     text-align: left;
-    font-size: 18px;
+    font-size: clamp(17px, 4vw, 18px);
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
 }
@@ -254,7 +259,7 @@ main {
     position: relative;
     color: #000000af;
     text-align: right;
-    font-size: 16px;
+    font-size: clamp(15px, 4vw, 16px);
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
 }
@@ -286,7 +291,7 @@ main {
     display: grid;
     display: none;
     grid-template-rows: repeat(2, auto);
-    grid-row-gap: 50px;
+    grid-row-gap: clamp(30px, 5vw, 50px);
     opacity: 0;
     transform: translateY(15px);
     transition: 0s;
@@ -295,22 +300,24 @@ main {
 .weather-template--active {
     opacity: 1;
     transition: .2s ease;
-    transition-delay: .1s;
+    transition-delay: 0s;
     transform: translateY(0px);
 }
 .weather-main {
     display: grid;
     grid-template-rows: min-content 1fr;
 }
-.weather-main__temp-conteiner,
-.weather-main__status-conteiner {
+.weather-main__temp-conteiner {
     display: flex;
     justify-content: center;
+}
+.weather-main__status-conteiner {
+    width: 100%;
 }
 .weather-main__temp {
     position: relative;
     color: #000000af;
-    font-size: 180px;
+    font-size: clamp(130px, 22vw, 180px);
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
 }
@@ -318,17 +325,21 @@ main {
     position: absolute;
     top: 10px;
     content: "℃";
-    font-size: 70px;
+    font-size: clamp(40px, 8vw, 70px);
 }
 .weather-main__status {
+    box-sizing: border-box;
+    max-width: clamp(200px, 90%, 800px);
     background: #0000000c;
     color: #000000af;
-    width: max-content;
-    padding: 10px 30px;
+    padding: 10px clamp(16px, 10vw, 32px);
+    margin: 0 auto;
     border-radius: 40px;
-    font-size: 50px;
+    text-align: center;
+    font-size: clamp(20px, 6vw, 50px);
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
+    word-wrap: break-word;
 }
 .weather-other {
     display: grid;
@@ -349,7 +360,7 @@ main {
     padding: 10px;
     border-radius: 20px;
     text-align: center;
-    font-size: 18px;
+    font-size: clamp(17px, 4vw, 18px);
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
 }
@@ -364,8 +375,8 @@ main {
     padding: 10px;
     border-radius: 20px;
     text-align: center;
-    font-size: 18px;
-    line-height: 18px;
+    font-size: clamp(17px, 4vw, 18px);
+    line-height: clamp(17px, 4vw, 18px);
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
     box-sizing: border-box;
@@ -435,7 +446,7 @@ main {
     background: #ffffff;
     z-index: -1;
     pointer-events: none;
-    transition: .2s ease;
+    transition: .1s ease;
     transform: scale(1);
 }
 .search__animation-conteiner .animation {
@@ -508,7 +519,7 @@ main {
     min-height: 30px;
     padding: 10px;
     margin: 0 0 20px 0;
-    font-size: 18px;
+    font-size: clamp(17px, 4vw, 18px);
 }
 .add-new-town__center-conteiner {
     display: flex;
@@ -520,7 +531,7 @@ main {
     align-items: center;
     min-height: 45px;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: clamp(15px, 4vw, 16px);
 }
 .add-new-town__button .add-new-town__animation {
     display: none;
@@ -575,12 +586,13 @@ main {
 }
 .town-notification__label {
     margin: 20px auto 0 auto;
-    max-width: 600px;
+    max-width: calc(100% - 40px);
     padding: 0;
     text-align: center;
     font-family: 'Roboto', sans-serif;
-    font-size: 25px;
+    font-size: clamp(22px, 5vw, 25px);
     font-weight: 600;
+    word-wrap: break-word;
     color: #000000af;
 }
 .town-not-found-notification__label {
@@ -591,7 +603,7 @@ main {
 }
 .town-not-found-notification__label--content {
     display: block;
-    max-width: 600px;
+    max-width: calc(100% - 40px);
     word-wrap: break-word;
 }
 .town-notification__buttons-menu {
@@ -604,7 +616,7 @@ main {
     min-height: 45px;
     padding: 10px 20px 10px 45px;
     margin: 25px auto 0 auto;
-    font-size: 16px;
+    font-size: clamp(14px, 4vw, 16px);
     border: none;
     outline: none;
     border-radius: 20px;
@@ -616,9 +628,17 @@ main {
     font-weight: 600;
     transition: .2s ease;
 }
+.no-connection-notification,
+.town-not-found-notification,
+.enter-town-notification {
+    position: absolute;
+}
 .no-connection-notification__refresh-button-text,
 .town-not-found-notification__home-button-text {
     position: relative;
+}
+.town-not-found-notification__home-button-text {
+    text-align: center;
 }
 .no-connection-notification__refresh-button-text::before,
 .town-not-found-notification__home-button-text::before {

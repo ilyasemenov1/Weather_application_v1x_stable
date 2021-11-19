@@ -1,0 +1,93 @@
+@media(max-width: 845px) {
+    .latest-towns__content-conteiner,
+    .recommend-towns__content-conteiner {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(auto-fit, auto);
+    }
+}
+.latest-towns__content-conteiner--3-colums {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(auto-fit, auto);
+} 
+.recommend-towns__content-conteiner--3-colums {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(auto-fit, auto);
+} 
+@media(max-width: 720px) {
+    .latest-towns__content-conteiner,
+    .recommend-towns__content-conteiner {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(auto-fit, auto);
+    }
+}
+.latest-towns__content-conteiner--2-colums {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(auto-fit, auto);
+} 
+.recommend-towns__content-conteiner--2-colums {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(auto-fit, auto);
+} 
+@media(max-width: 660px) {
+    .weather-other__data-block {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(2, auto);
+        grid-row-gap: 10px;
+    }
+    .weather-other {
+        grid-row-gap: 25px;
+    }
+}
+@media(max-width: 490px) {
+    .add-new-town {
+        margin: 0;
+    }
+    .latest-towns__content-conteiner,
+    .recommend-towns__content-conteiner {
+        grid-template-columns: repeat(1, 1fr);
+        grid-template-rows: repeat(auto-fit, auto);
+    }
+    .recommend-towns__content-conteiner,
+    .latest-towns__content-conteiner {
+        padding: 0 0 0 15px;
+    }
+    .search__back-button {
+        width: 56px;
+        height: 56px;
+    }
+    .search__input-conteiner {
+        height: 56px;
+    }
+    .search__button {
+        width: 46px;
+        height: 46px;
+    }
+}
+.latest-towns__content-conteiner--1-colum {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(auto-fit, auto);
+} 
+.recommend-towns__content-conteiner--1-colum {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(auto-fit, auto);
+} 
+@media (max-width: 390px){
+    .search__back-button {
+        width: 50px;
+        height: 50px;
+    }
+    .search__input-conteiner {
+        height: 50px;
+    }
+    .search__button {
+        width: 40px;
+        height: 40px;
+    }
+    .search {
+        grid-column-gap: 15px;
+    }
+    .recommend-towns__content-conteiner,
+    .latest-towns__content-conteiner {
+        padding: 0 0 0 10px;
+    }
+}

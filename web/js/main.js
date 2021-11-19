@@ -2,20 +2,23 @@ document_events();
 new_town_button_event();
 
 // global variables
-let add_button_text = document.querySelector("#add_button_text");
-let add_button_text_before = document.querySelector("#add_button_text_before");
-let add_new_town = document.querySelector(".add-new-town");
-let add_button_center = document.querySelector("#add_button_center");
-let no_connection = document.querySelector(".no-connection-notification");
-let town_not_found = document.querySelector(".town-not-found-notification");
-let town_not_found_label = document.querySelector("#town_not_found_label");
-let enter_town_notification = document.querySelector(".enter-town-notification");
-let search_input = document.querySelector("#search_input");
-let latest_towns = document.querySelector(".latest-towns");
+const add_button_text = document.querySelector("#add_button_text");
+const add_button_text_before = document.querySelector("#add_button_text_before");
+const add_new_town = document.querySelector(".add-new-town");
+const add_button_center = document.querySelector("#add_button_center");
+const no_connection = document.querySelector(".no-connection-notification");
+const town_not_found = document.querySelector(".town-not-found-notification");
+const town_not_found_label = document.querySelector("#town_not_found_label");
+const enter_town_notification = document.querySelector(".enter-town-notification");
+const search_input = document.querySelector("#search_input");
+const latest_towns = document.querySelector(".latest-towns");
+const recommend_towns_elements = document.querySelector("#recommend_towns_elements");
+const search_animation = document.querySelector("#search_animation");
+const key = 'b52345d6529f9d1ac5a2c583a5f89e31';
 var all_last_places_array = [];
 var last_places_array = [];
 let click_counter = 0;
-
+let search_anable = true;
 
 async function display_weather(place) {
     print_weather_info(true);
@@ -27,41 +30,65 @@ async function display_weather(place) {
         if (place) {
             no_connection.className = "no-connection-notification no-connection-notification--disabled";
 
-            let search_animation = document.querySelector("#search_animation");
             let weather_template = document.querySelector(".weather-template");
-        
-            search_animation.className = "search__animation-conteiner";
+
             weather_template.style = "display: grid;";
-        
-            var main_data = await eel.main(place)();
-        
-            var weather_info_data = main_data[0];
-            let istrue = main_data[1];
-        
-            if (istrue) {
 
-                if (last_places_array[0] != place) {
-                    last_places_array.unshift(place);
+            let delay = setTimeout(function() {
+                search_animation.className = "search__animation-conteiner";
+            },250);
 
-                    add_last_town(place);
-                }
+            search_anable = true;
 
-                var weather_data = document.querySelectorAll('.weather_data');
+            try {
+                fetch("https://api.openweathermap.org/data/2.5/weather?q=" + place + ",&appid=" + key + "&lang=ru")  
+                .then(function(resp) { return resp.json() })
+                .then(function(data) {
+                    if (search_anable) {
+                        let temp = Math.round(parseFloat(data.main.temp)-273.15);
+    
+                        let temp_min = Math.round(parseFloat(data.main.temp_min)-273.15);
+                        let temp_max = Math.round(parseFloat(data.main.temp_max)-273.15);
+                        let temp_min_max = temp_min  + "/" + temp_max;
         
-                let i = 0;
-                weather_info_data.forEach(element => {
-                    weather_data[i].textContent = element;
-                    i++;
-                });
+                        let wind = Math.round(data.wind.speed);
         
-                search_animation.className = "search__animation-conteiner  search__animation-conteiner--disactive";
-                weather_template.className = "weather-template weather-template--active";
+                        let humidity = data.main.humidity;
         
-            } else {
-                search_animation.className = "search__animation-conteiner  search__animation-conteiner--disactive";
+                        let status = data.weather[0].description;
         
-                town_not_found_label.textContent = " \"" + place + "\" ";
-                town_not_found.className = "town-notification town-not-found-notification";
+                        var weather_info_data = [temp, status, wind, temp_min_max, humidity];
+        
+                        if (last_places_array[0] != place) {
+                            last_places_array.unshift(place);
+        
+                            add_last_town(place);
+                        }
+        
+                        var weather_data = document.querySelectorAll('.weather_data');
+        
+                        let i = 0;
+                        weather_info_data.forEach(element => {
+                            weather_data[i].textContent = element;
+                            i++;
+                        });
+                
+                        clearTimeout(delay);
+                        search_animation.className = "search__animation-conteiner  search__animation-conteiner--disactive";
+                        weather_template.className = "weather-template weather-template--active";
+                    }
+                })
+                .catch(function() {
+                    if (search_anable) {
+                        clearTimeout(delay);
+                        search_animation.className = "search__animation-conteiner  search__animation-conteiner--disactive";
+                
+                        town_not_found_label.textContent = " \"" + place + "\" ";
+                        town_not_found.className = "town-notification town-not-found-notification";
+                    }
+                }); 
+            } catch {
+                console.log("town not found");
             }
         } else {
             print_weather_info(true);
@@ -88,7 +115,7 @@ function print_weather_info(par) {
         no_connection.className = "no-connection-notification no-connection-notification--disabled";
         town_not_found.className = "town-notification town-not-found-notification town-not-found-notification--disabled";
         enter_town_notification.className = "town-notification enter-town-notification enter-town-notification--disabled";
-        click_counter = hide__add_new_town_button();
+        click_counter = hide_add_new_town_button();
         latest_towns.style = "display: none";
     } else {
         search.style = "";
@@ -104,6 +131,8 @@ function print_weather_info(par) {
         town_not_found_label.textContent = "";
         enter_town_notification.className = "town-notification enter-town-notification enter-town-notification--disabled";
         latest_towns.style = "display: grid";
+        search_animation.className = "search__animation-conteiner  search__animation-conteiner--disactive";
+        search_anable = false;
     }
 }
 
@@ -189,13 +218,13 @@ function document_events() {
         if (!click_counter) {
             click_counter = show_add_new_town_button();
         } else {
-            click_counter = hide__add_new_town_button();
+            click_counter = hide_add_new_town_button();
         }
     });
 
     add_button.addEventListener('keydown', function(event) {
         if (event.keyCode == 27) {
-            click_counter = hide__add_new_town_button();
+            click_counter = hide_add_new_town_button();
         } 
     });
 
@@ -212,7 +241,7 @@ function document_events() {
             new_town_button_event();
         }
         if (event.keyCode == 27) {
-            click_counter = hide__add_new_town_button();
+            click_counter = hide_add_new_town_button();
         }
     });
 }
@@ -229,7 +258,7 @@ function show_add_new_town_button() {
     return 1;
 }
 
-function hide__add_new_town_button() {
+function hide_add_new_town_button() {
     add_button_center.style = "";
     add_button_text.textContent = "Добавить город";
     add_button_text_before.textContent = "+";
@@ -246,16 +275,20 @@ async function new_town_button_event() {
         if (new_town) {
             new_town_button.className = "add-new-town__button add-new-town__button--active";
             new_town_button.id = "new_town_button_active";
-            let main_data = await eel.is_town(new_town)();
-            if (main_data) {
-                if (addendum_new_town(new_town)) {
+
+            fetch("https://api.openweathermap.org/data/2.5/weather?q=" + new_town + ",&appid=" + key + "&lang=ru")  
+            .then(function(resp) { return resp.json() })
+            .then(function(data) {
+                if (data.cod == "200") {
+                    if (addendum_new_town(new_town)) {
+                        new_town_button.className = "add-new-town__button ";
+                        new_town_button.id = "new_town_button";
+                    }
+                } else {
                     new_town_button.className = "add-new-town__button ";
                     new_town_button.id = "new_town_button";
                 }
-            } else {
-                new_town_button.className = "add-new-town__button ";
-                new_town_button.id = "new_town_button";
-            }
+            })
         }
     }
 } 
@@ -305,6 +338,16 @@ function add_last_town(town) {
         town_count = last_town_buttons.length + 1;
     }
     
+    if (town_count == 1) {
+        latest_towns_content.className = "latest-towns__content-conteiner latest-towns__content-conteiner--1-colum";
+    } else if (town_count == 2){
+        latest_towns_content.className = "latest-towns__content-conteiner latest-towns__content-conteiner--2-colums";
+    } else if (town_count == 3){
+        latest_towns_content.className = "latest-towns__content-conteiner latest-towns__content-conteiner--3-colums";
+    } else if (town_count == 4) {
+        latest_towns_content.className = "latest-towns__content-conteiner";
+    }
+
     if (town_count > 4) {
         latest_towns_content.prepend(last_town_button);
         last_town_buttons = document.querySelectorAll(".latest-towns__town-button");
@@ -347,8 +390,14 @@ function town_close_button_event(close_button_arr, town_button_arr) {
                 close_button_arr[i].addEventListener('click', function() {
                     town_button_arr[i].remove();
                     var town_button_count = document.querySelectorAll(".recommend-towns__button");
-                    if (town_button_count.length == 0) {
-                        console.log("нет элементов");
+                    if (town_button_count.length == 3) {
+                        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--3-colums";
+                    } else if (town_button_count.length == 2) {
+                        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--2-colums";
+                    } else if (town_button_count.length == 1) {
+                        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--1-colum";
+                    } else if (town_button_count.length == 0) {
+                        console.log("нет элементов")
                     }
                 });
             }

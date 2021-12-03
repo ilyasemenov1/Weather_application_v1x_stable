@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/ui_adaptivity.css">
+    <link rel="stylesheet" href="css/animations.css">
     <title>Погода</title>
 </head>
 <body>
@@ -29,6 +30,9 @@
                 </span>
             </div>
         </section>
+        <div class="search-background">
+
+        </div>
         <section class="latest-towns">
             <h1 class="latest-towns__label">недавние города:</h1>
             <div class="latest-towns__content-conteiner">
@@ -121,7 +125,7 @@
                 </div>
             </div>
         </section>
-        <section class="add-new-town">
+        <section class="add-new-town" style="display: none;">
             <div class="add-new-town__content">
                 <input type="text" class="add-new-town__town-input" id="new_town_input" placeholder="Введите название города" autocomplete="off" value="">
                 <div class="add-new-town__center-conteiner">
@@ -165,5 +169,6 @@
         </section>
     </main>
     <script src="js/main.js"></script>
+    <script src="js/window_scroll.js"></script>
 </body>
 </html>

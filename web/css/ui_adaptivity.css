@@ -4,6 +4,9 @@
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(auto-fit, auto);
     }
+    .recommend-towns__close-button {
+        display: none;
+    }
 }
 .latest-towns__content-conteiner--3-colums {
     grid-template-columns: repeat(3, 1fr);
@@ -13,6 +16,28 @@
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(auto-fit, auto);
 } 
+@media(max-width: 830px) {
+    .search-scroll {
+        margin: 0;
+        border-radius: 0px;
+    }
+    .search-scroll__input-conteiner {
+        margin: 10px;
+        background: #f5f5f5;
+    }
+    .search-scroll__input,
+    .search-scroll__back-button,
+    .search-scroll__button {
+        background: #f5f5f5;
+    }
+    .search-scroll__back-button {
+        margin: 10px 0 10px 20px;
+    }
+    .search-scroll__back-button:hover,
+    .search-scroll__back-button:focus {
+        transform: translateX(-3px);
+    }
+}
 @media(max-width: 720px) {
     .latest-towns__content-conteiner,
     .recommend-towns__content-conteiner {
@@ -58,6 +83,9 @@
     .search__input-conteiner {
         height: 56px;
     }
+    .search-background {
+        height: 56px;
+    }
     .search__button {
         width: 46px;
         height: 46px;
@@ -77,6 +105,9 @@
         height: 50px;
     }
     .search__input-conteiner {
+        height: 50px;
+    }
+    .search-background {
         height: 50px;
     }
     .search__button {

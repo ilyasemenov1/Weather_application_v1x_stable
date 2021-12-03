@@ -62,7 +62,7 @@ async function display_weather(place) {
                         if (last_places_array[0] != place) {
                             last_places_array.unshift(place);
         
-                            add_last_town(place);
+                            add_last_town(place, temp, wind, humidity);
                         }
         
                         var weather_data = document.querySelectorAll('.weather_data');
@@ -84,7 +84,7 @@ async function display_weather(place) {
                         search_animation.className = "search__animation-conteiner  search__animation-conteiner--disactive";
                 
                         town_not_found_label.textContent = " \"" + place + "\" ";
-                        town_not_found.className = "town-notification town-not-found-notification";
+                        town_not_found.style = "display: flex;";
                     }
                 }); 
             } catch {
@@ -92,11 +92,11 @@ async function display_weather(place) {
             }
         } else {
             print_weather_info(true);
-            enter_town_notification.className = "town-notification enter-town-notification";
+            enter_town_notification.style = "display: flex;";
         }
     } else {
         print_weather_info(true);
-        no_connection.className = "town-notification no-connection-notification";
+        no_connection.style = "display: flex;";
     }
 }
 
@@ -111,10 +111,9 @@ function print_weather_info(par) {
         search_back_button.style = "display: flex;";
         recommend_towns.style = "display: none;";
         weather_template.className = "weather-template";
-        add_new_town.className = "add-new-town add-new-town--disactive";
-        no_connection.className = "no-connection-notification no-connection-notification--disabled";
-        town_not_found.className = "town-notification town-not-found-notification town-not-found-notification--disabled";
-        enter_town_notification.className = "town-notification enter-town-notification enter-town-notification--disabled";
+        add_new_town.style = "display: none";
+        no_connection.style = "display: none;";
+        enter_town_notification.style = "display: none;";
         click_counter = hide_add_new_town_button();
         latest_towns.style = "display: none";
     } else {
@@ -125,11 +124,11 @@ function print_weather_info(par) {
         weather_template.style = "";
         search_input.value = "";
         add_new_town.className = "add-new-town";
-        add_new_town.style = "";
-        no_connection.className = "no-connection-notification no-connection-notification--disabled";
-        town_not_found.className = "town-not-found-notification town-not-found-notification--disabled";
+        add_new_town.style = "display: none";
+        no_connection.style = "display: none;";
+        town_not_found.style = "display: none;";
         town_not_found_label.textContent = "";
-        enter_town_notification.className = "town-notification enter-town-notification enter-town-notification--disabled";
+        enter_town_notification.style = "display: none;";
         latest_towns.style = "display: grid";
         search_animation.className = "search__animation-conteiner  search__animation-conteiner--disactive";
         search_anable = false;
@@ -208,7 +207,7 @@ function document_events() {
     town_button_event_focus(town_close_button, town_button, town_close_button, "blur");
 
     var town_name_button = document.querySelectorAll(".recommend-towns__town-button-name");
-    town_name_button_event(town_name_button);
+    town_name_button_event(town_name_button, "recommend_towns");
     town_button_event_focus(town_name_button, town_button, town_close_button, "focus");
     town_button_event_focus(town_name_button, town_button, town_close_button, "blur");
 
@@ -252,7 +251,7 @@ function show_add_new_town_button() {
     add_button_text.textContent = "Добавление нового города";
     add_button_text_before.textContent = "-";
     add_button_text_before.style = "padding: 0 0 2px 0; height: 22px;";
-    add_new_town.style = "opacity: 1; transform: translateY(0px)";
+    add_new_town.style = "display: flex;";
     new_town_input_select.value = "";
 
     return 1;
@@ -263,7 +262,12 @@ function hide_add_new_town_button() {
     add_button_text.textContent = "Добавить город";
     add_button_text_before.textContent = "+";
     add_button_text_before.style = "";
-    add_new_town.style = "";
+    add_new_town.className = "add-new-town add-new-town__back-animation";
+
+    let add_new_town_delay = setTimeout(function() {
+        add_new_town.className = "add-new-town";
+        add_new_town.style = "display: none;";
+    }, 200);
 
     return 0;
 }
@@ -273,18 +277,22 @@ async function new_town_button_event() {
     if (new_town_button.id != "new_town_button_active") {
         let new_town = document.getElementById("new_town_input").value;
         if (new_town) {
-            new_town_button.className = "add-new-town__button add-new-town__button--active";
-            new_town_button.id = "new_town_button_active";
+            let delay = setTimeout(function() {
+                new_town_button.className = "add-new-town__button add-new-town__button--active";
+                new_town_button.id = "new_town_button_active";
+            }, 200);
 
             fetch("https://api.openweathermap.org/data/2.5/weather?q=" + new_town + ",&appid=" + key + "&lang=ru")  
             .then(function(resp) { return resp.json() })
             .then(function(data) {
                 if (data.cod == "200") {
+                    clearTimeout(delay);
                     if (addendum_new_town(new_town)) {
                         new_town_button.className = "add-new-town__button ";
                         new_town_button.id = "new_town_button";
                     }
                 } else {
+                    clearTimeout(delay);
                     new_town_button.className = "add-new-town__button ";
                     new_town_button.id = "new_town_button";
                 }
@@ -316,20 +324,59 @@ async function new_town_button_event() {
     new_recommend_town.appendChild(recommend_town_close_button);
     recommend_town_close_button.appendChild(recommend_towns_close_button_img);
 
-    town_name_button_event([recommend_town_name_button]);
+    town_name_button_event([recommend_town_name_button], "recommend_towns");
     town_close_button_event([recommend_town_close_button], [new_recommend_town]);
     
     return true;
 
 }
 
-function add_last_town(town) {
+function add_last_town(town, temp, wind, humidity) {
     let latest_towns_content = document.querySelector(".latest-towns__content-conteiner");
 
-    last_town_button = document.createElement("button");
+    let last_town_button = document.createElement("button");
     last_town_button.className = "latest-towns__town-button";
-    last_town_button.textContent = town;
     last_town_button.value = town;
+
+    // town button main content
+    let last_town_button_content = document.createElement("div");
+    last_town_button_content.className = "last_town_button--content";
+
+    let last_town_name = document.createElement("span");
+    last_town_name.className = "latest-towns__town-name-button";
+    last_town_name.textContent = town;
+
+    let last_town_temp_conteiner = document.createElement("div");
+    last_town_temp_conteiner.className = "latest-towns__town-temp--conteiner";
+
+    let last_town_temp = document.createElement("span");
+    last_town_temp.className = "latest-towns__town-temp";
+    last_town_temp.textContent = temp;
+
+    // wind
+    let last_town_wind_conteiner = document.createElement("div");
+    last_town_wind_conteiner.className = "latest-towns__data-conteiner";
+
+    let last_town_wind_label = document.createElement("span");
+    last_town_wind_label.className = "latest-towns__data-label latest-towns__wind-label";
+
+    let last_town_wind = document.createElement("span");
+    last_town_wind.className = "latest-towns__wind";
+    last_town_wind.textContent = wind;
+
+    // humidity
+    let last_town_humidity_conteiner = document.createElement("div");
+    last_town_humidity_conteiner.className = "latest-towns__data-conteiner";
+
+    let last_town_humidity_label = document.createElement("span");
+    last_town_humidity_label.className = "latest-towns__data-label latest-towns__humidity-label";
+
+    let last_town_humidity = document.createElement("span");
+    last_town_humidity.className = "latest-towns__humidity";
+    last_town_humidity.textContent = humidity;
+
+    let last_town_data_conteiner = document.createElement("div");
+    last_town_data_conteiner.className = "last-town__weather-data-conteiner";
 
     let town_count = 0;
     var last_town_buttons = document.querySelectorAll(".latest-towns__town-button");
@@ -339,7 +386,7 @@ function add_last_town(town) {
     }
     
     if (town_count == 1) {
-        latest_towns_content.className = "latest-towns__content-conteiner latest-towns__content-conteiner--1-colum";
+        latest_towns_content.className = "latest-towns__content-conteiner latest-towns__content-conteiner--2-colums";
     } else if (town_count == 2){
         latest_towns_content.className = "latest-towns__content-conteiner latest-towns__content-conteiner--2-colums";
     } else if (town_count == 3){
@@ -350,14 +397,35 @@ function add_last_town(town) {
 
     if (town_count > 4) {
         latest_towns_content.prepend(last_town_button);
+        last_town_button.append(last_town_button_content);
+        last_town_button_content.append(last_town_name);
+        last_town_button_content.append(last_town_temp);
+        last_town_button_content.append(last_town_data_conteiner);
+        last_town_data_conteiner.append(last_town_wind_conteiner);
+        last_town_wind_conteiner.append(last_town_wind_label);
+        last_town_wind_conteiner.append(last_town_wind);
+        last_town_data_conteiner.append(last_town_humidity_conteiner);
+        last_town_humidity_conteiner.append(last_town_humidity_label);
+        last_town_humidity_conteiner.append(last_town_humidity);
+
         last_town_buttons = document.querySelectorAll(".latest-towns__town-button");
         last_town_buttons[last_town_buttons.length - 1].remove();
     } else {
         latest_towns_content.prepend(last_town_button);
+        last_town_button.append(last_town_button_content);
+        last_town_button_content.append(last_town_name);
+        last_town_button_content.append(last_town_temp);
+        last_town_button_content.append(last_town_data_conteiner);
+        last_town_data_conteiner.append(last_town_wind_conteiner);
+        last_town_wind_conteiner.append(last_town_wind_label);
+        last_town_wind_conteiner.append(last_town_wind);
+        last_town_data_conteiner.append(last_town_humidity_conteiner);
+        last_town_humidity_conteiner.append(last_town_humidity_label);
+        last_town_humidity_conteiner.append(last_town_humidity);
         last_town_buttons = document.querySelectorAll(".latest-towns__town-button");
     }
 
-    town_name_button_event([last_town_buttons[0]]);
+    town_name_button_event([last_town_buttons[0]], "latest_towns");
 }
 
 function town_button_event_focus(focus_button_arr, town_button_arr, close_button_arr, event) {
@@ -405,17 +473,101 @@ function town_close_button_event(close_button_arr, town_button_arr) {
     }
 }
 
-function town_name_button_event(town_button_arr) {
+function town_name_button_event(town_button_arr, button_type) {
     if (town_button_arr.length >= 1) {
+        let weather_function = true;
+        let delay = 0;
         town_button_arr.forEach(element => {
-            element.addEventListener('click', function() {
-                let place = this.value;
-                let search_input = document.querySelector("#search_input");
-                search_input.value = place;
-                display_weather(place);
+            element.addEventListener('click', function(event) {
+                if (weather_function) {
+                    let place = this.value;
+                    let search_input = document.querySelector("#search_input");
+                    search_input.value = place;
+                    clearTimeout(delay);
+                    remove_indicate_menu();
+                    display_weather(place);
+                }
+                weather_function = true;
+            });
+            element.addEventListener("mousedown", function(event) {
+                if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+                    delay = setTimeout(function() {
+                        indicate_menu_add(element, event, "pc", button_type);
+                        weather_function = false;
+                    }, 250);
+                }
+            });
+            element.addEventListener("touchstart", function(event) {
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+                    delay = setTimeout(function() {
+                        indicate_menu_add(element, event, "mobile", button_type);
+                        weather_function = false;
+                    }, 250);
+                }
+            });
+            element.addEventListener("touchend", function(event) {
+                clearTimeout(delay);
+            });
+            element.addEventListener("blur", function() {
+                clearTimeout(delay);
+                remove_indicate_menu();
+                weather_function = true;
             });
         }); 
     }
+}
+function remove_indicate_menu() {
+    var indicate_menu_elements = document.querySelectorAll(".indicate-menu");
+    if (indicate_menu_elements) {
+        indicate_menu_elements.forEach(function(element) {
+            element.className = "indicate-menu indicate-menu--remove-animation";
+            let remove_delay = setTimeout(function() {
+                element.remove();
+            }, 300);
+        });
+    }
+}
+function indicate_menu_add(element, event, device_mode, button_type) {
+    remove_indicate_menu();
+    let indicate_menu = document.createElement("div");
+    indicate_menu.className = "indicate-menu";
+    let indicate_menu_romove_button = document.createElement("button");
+    indicate_menu_romove_button.className = "indicate-menu__remove-button";
+    indicate_menu_romove_button.innerHTML = "Удалить";
+    let indicate_menu_search_button = document.createElement("button");
+    indicate_menu_search_button.className = "indicate-menu__search-button";
+    indicate_menu_search_button.innerHTML = "Поиск";
+
+    let cord_Y = 0;
+    let cord_X = 0;
+
+    if (device_mode == "pc") {
+        cord_Y = event.clientY + window.pageYOffset;
+        cord_X = event.clientX;
+    } else if (device_mode == "mobile") {
+        cord_Y = event.changedTouches[0].clientY  + window.pageYOffset;
+        cord_X = event.changedTouches[0].clientX;
+    }
+
+    document.body.append(indicate_menu);
+    indicate_menu.style = "top: " + cord_Y + "px; left: " + cord_X + "px;";
+
+    indicate_menu.append(indicate_menu_romove_button);
+    indicate_menu.append(indicate_menu_search_button);
+    
+    indicate_menu_romove_button.addEventListener("click", function() {
+        if (button_type == "latest_towns") {
+            element.remove();
+        } else if (button_type == "recommend_towns") {
+            element.parentElement.remove();
+        }
+    });
+    indicate_menu_search_button.addEventListener("click", function() {
+        let search_place = element.value;
+        let search_input = document.querySelector("#search_input");
+        search_input.value = search_place;
+        display_weather(search_place);
+    });
 }
 function is_online() {
     if (navigator.onLine) {

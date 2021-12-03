@@ -12,11 +12,19 @@ main {
     margin: 20px auto 0 auto;
 }
 .search {
-    position: relative;
     display: grid;
     grid-template-columns: auto;
     grid-column-gap: 20px;
     min-height: 50px;
+    max-width: 830px;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 50;
+}
+.search-background {
+    display: none;
+    height: 60px;
+    width: 100%;
 }
 .search__back-button {
     display: flex;
@@ -55,8 +63,8 @@ main {
     border: none;
     border-radius: 20px; 
     padding: 5px;
-    transition: .2s ease;
     box-sizing: border-box;
+    transition: box-shadow .2s ease, background .2s ease;
 }
 .search__input-conteiner:hover,
 .add-new-town__town-input:hover,
@@ -74,6 +82,8 @@ main {
     color: #000000d7;
     font-family: "Roboto", sans-serif;
     font-size: clamp(18px, 4vw, 21px);
+    background: #ffffff;
+    transition: background .2s ease;
 }
 .search__button {
     display: flex;
@@ -100,20 +110,129 @@ main {
     cursor: pointer;
     background: #00000013;
 }
+.search-scroll {
+    position: fixed;
+    grid-column-gap: 10px;
+    top: 0;
+    left: 0;
+    background: #ffffff;
+    max-width: 830px;
+    width: 100vw;
+    margin: 15px calc((50% - 415px)) 0 calc((50% - 415px));
+    border-radius: 20px;
+    box-shadow: 0px 0px 18px #0000001f;
+    animation-name: app_search;
+    animation-duration: .1s;
+    animation-direction: ease;
+}
+.search-scroll__input-conteiner {
+    margin: 0;
+    box-shadow: none !important;
+    background: #ffffff;
+}
+.search-scroll__input {
+    background: #ffffff;
+}
+.search-scroll__ {
+    background: #ffffff;
+}
+.search-scroll__back-button {
+    margin: 0;
+    background: #ffffff;
+    box-shadow: none !important;
+}
+.search-scroll__back-button:hover,
+.search-scroll__back-button:focus {
+    transform: translateX(0px);
+    background: #0000000c;
+}
 .latest-towns {
     display: grid;
     grid-template-rows: min-content 1fr;
     grid-row-gap: clamp(10px, 5vw, 20px);
     display: none;
+    animation-name: main_section_app;
+    animation-duration: .2s;
+    animation-direction: ease;
+}
+.last_town_button--content {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+.latest-towns__town-name-button {
+    margin: 0 0 2px 0;
+    font-weight: 600;
+}
+.latest-towns__town-temp {
+    font-size: clamp(22px, 4vw, 25px);
+    font-weight: 600;
+    color: #0000009b;
+}
+.latest-towns__town-temp--conteiner {
+    display: flex;
+    position: relative; 
+}
+.latest-towns__town-temp::after {
+    position: absolute;
+    content: "℃";
+    font-size: clamp(18px, 4vw, 20px);
+    font-weight: 1000;
+}
+.latest-towns__data-conteiner {
+    display: flex;
+    gap: 5px;
+}
+.last-town__weather-data-conteiner {
+    display: flex;
+    gap: 15px;
+}
+.latest-towns__data-label {
+    width: 20px;
+    height: 20px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.latest-towns__wind-label {
+    background-image: url("../svg/wind_icon.svg");
+} 
+.latest-towns__humidity-label {
+    background-image: url("../svg/humidity_icon.svg");
+} 
+.latest-towns__wind,
+.latest-towns__humidity {
+    position: relative;
+    font-size: 18px;
+    font-weight: 600;
+    color: #0000009b;
+}
+.latest-towns__wind {
+    margin: 0 28px 0 0;
+}
+.latest-towns__humidity {
+    margin: 0 15px 0 0;
+}
+.latest-towns__wind::after {
+    position: absolute;
+    top: 2px;
+    content: "м/с";
+    width: 28px;
+    font-size: 16px;
+}
+.latest-towns__humidity::after {
+    position: absolute;
+    top: 2px;
+    content: "%";
+    font-size: 16px;
 }
 .latest-towns__label,
 .recommend-towns__label {
-    background: #0000000c;
-    color: #000000af;
+    background: #00000009;
+    color: #000000dc;
     width: max-content;
     padding: 10px;
     margin: 10px 0 clamp(3px, 1vw, 7px) 0;
-    border-radius: 20px;
+    border-radius: 15px;
     font-size: clamp(17px, 4vw, 18px);
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
@@ -131,6 +250,9 @@ main {
     display: grid;
     grid-template-rows: min-content 1fr min-content;
     grid-row-gap: clamp(10px, 5vw, 20px);
+    animation-name: main_section_app;
+    animation-duration: .2s;
+    animation-direction: ease;
 }
 .recommend-towns__content-conteiner,
 .latest-towns__content-conteiner {
@@ -146,7 +268,7 @@ main {
     min-height: 45px;
     background: #ffffff;
     box-shadow: 0px 0px 10px #00000016;
-    padding: 10px;
+    padding: 0;
     border: none;
     outline: none;
     border-radius: 20px;
@@ -167,6 +289,7 @@ main {
 .recommend-towns__town-button-name {
     height: 100%;
     width: calc(100% - 30px);
+    padding: 10px 6px 10px 16px;
     margin: 0 30px 0 0px;
     border: none;
     outline: none;
@@ -477,24 +600,18 @@ main {
 .animation span:nth-child(3) {
     animation-delay: -0.15s;
 }
-@keyframes lds-ring {
-0% {
-    transform: rotate(0deg);
-}
-100% {
-    transform: rotate(360deg);
-}
-}
 .add-new-town {
     display: flex;
     justify-content: center;
     margin: -10px 0 0 0;
-    opacity: 0;
-    transform: translateX(15px);
-    transition: .2s ease;
+    animation-name: add_new_town;
+    animation-duration: .2s;
+    animation-iteration-count: 1;
 } 
-.add-new-town--disactive {
-    display: none;
+.add-new-town__back-animation {
+    animation-name: add_new_town_back;
+    animation-duration: .2s;
+    animation-iteration-count: 1; 
 }
 .add-new-town__content {
     display: flex;
@@ -553,15 +670,15 @@ main {
 }
 .town-notification {
     position: absolute;
-    display: flex;
+    display: none;
     justify-content: center;
     top: 120px;
-    display: flex;
     flex-direction: column;
     width: 100%;
     padding: 140px 0 0 0;
-    transition: .2s ease transform, .2s ease opacity;
-    transition-delay: .1s;
+    animation-duration: .3s;
+    animation-name: pop_up_app;
+    animation-iteration-count: 1;
 }
 .town-notification__icon {
     position: absolute;
@@ -669,12 +786,62 @@ main {
     box-shadow: 0px 3px 18px #0000001f;
     transform: translateY(-3px);
 }
-.no-connection-notification--disabled,
-.town-not-found-notification--disabled,
-.enter-town-notification--disabled {
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(15px);
-    transition: 0s ease;
-    transition-delay: 0s;
+.indicate-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+    border-radius: 15px;
+    background: #ffffff;
+    box-shadow: 0px 3px 18px #0000001f;
+    animation-duration: .3s;
+    animation-name: pop_up_app;
+    animation-iteration-count: 1;
+}
+.indicate-menu--remove-animation {
+    animation-duration: .3s;
+    animation-name: pop_up_remove;
+    animation-iteration-count: 1;
+}
+.indicate-menu__remove-button,
+.indicate-menu__search-button {
+    position: relative;
+    min-width: 120px;
+    padding: 5px 25px 5px 50px;
+    margin: 0;
+    border: none;
+    outline: none;
+    text-align: left;
+    font-family: "Roboto", sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #000000af;
+    background: #ffffff;
+    transition: .2s ease;
+}
+.indicate-menu__remove-button::before,
+.indicate-menu__search-button::before {
+    position: absolute;
+    content: "";
+    left: 20px;
+    width: 20px;
+    height: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.indicate-menu__remove-button::before {
+    background-image: url("../svg/remove_icon.svg");
+}
+.indicate-menu__search-button::before {
+    left: 22px;
+    width: 32px;
+    height: 32px;
+    background-image: url("../svg/enter_town_icon.svg");
+}
+.indicate-menu__remove-button:hover,
+.indicate-menu__search-button:hover {
+    cursor: pointer;
+    background: #f5f5f5;
 }

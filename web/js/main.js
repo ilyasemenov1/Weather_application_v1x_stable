@@ -319,17 +319,42 @@ async function new_town_button_event() {
     let recommend_towns_close_button_img = document.createElement("span");
     recommend_towns_close_button_img.className = "recommend-towns__close-button--img";
 
-    recommend_towns.appendChild(new_recommend_town);
-    new_recommend_town.appendChild(recommend_town_name_button);
-    new_recommend_town.appendChild(recommend_town_close_button);
-    recommend_town_close_button.appendChild(recommend_towns_close_button_img);
+    let delete_notification = false;
 
-    town_name_button_event([recommend_town_name_button], "recommend_towns");
-    town_close_button_event([recommend_town_close_button], [new_recommend_town]);
+    var recommend_towns_notification_conteiner = document.querySelectorAll(".rocommend-towns__no-town-notification");
+    if (recommend_towns_notification_conteiner.length >= 1) {
+        recommend_towns_notification_conteiner[0].className = "rocommend-towns__no-town-notification rocommend-towns__no-town-notification--back";
+        delete_notification = true;
+        let delay = setTimeout(function() {
+            recommend_towns_notification_conteiner[0].remove();
+        }, 200);
+    }
+
+    if (delete_notification) {
+        let delay_2 = setTimeout(function() {
+            recommend_towns.append(new_recommend_town);
+            new_recommend_town.append(recommend_town_name_button);
+            new_recommend_town.append(recommend_town_close_button);
+            recommend_town_close_button.append(recommend_towns_close_button_img);
+        
+            town_name_button_event([recommend_town_name_button], "recommend_towns");
+            town_close_button_event([recommend_town_close_button], [new_recommend_town]);
+
+            return true;
+        }, 200);
+    } else {
+        recommend_towns.append(new_recommend_town);
+        new_recommend_town.append(recommend_town_name_button);
+        new_recommend_town.append(recommend_town_close_button);
+        recommend_town_close_button.append(recommend_towns_close_button_img);
     
-    return true;
-
+        town_name_button_event([recommend_town_name_button], "recommend_towns");
+        town_close_button_event([recommend_town_close_button], [new_recommend_town]);
+        
+        return true;
+    }
 }
+
 
 function add_last_town(town, temp, wind, humidity) {
     let latest_towns_content = document.querySelector(".latest-towns__content-conteiner");
@@ -456,20 +481,42 @@ function town_close_button_event(close_button_arr, town_button_arr) {
         if (close_button_arr.length == town_button_arr.length) {
             for (let i = 0; i < close_button_arr.length; i++) {
                 close_button_arr[i].addEventListener('click', function() {
-                    town_button_arr[i].remove();
-                    var town_button_count = document.querySelectorAll(".recommend-towns__button");
-                    if (town_button_count.length == 3) {
-                        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--3-colums";
-                    } else if (town_button_count.length == 2) {
-                        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--2-colums";
-                    } else if (town_button_count.length == 1) {
-                        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--1-colum";
-                    } else if (town_button_count.length == 0) {
-                        console.log("нет элементов")
-                    }
+                    remove_recommend_towns_element(town_button_arr[i]);
                 });
             }
         }
+    }
+}
+
+function remove_recommend_towns_element(element) {
+    element.remove();
+    var town_button_count = document.querySelectorAll(".recommend-towns__button");
+    if (town_button_count.length == 3) {
+        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--3-colums";
+    } else if (town_button_count.length == 2) {
+        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--2-colums";
+    } else if (town_button_count.length == 1) {
+        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--1-colum";
+    } else if (town_button_count.length == 0) {
+        let recommend_towns_notification_conteiner = document.createElement("p");
+        recommend_towns_notification_conteiner.className = "rocommend-towns__no-town-notification";
+        recommend_towns_notification_conteiner.textContent = "Нет рекомендованных городов";
+        recommend_towns_elements.append(recommend_towns_notification_conteiner);
+    }
+}
+
+function remove_latest_towns_element(element) {
+    element.remove();
+    const latest_towns_content = document.querySelector(".latest-towns__content-conteiner");
+    var town_button_count = document.querySelectorAll(".latest-towns__town-button");
+    if (town_button_count.length == 3) {
+        latest_towns_content.className = "latest-towns__content-conteiner latest-towns__content-conteiner--3-colums";
+    } else if (town_button_count.length == 2) {
+        latest_towns_content.className = "latest-towns__content-conteiner latest-towns__content-conteiner--2-colums";
+    } else if (town_button_count.length == 1) {
+        latest_towns_content.className = "latest-towns__content-conteiner latest-towns__content-conteiner--2-colums";
+    } else if (town_button_count.length == 0) {
+        latest_towns_content.parentElement.style = "display: none;";
     }
 }
 
@@ -484,7 +531,7 @@ function town_name_button_event(town_button_arr, button_type) {
                     let search_input = document.querySelector("#search_input");
                     search_input.value = place;
                     clearTimeout(delay);
-                    remove_indicate_menu();
+                    remove_indicate_menu(true);
                     display_weather(place);
                 }
                 weather_function = true;
@@ -505,30 +552,31 @@ function town_name_button_event(town_button_arr, button_type) {
                     }, 250);
                 }
             });
-            element.addEventListener("touchend", function(event) {
-                clearTimeout(delay);
-            });
             element.addEventListener("blur", function() {
                 clearTimeout(delay);
-                remove_indicate_menu();
+                remove_indicate_menu(false);
                 weather_function = true;
             });
         }); 
     }
 }
-function remove_indicate_menu() {
+function remove_indicate_menu(event) {
     var indicate_menu_elements = document.querySelectorAll(".indicate-menu");
-    if (indicate_menu_elements) {
+    if (indicate_menu_elements.length >= 1) {
         indicate_menu_elements.forEach(function(element) {
-            element.className = "indicate-menu indicate-menu--remove-animation";
-            let remove_delay = setTimeout(function() {
-                element.remove();
-            }, 300);
+            if (!event) {
+                element.className = "indicate-menu indicate-menu--remove-animation";
+                let remove_delay = setTimeout(function() {
+                    element.remove();
+                }, 300);
+            } else {
+                element.remove(); 
+            }
         });
     }
 }
 function indicate_menu_add(element, event, device_mode, button_type) {
-    remove_indicate_menu();
+    remove_indicate_menu(false);
     let indicate_menu = document.createElement("div");
     indicate_menu.className = "indicate-menu";
     let indicate_menu_romove_button = document.createElement("button");
@@ -556,13 +604,15 @@ function indicate_menu_add(element, event, device_mode, button_type) {
     indicate_menu.append(indicate_menu_search_button);
     
     indicate_menu_romove_button.addEventListener("click", function() {
+        remove_indicate_menu(true);
         if (button_type == "latest_towns") {
-            element.remove();
+            remove_latest_towns_element(element);
         } else if (button_type == "recommend_towns") {
-            element.parentElement.remove();
+            remove_recommend_towns_element(element.parentElement);
         }
     });
     indicate_menu_search_button.addEventListener("click", function() {
+        remove_indicate_menu(true);
         let search_place = element.value;
         let search_input = document.querySelector("#search_input");
         search_input.value = search_place;

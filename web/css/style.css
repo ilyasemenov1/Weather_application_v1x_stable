@@ -410,6 +410,36 @@ main {
     box-shadow: 0px 3px 18px #0000001f;
     transform: translateY(-3px);
 }
+.rocommend-towns__no-town-notification {
+    position: relative;
+    top: 7px;
+    margin: 70px auto 0 auto;
+    text-align: center;
+    font-size: clamp(20px, 5vw, 24px);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 600;
+    color: #000000dc;
+    animation-name: main_section_app;
+    animation-duration: .2s;
+    animation-iteration-count: 1;
+}
+.rocommend-towns__no-town-notification--back {
+    animation-name: main_section_back;
+    animation-duration: .2s;
+    animation-iteration-count: 1;
+}
+.rocommend-towns__no-town-notification::before {
+    position: absolute;
+    content: "";
+    top: calc(clamp(60px, 14vw, 70px) * -1);
+    left: calc(50% - 30px);
+    width: clamp(50px, 12vw, 60px);
+    height: clamp(50px, 12vw, 60px);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url("../svg/town_icon.svg");
+}
 .weather-template {
     display: grid;
     display: none;

@@ -28,8 +28,6 @@ async function display_weather(place) {
     if (is_online()) {
 
         if (place) {
-            no_connection.className = "no-connection-notification no-connection-notification--disabled";
-
             let weather_template = document.querySelector(".weather-template");
 
             weather_template.style = "display: grid;";
@@ -113,6 +111,8 @@ function print_weather_info(par) {
         weather_template.className = "weather-template";
         add_new_town.style = "display: none";
         no_connection.style = "display: none;";
+        town_not_found.style = "display: none;";
+        town_not_found_label.textContent = "";
         enter_town_notification.style = "display: none;";
         click_counter = hide_add_new_town_button();
         latest_towns.style = "display: none";
@@ -129,7 +129,9 @@ function print_weather_info(par) {
         town_not_found.style = "display: none;";
         town_not_found_label.textContent = "";
         enter_town_notification.style = "display: none;";
-        latest_towns.style = "display: grid";
+        if (last_places_array.length >= 1) {
+            latest_towns.style = "display: grid";
+        }
         search_animation.className = "search__animation-conteiner  search__animation-conteiner--disactive";
         search_anable = false;
     }
@@ -505,8 +507,10 @@ function remove_recommend_towns_element(element) {
     }
 }
 
-function remove_latest_towns_element(element) {
+function remove_latest_towns_element(element, index) {
     element.remove();
+    last_places_array.splice(index, 1);
+
     const latest_towns_content = document.querySelector(".latest-towns__content-conteiner");
     var town_button_count = document.querySelectorAll(".latest-towns__town-button");
     if (town_button_count.length == 3) {
@@ -606,7 +610,16 @@ function indicate_menu_add(element, event, device_mode, button_type) {
     indicate_menu_romove_button.addEventListener("click", function() {
         remove_indicate_menu(true);
         if (button_type == "latest_towns") {
-            remove_latest_towns_element(element);
+            var latest_town_button = document.querySelectorAll(".latest-towns__town-button");
+            let index = 0;
+
+            for (let i = 0; i >= latest_town_button.length; i++) {
+                if (element == latest_town_button[i]) {
+                    index = i;
+                }
+            }
+
+            remove_latest_towns_element(element, index);
         } else if (button_type == "recommend_towns") {
             remove_recommend_towns_element(element.parentElement);
         }

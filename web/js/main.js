@@ -697,7 +697,7 @@ function town_name_button_event(town_button_arr, button_type) {
                     weather_function = true;
                     delay = setTimeout(function() {
                         if (element.className == "recommend-towns__town-button-name") {
-                            indicate_menu_add(element.parentElement, button_type);
+                            indicate_menu_add(element, button_type);
                         } else {
                             indicate_menu_add(element, button_type);
                         }
@@ -711,7 +711,7 @@ function town_name_button_event(town_button_arr, button_type) {
                     weather_function = true;
                     delay = setTimeout(function() {
                         if (element.className == "recommend-towns__town-button-name") {
-                            indicate_menu_add(element.parentElement, button_type);
+                            indicate_menu_add(element, button_type);
                         } else {
                             indicate_menu_add(element, button_type);
                         }
@@ -770,7 +770,11 @@ function indicate_menu_add(element, button_type) {
     indicate_menu.append(indicate_menu_romove_button);
     indicate_menu.append(indicate_menu_search_button);
 
-    indicate_menu_page_position(element, indicate_menu, 11, 15);
+    if (button_type == "latest_towns") {
+        indicate_menu_page_position(element, indicate_menu, 11, 15);
+    } else if (button_type == "recommend_towns") {
+        indicate_menu_page_position(element.parentElement, indicate_menu, 11, 15);
+    }
     
     indicate_menu_romove_button.addEventListener("click", function() {
         remove_indicate_menu(true);
@@ -786,7 +790,7 @@ function indicate_menu_add(element, button_type) {
 
             remove_latest_towns_element(element, index);
         } else if (button_type == "recommend_towns") {
-            remove_recommend_towns_element(element);
+            remove_recommend_towns_element(element.parentElement);
         }
     });
     indicate_menu_search_button.addEventListener("click", function() {

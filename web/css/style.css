@@ -1,6 +1,6 @@
 body {
     margin: 0;
-    padding: 0;
+    padding: 20px 0 0 0;
 }
 main {
     position: relative;
@@ -9,7 +9,7 @@ main {
     grid-row-gap: clamp(20px, 5vw, 30px);
     max-width: 830px;
     padding: 15px;
-    margin: 20px auto 0 auto;
+    margin: 0 auto;
 }
 .search {
     display: grid;
@@ -20,6 +20,73 @@ main {
     width: 100%;
     box-sizing: border-box;
     z-index: 50;
+}
+.display-dark {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0000001c;
+    animation: display-dark-animation;
+    animation-duration: .2s;
+    animation-timing-function: ease;
+    animation-iteration-count: 1;
+    z-index: 49;
+}
+.display-dark--disactive-animation {
+    animation: display-dark-disactive-animation;
+    animation-duration: .2s;
+    animation-timing-function: ease;
+    animation-iteration-count: 1;
+}
+.display-dark--disactive {
+    display: none;
+}
+.search__modal-menu {
+    top: 100px;
+    position: absolute;
+    width: calc(100% - 30px);
+    max-width: 830px;
+    animation-name: pop_up_app;
+    animation-duration: .2s;
+    animation-timing-function: ease;
+}
+.search__modal-menu--disactive-animation {
+    animation-name: pop_up_remove_transform;
+    animation-duration: .1s;
+    animation-timing-function: ease;
+}
+.search__modal-menu--disactive {
+    display: none;
+}
+.modal-menu {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 0;
+    border-radius: 20px;
+    background: #ffffff;
+    box-shadow: 0px 0px 18px #0000001f;
+    transition: .2s ease;
+}
+.modal-menu__town-button {
+    position: relative;
+    min-height: 50px;
+    padding: 15px 35px;
+    margin: 0;
+    border: none;
+    outline: none;
+    background: #ffffff;
+    text-align: left;
+    font-family: "Roboto", sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #000000d7;
+    z-index: 100;
+}
+.modal-menu__town-button:hover {
+    cursor: pointer;
+    background: #ebebeb9b;
 }
 .search-background {
     display: none;
@@ -77,6 +144,7 @@ main {
     box-sizing: border-box;
     background: none;
     border: none;
+    border-radius: 15px;
     outline: none;
     text-align: center;
     color: #000000d7;
@@ -124,6 +192,13 @@ main {
     animation-name: app_search;
     animation-duration: .1s;
     animation-direction: ease;
+}
+.search-scroll .search__modal-menu {
+    top: 84px;
+    width: 100%;
+}
+.search-scroll .search__modal-menu--disactive-animation {
+    animation-name: pop_up_remove_transform;
 }
 .search-scroll__input-conteiner {
     margin: 0;
@@ -243,7 +318,9 @@ main {
 .weather-main__status::first-letter,
 .recommend-towns__add-button--content::first-letter,
 .weather-other__label::first-letter,
-.add-new-town__button--text::first-letter {
+.add-new-town__button--text::first-letter,
+.latest-towns__town-name-button::first-letter,
+.modal-menu__town-button::first-letter {
     text-transform: uppercase;
 }
 .recommend-towns {
@@ -274,6 +351,12 @@ main {
     border-radius: 20px;
     transition: .2s ease;
     box-sizing: border-box;
+    user-select: none; 
+}
+.recommend-towns__button--append-animation {
+    animation-name: pop_up_app;
+    animation-duration: .2s;
+    animation-timing-function: ease;
 }
 .latest-towns__town-button {
     padding: 10px 16px;
@@ -589,7 +672,7 @@ main {
     justify-content: center;
     align-items: center;
     position: absolute;
-    top: 75px;
+    top: 90px;
     left: calc(50% - 25px);
     width: 45px;
     height: 45px;
@@ -822,18 +905,71 @@ main {
     left: 0;
     display: flex;
     flex-direction: column;
-    padding: 8px 0;
-    border-radius: 15px;
+    padding: 12px 5px;
+    border-radius: 18px;
     background: #ffffff;
     box-shadow: 0px 3px 18px #0000001f;
     animation-duration: .3s;
-    animation-name: pop_up_app;
     animation-iteration-count: 1;
 }
-.indicate-menu--remove-animation {
+.right-animation {
+    animation-name: pop_up_app_right;
+}
+.bottom-animation {
+    animation-name: pop_up_app_bottom;
+}
+.top-animation {
+    animation-name: pop_up_app_top; 
+}
+.left-animation {
+    animation-name: pop_up_app_left; 
+}
+.right-animation::after,
+.bottom-animation::after,
+.top-animation::after,
+.left-animation::after,
+.right-animation-remove::after,
+.bottom-animation-remove::after,
+.top-animation-remove::after,
+.left-animation-remove::after {
+    position: absolute;
+    content: "";
+    border: 10px solid transparent;
     animation-duration: .3s;
-    animation-name: pop_up_remove;
     animation-iteration-count: 1;
+}
+.right-animation::after,
+.right-animation-remove::after {
+    left: -20px;
+    top: 15px;
+    border-right: 10px solid #ffffff;
+}
+.bottom-animation::after,
+.bottom-animation-remove::after {
+    left: 20px;
+    top: -20px;
+    border-bottom: 10px solid #ffffff; 
+}
+.top-animation::after,
+.top-animation-remove::after {
+    left: 20px;
+    top: 100%;
+    border-top: 10px solid #ffffff; 
+}
+.left-animation::after,
+.left-animation-remove::after {
+    left: 100%;
+    top: 15px;
+    border-left: 10px solid #ffffff;
+}
+.right-animation-remove::after,
+.bottom-animation-remove::after,
+.top-animation-remove::after {
+    animation-name: pop_up_remove;
+}
+
+.indicate-menu--remove-animation {
+    animation-name: pop_up_remove;
 }
 .indicate-menu__remove-button,
 .indicate-menu__search-button {
@@ -842,6 +978,7 @@ main {
     padding: 5px 25px 5px 50px;
     margin: 0;
     border: none;
+    border-radius: 5px;
     outline: none;
     text-align: left;
     font-family: "Roboto", sans-serif;

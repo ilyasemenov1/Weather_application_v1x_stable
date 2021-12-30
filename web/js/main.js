@@ -14,11 +14,14 @@ const search_input = document.querySelector("#search_input");
 const latest_towns = document.querySelector(".latest-towns");
 const recommend_towns_elements = document.querySelector("#recommend_towns_elements");
 const search_animation = document.querySelector("#search_animation");
+const search_modal_menu = document.querySelector(".search__modal-menu");
 const key = 'b52345d6529f9d1ac5a2c583a5f89e31';
 var all_last_places_array = [];
 var last_places_array = [];
 let click_counter = 0;
 let search_anable = true;
+let search_input_focused = false;
+let search_delay = 0;
 
 async function display_weather(place) {
     print_weather_info(true);
@@ -28,11 +31,14 @@ async function display_weather(place) {
     if (is_online()) {
 
         if (place) {
+
+            search_input.value = place;
+
             let weather_template = document.querySelector(".weather-template");
 
             weather_template.style = "display: grid;";
 
-            let delay = setTimeout(function() {
+            search_delay = setTimeout(function() {
                 search_animation.className = "search__animation-conteiner";
             },250);
 
@@ -71,14 +77,14 @@ async function display_weather(place) {
                             i++;
                         });
                 
-                        clearTimeout(delay);
+                        clearTimeout(search_delay);
                         search_animation.className = "search__animation-conteiner  search__animation-conteiner--disactive";
                         weather_template.className = "weather-template weather-template--active";
                     }
                 })
                 .catch(function() {
                     if (search_anable) {
-                        clearTimeout(delay);
+                        clearTimeout(search_delay);
                         search_animation.className = "search__animation-conteiner  search__animation-conteiner--disactive";
                 
                         town_not_found_label.textContent = " \"" + place + "\" ";
@@ -132,6 +138,7 @@ function print_weather_info(par) {
         if (last_places_array.length >= 1) {
             latest_towns.style = "display: grid";
         }
+        clearTimeout(search_delay);
         search_animation.className = "search__animation-conteiner  search__animation-conteiner--disactive";
         search_anable = false;
     }
@@ -139,43 +146,19 @@ function print_weather_info(par) {
 
 function document_events() {
 
-    let search_input_conteiner = document.querySelector(".search__input-conteiner");
+    search_events();
 
-    let search_button = document.querySelector("#search_button");
-
-    search_button.addEventListener('click', function() {
-
-        let place = document.getElementById("search_input").value;
-
-        display_weather(place);
-    });
-
-    search_button.addEventListener('focus', function() {
-        search_input_conteiner.style = "box-shadow: 0px 0px 18px #0000001f;";
-    });
-    
-    search_button.addEventListener('blur', function() {
-        search_input_conteiner.style = "";
-    });
-
-    let search_input = document.querySelector("#search_input");
-
-    search_input.addEventListener('keydown', function(event) {
-        if (event.keyCode == 13) {
-            let place = document.getElementById("search_input").value;
-            display_weather(place);
-        }
+    window.addEventListener("keydown", function(event) {
         if (event.keyCode == 27) {
-            print_weather_info(false);
+            if (!search_input_focused) {
+                print_weather_info(false);
+            }
         }
-    });
-
-    search_input.addEventListener('focus', function() {
-        search_input_conteiner.style = "box-shadow: 0px 0px 18px #0000001f;";
-    });
-    
-    search_input.addEventListener('blur', function() {
-        search_input_conteiner.style = "";
+        if (event.keyCode == 111) {
+            let delay = this.setTimeout(function() {
+                search_input.focus();
+            }, 10);
+        }
     });
 
     let refresh_button = document.querySelector("#refresh_button");
@@ -183,8 +166,6 @@ function document_events() {
     refresh_button.addEventListener('click', function() {
 
         print_weather_info(true);
-
-        search_input.value = all_last_places_array[0];
 
         display_weather(all_last_places_array[0]);
     });
@@ -245,6 +226,152 @@ function document_events() {
             click_counter = hide_add_new_town_button();
         }
     });
+}
+
+function search_events() {
+    let search_input_conteiner = document.querySelector(".search__input-conteiner");
+    let search_input = document.querySelector("#search_input");
+    let search_button = document.querySelector("#search_button");
+    let search_modal_menu_remove_index = false;
+
+    search_button.addEventListener('click', function() {
+
+        let place = document.getElementById("search_input").value;
+        display_weather(place);
+    });
+
+    search_button.addEventListener('focus', function() {
+        search_input_conteiner.style = "box-shadow: 0px 0px 18px #0000001f;";
+    });
+    
+    search_button.addEventListener('blur', function() {
+        search_input_conteiner.style = "";
+    });
+
+    search_input.addEventListener('keydown', function(event) {
+        if (event.keyCode == 13) {
+            search_input.blur();
+            let place = document.getElementById("search_input").value;
+            display_weather(place);
+        }
+        if (event.keyCode == 27) {
+            let delay = setTimeout(function() {
+                search_input.blur();
+            }, 10);
+        }
+        if (event.keyCode == 46) {
+            search_input.value = "";
+        }
+        let delay = setTimeout(function() {
+            search_modal_menu_remove_index = recommend_towns_for_search(document.getElementById("search_input").value, search_modal_menu_remove_index);
+        }, 50);
+    });
+
+    let display_dark = document.querySelector(".display-dark");
+
+    search_input.addEventListener('focus', function() {
+        search_input_focused = true;
+
+        search_input_conteiner.style = "box-shadow: 0px 0px 18px #0000001f;";
+        display_dark.className = "display-dark";
+        document.body.style = "max-height: 100vh; overflow: hidden;";
+        search_modal_menu_remove_index = recommend_towns_for_search(document.getElementById("search_input").value, search_modal_menu_remove_index);
+    });
+    
+    search_input.addEventListener('blur', function() {
+        search_input_focused = false;
+        search_input_conteiner.style = "";
+        display_dark.className = "display-dark display-dark--disactive-animation";
+
+        if (search_modal_menu_remove_index) {
+            search_modal_menu.className = "search__modal-menu search__modal-menu--disactive-animation";
+            search_modal_menu_remove_index = false;
+        }
+        let delay = setTimeout(function() {
+            display_dark.className = "display-dark display-dark--disactive";
+            search_modal_menu.className = "search__modal-menu search__modal-menu--disactive";
+            document.body.style = "overflow: visible;";
+        }, 100);
+
+    });
+}
+
+function recommend_towns_for_search(place, search_modal_menu_remove_index) {
+    
+    if (place) {
+
+        var search_towns_arr = ['всеволожск', "санкт-петербург", "москва", "минск", "севастополь", "екатеренбург", "новосибирск"];
+        var append_search_towns = [];
+
+        let town_counter = 0;
+    
+        for (let i = 0; i < search_towns_arr.length; i++) {
+            if (search_towns_arr[i].indexOf(place) > -1) {
+                append_search_towns.push(search_towns_arr[i]);
+                town_counter++;
+            }
+        }
+        if (!town_counter) {
+            if (search_modal_menu_remove_index) {
+                search_modal_menu.className = "search__modal-menu search__modal-menu--disactive-animation";
+                search_modal_menu_remove_index = false;
+            }
+
+            var search_button_remove = document.querySelectorAll(".modal-menu__town-button");
+            if (search_button_remove.length > 0) {
+                for (let i = 0; i < search_button_remove.length; i++) {
+                    let delay = setTimeout(function() {
+                        search_button_remove[i].remove();
+                    }, 100);
+                }
+            }
+
+            let delay = setTimeout(function() {
+                search_modal_menu.className = "search__modal-menu search__modal-menu--disactive";
+            }, 100);
+        } else {
+
+            var search_button_remove = document.querySelectorAll(".modal-menu__town-button");
+            if (search_button_remove.length > 0) {
+                for (let i = 0; i < search_button_remove.length; i++) {
+                    search_button_remove[i].remove();
+                }
+            }
+
+            if (!search_modal_menu_remove_index) {
+                search_modal_menu.className = "search__modal-menu";
+                search_modal_menu_remove_index = true;
+            }
+
+            for (let i = 0; i < append_search_towns.length; i++) {
+                let search_button = document.createElement("button");
+                search_button.className = "modal-menu__town-button";
+                search_button.value = append_search_towns[i];
+                search_button.textContent = append_search_towns[i];
+                let modal_menu = document.querySelector(".modal-menu");
+                if (modal_menu) {
+                    modal_menu.append(search_button);
+                }
+
+                search_button.addEventListener("click", function() {
+                    let place = this.value;
+                    display_weather(place);
+
+                    search_modal_menu.className = "search__modal-menu search__modal-menu--disactive";
+                    search_modal_menu_remove_index = false;
+                })
+            }
+        }
+    } else {
+        if (search_modal_menu_remove_index) {
+            search_modal_menu.className = "search__modal-menu search__modal-menu--disactive-animation";
+            search_modal_menu_remove_index = false;
+        }
+        let delay = setTimeout(function() {
+            search_modal_menu.className = "search__modal-menu search__modal-menu--disactive";
+        }, 100);
+    }
+    return search_modal_menu_remove_index;
 }
 
 function show_add_new_town_button() {
@@ -308,7 +435,7 @@ async function new_town_button_event() {
     let recommend_towns = document.querySelector("#recommend_towns_elements");
 
     let new_recommend_town = document.createElement("div");
-    new_recommend_town.className = "recommend-towns__button";
+    new_recommend_town.className = "recommend-towns__button recommend-towns__button--append-animation";
 
     let recommend_town_name_button = document.createElement("button");
     recommend_town_name_button.className = "recommend-towns__town-button-name";
@@ -342,6 +469,12 @@ async function new_town_button_event() {
             town_name_button_event([recommend_town_name_button], "recommend_towns");
             town_close_button_event([recommend_town_close_button], [new_recommend_town]);
 
+            let delay_2 = setTimeout(function() {
+                new_recommend_town.className = "recommend-towns__button";
+            }, 200);
+
+            addendum_new_town_count();
+
             return true;
         }, 200);
     } else {
@@ -353,10 +486,28 @@ async function new_town_button_event() {
         town_name_button_event([recommend_town_name_button], "recommend_towns");
         town_close_button_event([recommend_town_close_button], [new_recommend_town]);
         
+        let delay_2 = setTimeout(function() {
+            new_recommend_town.className = "recommend-towns__button";
+        }, 200);
+
+        addendum_new_town_count();
+
         return true;
     }
 }
 
+function addendum_new_town_count() {
+    let town_button_count = document.querySelectorAll(".recommend-towns__button").length;
+    if (town_button_count >= 4) {
+        recommend_towns_elements.className = "recommend-towns__content-conteiner";
+    } else if (town_button_count == 3) {
+        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--3-colums";
+    } else if (town_button_count == 2) {
+        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--2-colums";
+    } else if (town_button_count == 1) {
+        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--1-colum";
+    }
+}
 
 function add_last_town(town, temp, wind, humidity) {
     let latest_towns_content = document.querySelector(".latest-towns__content-conteiner");
@@ -533,29 +684,41 @@ function town_name_button_event(town_button_arr, button_type) {
                 if (weather_function) {
                     let place = this.value;
                     let search_input = document.querySelector("#search_input");
-                    search_input.value = place;
                     clearTimeout(delay);
                     remove_indicate_menu(true);
                     display_weather(place);
                 }
                 weather_function = true;
             });
-            element.addEventListener("mousedown", function(event) {
-                if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+                element.addEventListener("mousedown", function() {
+                    clearTimeout(delay);
+                    remove_indicate_menu(false);
+                    weather_function = true;
                     delay = setTimeout(function() {
-                        indicate_menu_add(element, event, "pc", button_type);
+                        if (element.className == "recommend-towns__town-button-name") {
+                            indicate_menu_add(element.parentElement, button_type);
+                        } else {
+                            indicate_menu_add(element, button_type);
+                        }
                         weather_function = false;
                     }, 250);
-                }
-            });
-            element.addEventListener("touchstart", function(event) {
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+                });
+            } else {
+                element.addEventListener("focus", function() {
+                    clearTimeout(delay);
+                    remove_indicate_menu(false);
+                    weather_function = true;
                     delay = setTimeout(function() {
-                        indicate_menu_add(element, event, "mobile", button_type);
+                        if (element.className == "recommend-towns__town-button-name") {
+                            indicate_menu_add(element.parentElement, button_type);
+                        } else {
+                            indicate_menu_add(element, button_type);
+                        }
                         weather_function = false;
-                    }, 250);
-                }
-            });
+                    }, 100);
+                });
+            }
             element.addEventListener("blur", function() {
                 clearTimeout(delay);
                 remove_indicate_menu(false);
@@ -569,7 +732,20 @@ function remove_indicate_menu(event) {
     if (indicate_menu_elements.length >= 1) {
         indicate_menu_elements.forEach(function(element) {
             if (!event) {
-                element.className = "indicate-menu indicate-menu--remove-animation";
+
+                let element_remove_className = "";
+
+                if (element.className.indexOf("top-animation") != -1) {
+                    element_remove_className = "top-animation-remove";
+                } else if (element.className.indexOf("bottom-animation") != -1) {
+                    element_remove_className = "bottom-animation-remove";
+                } else if (element.className.indexOf("right-animation") != -1) {
+                    element_remove_className = "right-animation-remove";
+                } else if (element.className.indexOf("left-animation") != -1) {
+                    element_remove_className = "left-animation-remove";
+                }
+
+                element.className = "indicate-menu indicate-menu--remove-animation " + element_remove_className;
                 let remove_delay = setTimeout(function() {
                     element.remove();
                 }, 300);
@@ -579,7 +755,7 @@ function remove_indicate_menu(event) {
         });
     }
 }
-function indicate_menu_add(element, event, device_mode, button_type) {
+function indicate_menu_add(element, button_type) {
     remove_indicate_menu(false);
     let indicate_menu = document.createElement("div");
     indicate_menu.className = "indicate-menu";
@@ -590,22 +766,11 @@ function indicate_menu_add(element, event, device_mode, button_type) {
     indicate_menu_search_button.className = "indicate-menu__search-button";
     indicate_menu_search_button.innerHTML = "Поиск";
 
-    let cord_Y = 0;
-    let cord_X = 0;
-
-    if (device_mode == "pc") {
-        cord_Y = event.clientY + window.pageYOffset;
-        cord_X = event.clientX;
-    } else if (device_mode == "mobile") {
-        cord_Y = event.changedTouches[0].clientY  + window.pageYOffset;
-        cord_X = event.changedTouches[0].clientX;
-    }
-
     document.body.append(indicate_menu);
-    indicate_menu.style = "top: " + cord_Y + "px; left: " + cord_X + "px;";
-
     indicate_menu.append(indicate_menu_romove_button);
     indicate_menu.append(indicate_menu_search_button);
+
+    indicate_menu_page_position(element, indicate_menu, 11, 15);
     
     indicate_menu_romove_button.addEventListener("click", function() {
         remove_indicate_menu(true);
@@ -621,16 +786,56 @@ function indicate_menu_add(element, event, device_mode, button_type) {
 
             remove_latest_towns_element(element, index);
         } else if (button_type == "recommend_towns") {
-            remove_recommend_towns_element(element.parentElement);
+            remove_recommend_towns_element(element);
         }
     });
     indicate_menu_search_button.addEventListener("click", function() {
         remove_indicate_menu(true);
         let search_place = element.value;
         let search_input = document.querySelector("#search_input");
-        search_input.value = search_place;
         display_weather(search_place);
     });
+}
+function indicate_menu_page_position(element, indicate_menu, element_margin, page_padding) {
+    const window_width = window.innerWidth;
+    const window_height = window.innerHeight;
+    const window_scroll = window.pageYOffset;
+    const element_Y = element.getBoundingClientRect().top;
+    const element_X = element.getBoundingClientRect().left;
+    const element_width = element.clientWidth;
+    const element_height = element.clientHeight;
+    const indicate_menu_height = indicate_menu.offsetHeight;
+    const indicate_menu_width = indicate_menu.offsetWidth;
+
+    let search_height = document.querySelector(".search").clientHeight + 20;
+
+    if (window_scroll > 35) {
+        search_height = document.querySelector(".search").clientHeight;
+    }
+
+    const left_border_distanse = element_X - (indicate_menu_width + element_margin);
+    const right_border_distanse = window_width - (element_X + element_width + element_margin + indicate_menu_width);
+    const top_height = element_Y  - element_margin - indicate_menu_height - search_height;
+    const bottom_height = window_height - element_Y - element_height - element_margin - indicate_menu_height - search_height;
+
+    if (bottom_height < page_padding && top_height > page_padding) {
+        indicate_menu.className = "indicate-menu top-animation";
+        indicate_menu.style = "top: " + (element_Y - element_margin - indicate_menu_height + window_scroll) + "px; left: " + element_X + "px;";
+    } else if (right_border_distanse < page_padding && bottom_height < page_padding && top_height > page_padding && left_border_distanse < page_padding) {
+        indicate_menu.className = "indicate-menu top-animation";
+        indicate_menu.style = "top: " + (element_Y - element_margin - indicate_menu_height + window_scroll) + "px; left: " + element_X + "px;";
+    } else if (right_border_distanse < page_padding && bottom_height > page_padding && left_border_distanse < page_padding) {
+        indicate_menu.className = "indicate-menu bottom-animation";
+        indicate_menu.style = "top: " + (element_Y + element_height + element_margin + window_scroll) + "px; left: " + element_X + "px;";
+    } else if (right_border_distanse > page_padding) {
+        indicate_menu.className = "indicate-menu right-animation";
+        indicate_menu.style = "top: " + (element_Y + window_scroll) + "px; left: " + (element_X + element_width + element_margin) + "px;";
+    } else if (left_border_distanse > page_padding) {
+        indicate_menu.className = "indicate-menu left-animation";
+        indicate_menu.style = "top: " + (element_Y + window_scroll) + "px; left: " + (element_X - indicate_menu_width - element_margin) + "px;";
+    } else {
+        indicate_menu.remove();
+    }
 }
 function is_online() {
     if (navigator.onLine) {

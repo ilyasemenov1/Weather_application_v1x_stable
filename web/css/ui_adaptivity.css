@@ -7,6 +7,22 @@
     .recommend-towns__close-button {
         display: none;
     }
+    .recommend-towns__town-button-name {
+        width: 100%;
+        margin: 0px;
+    }
+    .search-scroll .search__modal-menu {
+        top: 76px;
+        width: 100%;
+        animation-name: display-dark-animation;
+    }
+    .search-scroll .search__modal-menu--disactive-animation {
+        animation-name: pop_up_remove;
+    }
+    .search-scroll .modal-menu {
+        border-radius: 0px;
+        box-shadow: none;
+    }
 }
 .latest-towns__content-conteiner--3-colums {
     grid-template-columns: repeat(3, 1fr);
@@ -90,6 +106,9 @@
         width: 46px;
         height: 46px;
     }
+    .search__modal-menu {
+        top: 90px;
+    }
 }
 .latest-towns__content-conteiner--1-colum {
     grid-template-columns: repeat(1, 1fr);
@@ -116,6 +135,12 @@
     }
     .search {
         grid-column-gap: 15px;
+    }
+    .search__modal-menu {
+        top: 88px;
+    }
+    .search-scroll .search__modal-menu {
+        top: 70px;
     }
     .recommend-towns__content-conteiner,
     .latest-towns__content-conteiner {

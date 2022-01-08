@@ -23,6 +23,10 @@
         border-radius: 0px;
         box-shadow: none;
     }
+    .weather-forecast__content {
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(2, 1fr);
+    }
 }
 .latest-towns__content-conteiner--3-colums {
     grid-template-columns: repeat(3, 1fr);
@@ -77,6 +81,12 @@
     }
     .weather-other {
         grid-row-gap: 25px;
+    }
+}
+@media (max-width: 610px) {
+    .weather-forecast__content {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: repeat(3, 1fr);
     }
 }
 @media(max-width: 490px) {
@@ -145,5 +155,9 @@
     .recommend-towns__content-conteiner,
     .latest-towns__content-conteiner {
         padding: 0 0 0 10px;
+    }
+    .weather-forecast__content {
+        grid-template-columns: repeat(1, 1fr);
+        grid-template-rows: repeat(5, 1fr);
     }
 }

@@ -45,21 +45,24 @@ async function display_weather(place) {
             search_anable = true;
 
             try {
-                fetch("https://api.openweathermap.org/data/2.5/weather?q=" + place + ",&appid=" + key + "&lang=ru")  
+                fetch("https://api.openweathermap.org/data/2.5/forecast?q=" + place + ",&appid=" + key + "&lang=ru&cnt=6")  
                 .then(function(resp) { return resp.json() })
                 .then(function(data) {
+
+                    const day_0_weather = data.list[0];
+
                     if (search_anable) {
-                        let temp = Math.round(parseFloat(data.main.temp)-273.15);
+                        let temp = Math.round(parseFloat(day_0_weather.main.temp)-273.15);
     
-                        let temp_min = Math.round(parseFloat(data.main.temp_min)-273.15);
-                        let temp_max = Math.round(parseFloat(data.main.temp_max)-273.15);
+                        let temp_min = Math.round(parseFloat(day_0_weather.main.temp_min)-273.15);
+                        let temp_max = Math.round(parseFloat(day_0_weather.main.temp_max)-273.15);
                         let temp_min_max = temp_min  + "/" + temp_max;
         
-                        let wind = Math.round(data.wind.speed);
+                        let wind = Math.round(day_0_weather.wind.speed);
         
-                        let humidity = data.main.humidity;
+                        let humidity = day_0_weather.main.humidity;
         
-                        let status = data.weather[0].description;
+                        let status = day_0_weather.weather[0].description;
         
                         var weather_info_data = [temp, status, wind, temp_min_max, humidity];
         
@@ -77,6 +80,61 @@ async function display_weather(place) {
                             i++;
                         });
                 
+                        var today_date = new Date();
+                        let day_tomorrow = today_date.getDay();
+                        day_tomorrow++;
+
+                        let day_of_week = "";
+
+                        var forecast_week_day = document.querySelectorAll(".forecast-day__label");
+
+                        let day_index = 0
+
+                        if (day_tomorrow > 6) {
+                            day_tomorrow = 0;
+                        }
+
+                        for (let i = 0; i < forecast_week_day.length; i++) {
+
+                            if (day_tomorrow + day_index == 0) {
+                                day_of_week = "Воскресенье";
+                            } else if (day_tomorrow + day_index == 1) {
+                                day_of_week = "Понедельник";
+                            } else if (day_tomorrow + day_index == 2) {
+                                day_of_week = "Вторник";
+                            } else if (day_tomorrow + day_index == 3) {
+                                day_of_week = "Среда";
+                            } else if (day_tomorrow + day_index == 4) {
+                                day_of_week = "Четрерг";
+                            } else if (day_tomorrow + day_index == 5) {
+                                day_of_week = "Пятница";
+                            } else if (day_tomorrow + day_index == 6) {
+                                day_of_week = "Суббота";
+                            }
+                            
+                            if (i != 0) {
+                                forecast_week_day[i].textContent = day_of_week;
+                            }
+
+                            day_index++;
+
+                            if (day_index + day_tomorrow >= 6) {
+                                day_index = 0;
+                                day_tomorrow = 0;
+                            }
+                        }
+
+                        var forecast_day_temp_arr = document.querySelectorAll(".forecast-day__temp");
+                        var forecast_day_status_arr = document.querySelectorAll(".forecast-day__status");
+                        var forecast_day_wind_arr = document.querySelectorAll(".forecast-day__wind");
+                        var forecast_day_humidity_arr = document.querySelectorAll(".forecast-day__humidity");
+
+                        for (let i = 0; i < forecast_day_temp_arr.length; i++) {
+                            forecast_day_temp_arr[i].textContent = Math.round(parseFloat(data.list[i+1].main.temp)-273.15);
+                            forecast_day_status_arr[i].style = "background-image: url(../img/weather_icons/" + data.list[i+1].weather[0].icon + ".png)";
+                            forecast_day_wind_arr[i].textContent = Math.round(data.list[i+1].wind.speed);
+                            forecast_day_humidity_arr[i].textContent = data.list[i+1].main.humidity;
+                        }
                         clearTimeout(search_delay);
                         search_animation.className = "search__animation-conteiner  search__animation-conteiner--disactive";
                         weather_template.className = "weather-template weather-template--active";
@@ -86,7 +144,7 @@ async function display_weather(place) {
                     if (search_anable) {
                         clearTimeout(search_delay);
                         search_animation.className = "search__animation-conteiner  search__animation-conteiner--disactive";
-                
+
                         town_not_found_label.textContent = " \"" + place + "\" ";
                         town_not_found.style = "display: flex;";
                     }
@@ -403,29 +461,39 @@ function hide_add_new_town_button() {
 
 async function new_town_button_event() {
     let new_town_button = document.querySelector("#new_town_button");
-    if (new_town_button.id != "new_town_button_active") {
+    if (new_town_button.className.indexOf("add-new-town__button--active") == -1) {
         let new_town = document.getElementById("new_town_input").value;
         if (new_town) {
             let delay = setTimeout(function() {
                 new_town_button.className = "add-new-town__button add-new-town__button--active";
-                new_town_button.id = "new_town_button_active";
             }, 200);
+            var recommend_towns_towns = document.querySelectorAll(".recommend-towns__town-button-name");
+            let add_town_index = 1;
 
-            fetch("https://api.openweathermap.org/data/2.5/weather?q=" + new_town + ",&appid=" + key + "&lang=ru")  
-            .then(function(resp) { return resp.json() })
-            .then(function(data) {
-                if (data.cod == "200") {
-                    clearTimeout(delay);
-                    if (addendum_new_town(new_town)) {
-                        new_town_button.className = "add-new-town__button ";
-                        new_town_button.id = "new_town_button";
-                    }
-                } else {
-                    clearTimeout(delay);
-                    new_town_button.className = "add-new-town__button ";
-                    new_town_button.id = "new_town_button";
+            for (let i = 0; i < recommend_towns_towns.length; i++) {
+                if (recommend_towns_towns[i].value == new_town) {
+                    add_town_index = 0;
                 }
-            })
+            }
+            if (add_town_index) {
+                fetch("https://api.openweathermap.org/data/2.5/weather?q=" + new_town + ",&appid=" + key + "&lang=ru")  
+                .then(function(resp) { return resp.json() })
+                .then(function(data) {
+                    if (data.cod == "200") {
+    
+                        clearTimeout(delay);
+                        addendum_new_town(new_town)
+                        new_town_button.className = "add-new-town__button ";
+                        
+                    } else {
+                        clearTimeout(delay);
+                        new_town_button.className = "add-new-town__button ";
+                    }
+                })
+            } else {
+                clearTimeout(delay);
+                new_town_button.className = "add-new-town__button ";
+            }
         }
     }
 } 
@@ -474,8 +542,6 @@ async function new_town_button_event() {
             }, 200);
 
             addendum_new_town_count();
-
-            return true;
         }, 200);
     } else {
         recommend_towns.append(new_recommend_town);
@@ -491,8 +557,6 @@ async function new_town_button_event() {
         }, 200);
 
         addendum_new_town_count();
-
-        return true;
     }
 }
 
@@ -696,11 +760,7 @@ function town_name_button_event(town_button_arr, button_type) {
                     remove_indicate_menu(false);
                     weather_function = true;
                     delay = setTimeout(function() {
-                        if (element.className == "recommend-towns__town-button-name") {
-                            indicate_menu_add(element, button_type);
-                        } else {
-                            indicate_menu_add(element, button_type);
-                        }
+                        indicate_menu_add(element, button_type);
                         weather_function = false;
                     }, 250);
                 });
@@ -710,11 +770,7 @@ function town_name_button_event(town_button_arr, button_type) {
                     remove_indicate_menu(false);
                     weather_function = true;
                     delay = setTimeout(function() {
-                        if (element.className == "recommend-towns__town-button-name") {
-                            indicate_menu_add(element, button_type);
-                        } else {
-                            indicate_menu_add(element, button_type);
-                        }
+                        indicate_menu_add(element, button_type);
                         weather_function = false;
                     }, 100);
                 });

@@ -1,6 +1,6 @@
 @keyframes pop_up_app_top {
     0% {
-        transform: translateY(15px) scale(.9);
+        transform: translateY(15px) scale(.85);
         opacity: 0;
     }
     100% {
@@ -10,7 +10,7 @@
 }
 @keyframes pop_up_app_bottom {
     0% {
-        transform: translateY(-15px) scale(.9);
+        transform: translateY(-15px) scale(.85);
         opacity: 0;
     }
     100% {

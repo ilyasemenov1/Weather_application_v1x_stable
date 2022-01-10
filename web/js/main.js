@@ -131,7 +131,7 @@ async function display_weather(place) {
 
                         for (let i = 0; i < forecast_day_temp_arr.length; i++) {
                             forecast_day_temp_arr[i].textContent = Math.round(parseFloat(data.list[i+1].main.temp)-273.15);
-                            forecast_day_status_arr[i].style = "background-image: url(./img/weather_icons/" + data.list[i+1].weather[0].icon + ".png)";
+                            forecast_day_status_arr[i].style = "background-image: url(./svg/weather_icons/" + data.list[i+1].weather[0].icon + ".svg)";
                             forecast_day_wind_arr[i].textContent = Math.round(data.list[i+1].wind.speed);
                             forecast_day_humidity_arr[i].textContent = data.list[i+1].main.humidity;
                         }

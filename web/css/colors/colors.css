@@ -1,0 +1,253 @@
+/** --Light-theme-- **/
+
+body {
+    transition: background .2s ease;
+}
+
+/** Search **/
+
+.search-input-conteiner-colors,
+.search-scroll-back-button-colors,
+.search-input-colors,
+.search-back-button-colors,
+.modal-menu-colors,
+.modal-menu-town-button-colors  {
+    background: var(--elem-background-color);
+}
+.search-scroll-input-conteiner-colors,
+.search-button-colors,
+.search-scroll-back-button-colors {
+    background: none;
+}
+.search-scroll-colors,
+.search-scroll .search__modal-menu {
+    background: var(--search-scroll-background);
+    backdrop-filter: var(--search-scroll-blur);
+}
+.search-scroll .modal-menu-town-button-colors {
+    background: none;
+}
+.search-scroll .search__modal-menu {
+    backdrop-filter: var(--search-scroll-blur);
+}
+.search-scroll .modal-menu-town-button-colors:hover {
+    background: var(--search-scroll-modal-menu-town-color-active);
+}
+.search-input-conteiner-colors,
+.search-back-button-colors {
+    box-shadow: var(--box-shadow-main);
+}
+.search-scroll-back-button-colors {
+    box-shadow: none !important;
+}
+.search-scroll-back-button-colors:hover,
+.search-scroll-back-button-colors:focus {
+    background: var(--dark-color-1);
+}
+.search-scroll-input-conteiner-colors {
+    box-shadow: none !important;
+}
+.search-input-colors {
+    color: var(--main-text-color);
+}
+.search-button-colors:hover,
+.search-button-colors:focus {
+    background: var(--search-button-active);
+}
+.search-back-button-colors:hover,
+.search-back-button-colors:focus {
+    box-shadow: var(--box-shadow-active);
+}
+.display-dark-colors {
+    background: var(--display-dark-color);
+}
+.modal-menu-colors {
+    box-shadow: var(--box-shadow-active);
+}
+.modal-menu-town-button-colors {
+    color: var(--main-text-color);
+}
+.modal-menu-town-button-colors:hover {
+    background: var(--search-modal-menu-town-color-active);
+}
+
+/** Main-page **/
+
+.town-element-colors,
+.town-element-colors--active,
+.indicate-menu-colors,
+.indicate-menu-remove-button-colors,
+.indicate-menu-search-button-colors,
+.add-new-town-input-colors,
+.add-new-town-button-colors,
+.search-animation-conteiner-color,
+.town-notification-button-color,
+.settings-button-colors {
+    background: var(--elem-background-color);
+}
+.label-colors {
+    background: var(--label-background-color);
+    color: var(--label-text-color);
+}
+.town-element-colors {
+    box-shadow: var(--box-shadow-main);
+}
+.town-element-colors:hover,
+.town-element-colors:focus {
+    box-shadow: var(--box-shadow-active);
+}
+.town-element-colors--active {
+    box-shadow: var(--box-shadow-active);
+}
+.town-name-colors {
+    background: none;
+    color: var(--main-text-color);
+}
+.town-close-button-colors {
+    background: var(--town-close-button-background);
+}
+.indicate-menu-colors {
+    box-shadow: var(--box-shadow-active);
+}
+.latest-towns-name-button-color {
+    color: var(--latest-towns-name-button-color);
+}
+.latest-towns-temp-color,
+.latest-towns-second-info-color {
+    color: var(--latest-towns-second-info-color);
+}
+.indicate-menu-remove-button-colors,
+.indicate-menu-search-button-colors,
+.recommend-towns-add-button-content-colors,
+.recommend-towns-add-button-before-colors,
+.add-new-town-input-colors,
+.add-new-town-button-colors,
+.town-notification-button-color {
+    color: var(--add-new-town-text-color);
+}
+.indicate-menu-remove-button-colors:hover,
+.indicate-menu-search-button-colors:hover {
+    background: var(--indicate-menu-active-background);
+}
+.recommend-towns-add-button-before-colors,
+.town-not-found-notification-home-button-text-colors::before,
+.no-connection-notification-refresh-button-text-colors::before {
+    background: var(--add-new-town-background-color);
+    background-position: 60% 80% !important;
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+}
+.add-new-town-input-colors,
+.add-new-town-button-colors,
+.add-new-town-button-active-colors:hover,
+.add-new-town-button-active-colors:focus {
+    box-shadow: var(--box-shadow-main);
+}
+.add-new-town-input-colors:hover,
+.add-new-town-input-colors:focus,
+.add-new-town-button-colors:hover,
+.add-new-town-button-colors:focus {
+    box-shadow: var(--box-shadow-active);
+}
+.search-animation-conteiner-color {
+    box-shadow: var(--box-shadow-main);
+}
+
+/** Weather-info **/
+
+.weather-temp-colors,
+.weather-status-colors,
+.weather-info-label-colors,
+.weather-info-colors,
+.forecast-day-label-colors,
+.forecast-main-info-colors,
+.forecast-second-info-colors,
+.town-notification-label-color {
+    color: var(--add-new-town-text-color);
+}
+.weather-status-colors {
+    background: var(--dark-color-1);
+}
+.weather-info-label-colors {
+    background: var(--dark-color-1);
+}
+.weather-info-colors {
+    border: 2px solid var(--dark-color-1);
+}
+.weather-info-colors {
+    background: var(--weather-info-background);
+}
+.forecast-day-colors:hover {
+    box-shadow: var(--box-shadow-main);
+    background: var(--forecast-day-color);
+}
+.forecast-day-label-colors {
+    background: linear-gradient(41deg, rgba(154,160,161,.2) 10%, rgba(166,175,180,.2) 56%, rgba(143,148,156,.2) 100%);
+}
+
+
+/** --Dark-theme-- **/
+
+
+/** Search **/
+
+body {
+    background: var(--main-background);
+}
+
+.search-scroll-input-conteiner-colors,
+.search-scroll__input,
+.search-button-colors {
+    background: none;
+}
+body[data-theme="dark"] .search-scroll .modal-menu-town-button-colors {
+    background: none;
+}
+.search-scroll-back-button-colors {
+    box-shadow: none !important;
+    background: none;
+}
+.search-scroll-input-conteiner-colors {
+    box-shadow: none !important;
+}
+
+/** Main-page **/
+
+
+.search-animation-conteiner-color .animation span {
+    border: 5px solid #fff;
+    border-color: var(--search-animation-color) transparent transparent transparent;
+}
+
+/** Weather-info **/
+
+.dark-theme .forecast-day-label-colors {
+    background: linear-gradient(41deg, rgba(154,160,161,.2) 10%, rgba(166,175,180,.2) 56%, rgba(143,148,156,.2) 100%);
+}
+.right-animation::after,
+.right-animation-remove::after {
+    left: -20px;
+    top: 15px;
+    border-right: 10px solid var(--elem-background-color);
+}
+.bottom-animation::after,
+.bottom-animation-remove::after {
+    left: 20px;
+    top: -20px;
+    border-bottom: 10px solid var(--elem-background-color); 
+}
+.top-animation::after,
+.top-animation-remove::after {
+    left: 20px;
+    top: 100%;
+    border-top: 10px solid var(--elem-background-color); 
+}
+.left-animation::after,
+.left-animation-remove::after {
+    left: 100%;
+    top: 15px;
+    border-left: 10px solid var(--elem-background-color);
+}
+body[theme="dark"] .settings-block {
+    background: #0000005d;
+}

@@ -1,0 +1,265 @@
+.settings-button {
+    position: fixed;
+    top: calc(100% - 70px);
+    left: calc(100% - 90px);
+    width: 55px;
+    height: 55px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    outline: none;
+    border-radius: 100%;
+    box-shadow: 0px 0px 10px #0000001f;
+    z-index: 5;
+    transition: .2s ease;
+}
+.settings-button__popup {
+    position: absolute;
+    top: 15px;
+    right: 65px;
+    padding: 6px 10px;
+    background: #0000008c;
+    border-radius: 5px;
+    text-align: right;
+    font-family: "Roboto", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 1px;
+    pointer-events: none;
+    opacity: 0;
+    transition: .3s ease;
+}
+.settings-button__popup::after {
+    position: absolute;
+    content: "";
+    top: 5px;
+    right: -16px;
+    border: 8px solid transparent;
+    border-left: 8px solid #0000008c;
+    transition: .2s ease;
+}
+.settings-button:hover,
+.settings-button:focus {
+    cursor: pointer;
+    box-shadow: 0px 0px 18px #0000001f;
+}
+.settings-button:focus-visible .settings-button__popup {
+    opacity: 1;
+}
+.settings {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 101;
+}
+.settings-disactive {
+    display: none;
+}
+.settings__main-conteiner {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: right;
+    overflow: hidden;
+}
+.settings-disactive .settings__background {
+    display: none;
+}
+.settings-close-animation .settings__background {
+    animation: display-dark-disactive-animation;
+    animation-timing-function: ease;
+    animation-duration: .2s;
+}
+.settings__background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgb(0 0 0 / 8%);
+    z-index: -1;
+    animation: display-dark-animation;
+    animation-timing-function: ease;
+    animation-duration: .2s;
+}
+.settings-block {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 430px;
+    width: 100%;
+    padding: 40px;
+    background: #000000bd;
+    backdrop-filter: blur(10px);
+    animation: settings-menu-animation;
+    animation-timing-function: ease;
+    animation-duration: .2s;
+}
+.settings-close-animation .settings-block {
+    animation: settings-remove-menu-animation;
+    animation-timing-function: ease;
+    animation-duration: .2s;
+}
+.settings-disactive .settings-block {
+    display: none;
+}
+.settings-block__label {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+}
+.settings-block__label-button {
+    position: relative;
+    top: -4px;
+    display: flex;
+    flex: 0 0 auto;
+    width: 45px;
+    height: 45px;
+    border: none;
+    outline: none;
+    background: none;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 45px 45px;
+    background-image: url("../svg/light_theme/settings/close_icon.svg");
+}
+.settings-block__label-button:hover {
+    cursor: pointer;
+}
+.settings-block__label-text {
+    font-family: "Roboto", sans-serif;
+    font-size: 34px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: #ffffff;
+}
+.main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.main-content::-webkit-scrollbar {
+    background: #ffffff00;
+    width: 5px;
+}
+.main-content::-webkit-scrollbar-track {
+    background: #ffffff00;
+}
+.main-content::-webkit-scrollbar-thumb {
+    background: #ffffff1c;
+}
+.main-content::-webkit-scrollbar-thumb:hover {
+    background: #ffffff27;
+}
+.ui-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 0 10px 0 0;
+}
+.ui-settings__wrapper {
+    display: flex;
+    flex-direction: column;
+}
+.main-content__label {
+    font-family: "Roboto", sans-serif;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: #ffffff;
+}
+.ui-settings-block {
+    display: grid;
+    grid-template-columns: 1fr 60px;
+    grid-column-gap: 20px;
+    padding: 10px;
+    margin: 0;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    text-align: left;
+    background: none;
+    transition: .2s ease;
+}
+.ui-settings-block:hover,
+.ui-settings-block:focus-visible {
+    cursor: pointer;
+    background: #ffffff0e;
+}
+.ui-settings-block__label {
+    font-family: "Roboto", sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: #e4e4e4;
+}
+.main-content-recommend-towns {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.main-content-recommend-towns__wrapper {
+    display: flex;
+    flex-direction: column;
+    gap:6px;
+}
+.main-content-recommend-towns__town {
+    display: flex;
+    gap: 8px;
+}
+.main-content-recommend-towns__town>button {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 10px;
+    outline: none;
+    background: none;
+    transition: .1s ease;
+}
+.main-content-recommend-towns__town>button:hover {
+    cursor: pointer;
+    background: #ffffff23;
+}
+.main-content-recommend-towns__edit-button,
+.main-content-recommend-towns__remove-button {
+    width: 32px;
+    opacity: 0;
+}
+.main-content-recommend-towns__town-button {
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #e4e4e4;
+}
+.main-content-recommend-towns__town:hover .main-content-recommend-towns__edit-button,
+.main-content-recommend-towns__town:hover .main-content-recommend-towns__remove-button {
+    opacity: 1;
+}
+.settings-switch {
+    position: relative;
+    top: calc(50% - 7px);
+    left: calc(50% - 20px);
+    width: 40px;
+    height: 14px;
+    border-radius: 25px;
+    background: #ffffff3d;
+    transition: .2s ease;
+}
+.settings-switch__triger {
+    position: absolute;
+    top: -4px;
+    left: 0px;
+    width: 23px;
+    height: 23px;
+    border-radius: 50%;
+    background: #d3d3d3;
+    transition: .2s ease;
+}
+.ui-settings-block--active .settings-switch {
+    background: #75a2f652;
+}
+.ui-settings-block--active .settings-switch__triger {
+    left: calc(100% - 23px);
+    background: #598be9;
+}

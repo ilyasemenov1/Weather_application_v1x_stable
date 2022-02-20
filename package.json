@@ -1,0 +1,28 @@
+{
+  "name": "weather-app",
+  "version": "1.3.6",
+  "description": "Weather_app - v1.3.6",
+  "main": "server.js",
+  "dependencies": {
+    "core-js": "^3.21.0",
+    "querystring": "^0.2.1",
+    "underscore": "^1.13.2"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ilyasemenov1/Weather_application_v1x_private.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ilyasemenov1/Weather_application_v1x_private/issues"
+  },
+  "homepage": "https://github.com/ilyasemenov1/Weather_application_v1x_private#readme"
+}

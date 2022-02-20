@@ -1,0 +1,20 @@
+{
+    "ui": {
+        "theme": {
+            "dark-theme": false
+        },
+        "latest-towns": {
+            "display-latest-towns": true
+        },
+        "recommend-towns": {
+            "display-recommend-towns": true,
+            "recommend-latest-towns": true,
+            "block-recommend-towns": false
+        },
+        "weather-info": {
+            "dasplay-weather-additional-info": true,
+            "dasplay-weather-forecast": true,
+            "dasplay-weather-forecast-icons": true
+        }
+    }
+}

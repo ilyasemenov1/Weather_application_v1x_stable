@@ -138,3 +138,39 @@
         opacity: 0;
     }
 }
+@keyframes settings-menu-animation {
+    0% {
+        transform: translateX(100%);
+    } 
+    100% {
+        transform: translateX(0);
+    }
+}
+@keyframes settings-remove-menu-animation {
+    0% {
+        transform: translateX(0);
+    } 
+    100% {
+        transform: translateX(100%);
+    }
+}
+@keyframes disactive-animation {
+    0% {
+        opacity: 1;
+        transform: translateX(0px); 
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(-15px); 
+    }
+}
+@keyframes active-animation {
+    0% {
+        opacity: 0;
+        transform: translateX(-15px); 
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0px); 
+    }
+}

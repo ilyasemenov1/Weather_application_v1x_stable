@@ -28,7 +28,7 @@
     --indicate-menu-active-background: #f5f5f5;
 
     --box-shadow-main: 0px 0px 10px #00000016;
-    --box-shadow-active: 0px 0px 18px #0000001f;
+    --box-shadow-active: 0px 0px 16px #0000001f;
 }
 
 body[theme="dark"] {
@@ -61,5 +61,5 @@ body[theme="dark"] {
     --indicate-menu-active-background: #ffffff1a;
 
     --box-shadow-main: 0px 0px 10px #00000016;
-    --box-shadow-active: 0px 0px 18px #0000001f;
+    --box-shadow-active: 0px 0px 16px #0000001f;
 }

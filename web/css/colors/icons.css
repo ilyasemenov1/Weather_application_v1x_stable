@@ -49,7 +49,7 @@ body[theme="light"] .forecast-day__wind::before {
     background-image: url("../../svg/light_theme/weather_info_icons/wind_icon.svg");
 }
 body[theme="light"] .forecast-day__humidity::before {
-    background-image: url("../../svg/light_theme/weather_info_icons/wind_icon.svg");
+    background-image: url("../../svg/light_theme/weather_info_icons/humidity_icon.svg");
 }
 body[theme="light"] .settings-button-colors {
     background-position: center;
@@ -109,7 +109,7 @@ body[theme="dark"] .forecast-day__wind::before {
     background-image: url("../../svg/dark_theme/weather_info_icons/wind_icon.svg");
 }
 body[theme="dark"] .forecast-day__humidity::before {
-    background-image: url("../../svg/dark_theme/weather_info_icons/wind_icon.svg");
+    background-image: url("../../svg/dark_theme/weather_info_icons/humidity_icon.svg");
 }
 body[theme="dark"] .settings-button-colors {
     background-position: center;

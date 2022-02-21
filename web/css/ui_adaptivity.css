@@ -58,7 +58,7 @@
     }
     .search-scroll__input-conteiner {
         margin: 10px;
-        background: #f5f5f58f;
+        background: none;
     }
     .search-scroll__input,
     .search-scroll__back-button,
@@ -162,6 +162,15 @@
         border: 6px solid #fff;
         border-color: rgb(243, 243, 243) transparent transparent transparent;
     }
+    .ui-settings-block__label {
+        font-size: 16px;
+    }
+    .ui-settings__label {
+        font-size: 20px;
+    }
+    .settings-block__label-text {
+        font-size: 32px;
+    }
 }
 .latest-towns__content-conteiner--1-colum {
     grid-template-columns: repeat(1, 1fr);
@@ -173,6 +182,7 @@
 } 
 @media (max-width: 390px){
     .search__back-button {
+        top: 0;
         width: 50px;
         height: 50px;
     }
@@ -195,6 +205,9 @@
     .search-scroll .search__modal-menu {
         top: 70px;
     }
+    .search-scroll .search__back-button {
+        top: 10px;
+    }
     .recommend-towns__content-conteiner,
     .latest-towns__content-conteiner {
         padding: 0 0 0 10px;
@@ -202,5 +215,33 @@
     .weather-forecast__content {
         grid-template-columns: repeat(1, 1fr);
         grid-template-rows: repeat(5, 1fr);
+    }
+    .settings-button {
+        left: calc(100% - 65px);
+        top: calc(100% - 65px);
+        width: 50px;
+        height: 50px;
+        background-size: 32px 32px !important;
+    }
+    .settings-button span {
+        top: 12px;
+        right: 60px;
+    }
+    .ui-settings-block__label {
+        font-size: 15px;
+    }
+    .ui-settings__label {
+        font-size: 19px;
+    }
+    .settings-block__label-text {
+        position: relative;
+        top: 2px;
+        font-size: 30px;
+    }
+    .ui-settings-block {
+        grid-column-gap: 15px;
+    }
+    .settings-block {
+        padding: 40px 25px;
     }
 }

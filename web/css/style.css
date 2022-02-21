@@ -102,7 +102,7 @@ main {
     border: none;
     outline: none;
     border-radius: 20px; 
-    transition: .2s ease;
+    transition: width .2s ease, height .2s ease, background .2s ease, transform .2s ease, margin .2s ease, box-shadow .2s ease;
 }
 .search__back-button--img {
     width: 50px;
@@ -910,7 +910,7 @@ main {
     font-family: "Roboto", sans-serif;
     font-size: 17px;
     font-weight: 600;
-    transition: .2s ease;
+    transition: .15s ease;
 }
 .indicate-menu__remove-button::before,
 .indicate-menu__search-button::before {

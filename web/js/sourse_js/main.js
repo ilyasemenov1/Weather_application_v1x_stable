@@ -266,12 +266,13 @@ function document_events() {
     });
 
     settings_close_button.addEventListener("click", function() {
-        settings.className = "settings settings-close-animation";
+        settings.classList.add("settings-close-animation");
         settings_button_active = false;
         document.body.style = "";
 
         let delay = setTimeout(function() {
-            settings.className = "settings settings-disactive";
+            settings.classList.remove("settings-close-animation");
+            settings.classList.add("settings-disactive");
         }, 199);
     });
 
@@ -515,23 +516,25 @@ function hide_add_new_town_button() {
     return 0;
 }
 
-async function new_town_button_event() {
+function new_town_button_event() {
+
     let new_town_button = document.querySelector("#new_town_button");
-    if (new_town_button.className.indexOf("add-new-town__button--active") == -1) {
+    if (!(new_town_button.classList.contains("add-new-town__button--active"))) {
         let new_town = document.getElementById("new_town_input").value;
         if (new_town) {
             let delay = setTimeout(function() {
-                new_town_button.className = "add-new-town__button add-new-town__button--active add-new-town-button-colors add-new-town-button-active-colors";
+                new_town_button.classList.add("add-new-town__button--active", "add-new-town-button-active-colors");
             }, 200);
-            var recommend_towns_towns = document.querySelectorAll(".recommend-towns__town-button-name");
-            let add_town_index = 1;
+            var recommend_towns_arr = document.querySelectorAll(".recommend-towns__town-button-name");
+            let new_town_index = true;
 
-            for (let i = 0; i < recommend_towns_towns.length; i++) {
-                if (recommend_towns_towns[i].value == new_town) {
-                    add_town_index = 0;
+            recommend_towns_arr.forEach(element => {
+                if (element.value == new_town) {
+                    new_town_index = false;
                 }
-            }
-            if (add_town_index) {
+            });
+
+            if (new_town_index) {
                 fetch("https://api.openweathermap.org/data/2.5/weather?q=" + new_town + ",&appid=" + key + "&lang=ru")  
                 .then(function(resp) { return resp.json() })
                 .then(function(data) {

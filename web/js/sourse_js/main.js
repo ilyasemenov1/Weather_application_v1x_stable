@@ -1,4 +1,4 @@
-const json = require("../json/settings.json");
+const json = require('../json/settings.json');
 
 document_events();
 new_town_button_event();
@@ -45,126 +45,149 @@ async function display_weather(place) {
             }, 250);
 
             search_anable = true;
+            let error_index = 1;
 
             try {
                 fetch("https://api.openweathermap.org/data/2.5/forecast?q=" + place + ",&appid=" + key + "&lang=ru&cnt=6")  
                 .then(function(resp) { return resp.json() })
                 .then(function(data) {
 
-                    const day_0_weather = data.list[0];
+                    error_index = 0;
 
-                    if (search_anable) {
-                        let temp = Math.round(parseFloat(day_0_weather.main.temp)-273.15);
+                    if (data.cod == 200) {
+                        const day_0_weather = data.list[0];
+
+                        if (search_anable) {
+                            let temp = Math.round(parseFloat(day_0_weather.main.temp)-273.15);
+        
+                            let temp_min = Math.round(parseFloat(day_0_weather.main.temp_min)-273.15);
+                            let temp_max = Math.round(parseFloat(day_0_weather.main.temp_max)-273.15);
+                            let temp_min_max = temp_min  + "/" + temp_max;
+            
+                            let wind = Math.round(day_0_weather.wind.speed);
+            
+                            let humidity = day_0_weather.main.humidity;
+            
+                            let status = day_0_weather.weather[0].description;
+            
+                            var weather_info_data = [temp, status, wind, temp_min_max, humidity];
+            
+                            if (last_places_array[0] != place) {
+                                last_places_array.unshift(place);
+            
+                                add_last_town(place, temp, wind, humidity);
+                            }
     
-                        let temp_min = Math.round(parseFloat(day_0_weather.main.temp_min)-273.15);
-                        let temp_max = Math.round(parseFloat(day_0_weather.main.temp_max)-273.15);
-                        let temp_min_max = temp_min  + "/" + temp_max;
-        
-                        let wind = Math.round(day_0_weather.wind.speed);
-        
-                        let humidity = day_0_weather.main.humidity;
-        
-                        let status = day_0_weather.weather[0].description;
-        
-                        var weather_info_data = [temp, status, wind, temp_min_max, humidity];
-        
-                        if (last_places_array[0] != place) {
-                            last_places_array.unshift(place);
-        
-                            add_last_town(place, temp, wind, humidity);
-                        }
-
-                        var weather_data = document.querySelectorAll('.weather_data');
-
-                        if (json["ui"]["weather-info"]["dasplay-weather-additional-info"]) {
-        
-                            let i = 0;
-                            weather_info_data.forEach(element => {
-                                weather_data[i].textContent = element;
-                                i++;
-                            });
-                        } else {
-                            for (let i = 0; i < 2; i++) {
-                                weather_data[i].textContent = weather_info_data[i];
-                            }
-                        }
-
-                        if (json["ui"]["weather-info"]["dasplay-weather-forecast"]) {
-
-                            var today_date = new Date();
-                            let day_tomorrow = today_date.getDay();
-                            day_tomorrow++;
-
-                            let day_of_week = "";
-
-                            var forecast_week_day = document.querySelectorAll(".forecast-day__label");
-
-                            let day_index = 0
-
-                            if (day_tomorrow > 6) {
-                                day_tomorrow = 0;
-                            }
-
-                            for (let i = 0; i < forecast_week_day.length; i++) {
-
-                                if (day_tomorrow + day_index == 0) {
-                                    day_of_week = "Воскресенье";
-                                } else if (day_tomorrow + day_index == 1) {
-                                    day_of_week = "Понедельник";
-                                } else if (day_tomorrow + day_index == 2) {
-                                    day_of_week = "Вторник";
-                                } else if (day_tomorrow + day_index == 3) {
-                                    day_of_week = "Среда";
-                                } else if (day_tomorrow + day_index == 4) {
-                                    day_of_week = "Четрерг";
-                                } else if (day_tomorrow + day_index == 5) {
-                                    day_of_week = "Пятница";
-                                } else if (day_tomorrow + day_index == 6) {
-                                    day_of_week = "Суббота";
+                            var weather_data = document.querySelectorAll('.weather_data');
+    
+                            if (json["ui"]["weather-info"]["dasplay-weather-additional-info"]) {
+            
+                                let i = 0;
+                                weather_info_data.forEach(element => {
+                                    weather_data[i].textContent = element;
+                                    i++;
+                                });
+                            } else {
+                                for (let i = 0; i < 2; i++) {
+                                    weather_data[i].textContent = weather_info_data[i];
                                 }
-                                
-                                if (i != 0) {
-                                    forecast_week_day[i].textContent = day_of_week;
-                                }
-
-                                day_index++;
-
-                                if (day_index + day_tomorrow >= 6) {
-                                    day_index = 0;
+                            }
+    
+                            if (json["ui"]["weather-info"]["dasplay-weather-forecast"]) {
+    
+                                var today_date = new Date();
+                                let day_tomorrow = today_date.getDay();
+                                day_tomorrow++;
+    
+                                let day_of_week = "";
+    
+                                var forecast_week_day = document.querySelectorAll(".forecast-day__label");
+    
+                                let day_index = 0
+    
+                                if (day_tomorrow >= 6) {
                                     day_tomorrow = 0;
                                 }
-                            }
 
-                            var forecast_day_temp_arr = document.querySelectorAll(".forecast-day__temp");
-                            var forecast_day_status_arr = document.querySelectorAll(".forecast-day__status");
-                            var forecast_day_wind_arr = document.querySelectorAll(".forecast-day__wind");
-                            var forecast_day_humidity_arr = document.querySelectorAll(".forecast-day__humidity");
-
-                            for (let i = 0; i < forecast_day_temp_arr.length; i++) {
-                                forecast_day_temp_arr[i].textContent = Math.round(parseFloat(data.list[i+1].main.temp)-273.15);
-                                if (json["ui"]["weather-info"]["dasplay-weather-forecast-icons"]) {
-                                    forecast_day_status_arr[i].style = "background-image: url(./svg/light_theme/weather_icons/" + data.list[i+1].weather[0].icon + ".svg)";
+                                for (let i = 0; i < forecast_week_day.length; i++) {
+    
+                                    if (day_tomorrow + day_index == 0) {
+                                        day_of_week = "Воскресенье";
+                                    } else if (day_tomorrow + day_index == 1) {
+                                        day_of_week = "Понедельник";
+                                    } else if (day_tomorrow + day_index == 2) {
+                                        day_of_week = "Вторник";
+                                    } else if (day_tomorrow + day_index == 3) {
+                                        day_of_week = "Среда";
+                                    } else if (day_tomorrow + day_index == 4) {
+                                        day_of_week = "Четрерг";
+                                    } else if (day_tomorrow + day_index == 5) {
+                                        day_of_week = "Пятница";
+                                    } else if (day_tomorrow + day_index == 6) {
+                                        day_of_week = "Суббота";
+                                    }
+                                    
+                                    if (i != 0) {
+                                        forecast_week_day[i].textContent = day_of_week;
+                                    }
+    
+                                    day_index++;
+    
+                                    if (day_index + day_tomorrow >= 6) {
+                                        day_index = 0;
+                                        day_tomorrow = 0;
+                                    }
                                 }
-                                forecast_day_wind_arr[i].textContent = Math.round(data.list[i+1].wind.speed);
-                                forecast_day_humidity_arr[i].textContent = data.list[i+1].main.humidity;
+    
+                                var forecast_day_temp_arr = document.querySelectorAll(".forecast-day__temp");
+                                var forecast_day_status_arr = document.querySelectorAll(".forecast-day__status");
+                                var forecast_day_wind_arr = document.querySelectorAll(".forecast-day__wind");
+                                var forecast_day_humidity_arr = document.querySelectorAll(".forecast-day__humidity");
+    
+                                for (let i = 0; i < forecast_day_temp_arr.length; i++) {
+                                    forecast_day_temp_arr[i].textContent = Math.round(parseFloat(data.list[i+1].main.temp)-273.15);
+                                    if (json["ui"]["weather-info"]["dasplay-weather-forecast-icons"]) {
+                                        forecast_day_status_arr[i].style = "background-image: url(./svg/light_theme/weather_icons/" + data.list[i+1].weather[0].icon + ".svg)";
+                                    }
+                                    forecast_day_wind_arr[i].textContent = Math.round(data.list[i+1].wind.speed);
+                                    forecast_day_humidity_arr[i].textContent = data.list[i+1].main.humidity;
+                                }
                             }
+                            
+                            clearTimeout(search_delay);
+                            search_animation.classList.add("search__animation-conteiner--disactive");
+                            search_animation.classList.remove("search__animation-conteiner--scroll");
+                            weather_template.classList.add("weather-template--active");
                         }
-                        
-                        clearTimeout(search_delay);
-                        search_animation.classList.add("search__animation-conteiner--disactive");
-                        search_animation.classList.remove("search__animation-conteiner--scroll");
-                        weather_template.classList.add("weather-template--active");
+                    } else if (data.cod == 404) {
+                        if (search_anable) {
+                            clearTimeout(search_delay);
+                            search_animation.classList.add("search__animation-conteiner--disactive");
+                            search_animation.classList.remove("search__animation-conteiner--scroll");
+    
+                            town_not_found_label.textContent = " \"" + place + "\" ";
+                            town_not_found.style = "display: flex;";
+                        }
                     }
                 })
                 .catch(function() {
-                    if (search_anable) {
-                        clearTimeout(search_delay);
-                        search_animation.classList.add("search__animation-conteiner--disactive");
-                        search_animation.classList.remove("search__animation-conteiner--scroll");
 
-                        town_not_found_label.textContent = " \"" + place + "\" ";
-                        town_not_found.style = "display: flex;";
-                    }
+                    let delay = setTimeout(function() {
+                        if (error_index) {
+                            clearTimeout(search_delay);
+                            search_animation.classList.add("search__animation-conteiner--disactive");
+                            search_animation.classList.remove("search__animation-conteiner--scroll");
+    
+                            let town_not_found_notification__label_before = document.querySelector(".town-not-found-notification__label--before");
+                            let town_not_found_notification__label_after = document.querySelector(".town-not-found-notification__label--after");
+    
+                            town_not_found_notification__label_before.textContent = "";
+                            town_not_found_notification__label_after.textContent = "";
+    
+                            town_not_found_label.textContent = "Произошла ошибка при поиске";
+                            town_not_found.style = "display: flex;";
+                        }
+                    }, 10);
                 }); 
             } catch {
                 console.log("town not found");
@@ -933,22 +956,24 @@ function indicate_menu_page_position(element, indicate_menu, element_margin, pag
 
     const left_border_distanse = element_X - (indicate_menu_width + element_margin);
     const right_border_distanse = window_width - (element_X + element_width + element_margin + indicate_menu_width);
+    const right_border_distanse_under = window_width - (element_X + element_margin + indicate_menu_width);
     const top_height = element_Y  - element_margin - indicate_menu_height - search_height;
-    const bottom_height = window_height - element_Y - element_height - element_margin - indicate_menu_height - search_height;
+    const bottom_height_side = window_height - element_Y - element_margin - indicate_menu_height;
+    const bottom_height = window_height - element_Y - element_margin - element_height- indicate_menu_height;
 
-    if (bottom_height < page_padding && top_height > page_padding) {
+    if (bottom_height < page_padding && top_height > page_padding && right_border_distanse_under > page_padding) {
         indicate_menu.className = "indicate-menu indicate-menu-colors top-animation";
         indicate_menu.style = "top: " + (element_Y - element_margin - indicate_menu_height + window_scroll) + "px; left: " + element_X + "px;";
-    } else if (right_border_distanse < page_padding && bottom_height < page_padding && top_height > page_padding && left_border_distanse < page_padding) {
+    } else if (right_border_distanse_under > page_padding && right_border_distanse < page_padding && bottom_height < page_padding && top_height > page_padding && left_border_distanse < page_padding) {
         indicate_menu.className = "indicate-menu indicate-menu-colors top-animation";
         indicate_menu.style = "top: " + (element_Y - element_margin - indicate_menu_height + window_scroll) + "px; left: " + element_X + "px;";
-    } else if (right_border_distanse < page_padding && bottom_height > page_padding && left_border_distanse < page_padding) {
+    } else if (right_border_distanse_under > page_padding && right_border_distanse < page_padding && bottom_height > page_padding && top_height > page_padding && left_border_distanse < page_padding) {
         indicate_menu.className = "indicate-menu indicate-menu-colors bottom-animation";
         indicate_menu.style = "top: " + (element_Y + element_height + element_margin + window_scroll) + "px; left: " + element_X + "px;";
-    } else if (right_border_distanse > page_padding) {
+    } else if (right_border_distanse > page_padding && bottom_height_side > page_padding) {
         indicate_menu.className = "indicate-menu indicate-menu-colors right-animation";
         indicate_menu.style = "top: " + (element_Y + window_scroll) + "px; left: " + (element_X + element_width + element_margin) + "px;";
-    } else if (left_border_distanse > page_padding) {
+    } else if (left_border_distanse > page_padding && bottom_height_side > page_padding) {
         indicate_menu.className = "indicate-menu indicate-menu-colors left-animation";
         indicate_menu.style = "top: " + (element_Y + window_scroll) + "px; left: " + (element_X - indicate_menu_width - element_margin) + "px;";
     } else {

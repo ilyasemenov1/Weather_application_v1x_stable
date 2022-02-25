@@ -1,6 +1,6 @@
 /** Light-theme **/
 
-body[theme="light"] .recommend-towns__close-button--img {
+body[theme="light"] .recommend-towns__close-button {
     background-image: url("../../svg/light_theme/main_icons/close_icon.svg");
 }
 body[theme="light"] .no-connection-notification__icon {
@@ -17,7 +17,7 @@ body[theme="light"] .enter-town-notification__icon {
 body[theme="light"] .rocommend-towns__no-town-notification::before {
     background-image: url("../../svg/light_theme/notification_icons/town_icon.svg");
 }
-body[theme="light"] .recommend-towns__close-button--img {
+body[theme="light"] .recommend-towns__close-button {
     background-image: url("../../svg/light_theme/main_icons/close_icon.svg");
 }
 body[theme="light"] .latest-towns__wind-label {
@@ -60,7 +60,7 @@ body[theme="light"] .settings-button-colors {
 
 /** Dark-theme **/
 
-body[theme="dark"] .recommend-towns__close-button--img {
+body[theme="dark"] .recommend-towns__close-button {
     background-image: url("../../svg/dark_theme/main_icons/close_icon.svg");
 }
 body[theme="dark"] .no-connection-notification__icon {
@@ -76,9 +76,6 @@ body[theme="dark"] .enter-town-notification__icon {
 }
 body[theme="dark"] .rocommend-towns__no-town-notification::before {
     background-image: url("../../svg/dark_theme/notification_icons/town_icon.svg");
-}
-body[theme="dark"] .recommend-towns__close-button--img {
-    background-image: url("../../svg/dark_theme/main_icons/close_icon.svg");
 }
 body[theme="dark"] .latest-towns__wind-label {
     background-image: url("../../svg/dark_theme/weather_info_icons/wind_icon.svg");

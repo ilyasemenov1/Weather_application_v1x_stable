@@ -282,6 +282,8 @@ main {
     font-size: clamp(17px, 4vw, 18px);
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
+    white-space: nowrap;
+    box-sizing: border-box;
 }
 .latest-towns__label::first-letter,
 .recommend-towns__label::first-letter,
@@ -314,6 +316,7 @@ main {
 }
 .recommend-towns__button,
 .latest-towns__town-button {
+    display: block;
     position: relative;
     min-height: 45px;
     padding: 0;
@@ -353,9 +356,10 @@ main {
     font-weight: 500;
 }
 .recommend-towns__close-button {
-    display: flex;
-    justify-self: center;
-    align-items: center;
+    display: block;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: 10px 10px !important;
     position: absolute;
     top: 10px;
     left: calc(100% - 35px);
@@ -367,15 +371,6 @@ main {
     border-radius: 100%;
     opacity: 0;
     transition: .2s ease;
-}
-.recommend-towns__close-button--img {
-    position: relative;
-    left: 7px;
-    width: 10px;
-    height: 10px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
 }
 .recommend-towns__button--active {
     cursor: pointer;

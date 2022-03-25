@@ -174,3 +174,19 @@
         transform: translateX(0px); 
     }
 }
+@keyframes search-input-right {
+    0% {
+        transform: translateX(0px); 
+    }
+    100% {
+        transform: translateX(35px); 
+    }
+}
+@keyframes search-input-left {
+    0% {
+        transform: translateX(35px); 
+    }
+    100% {
+        transform: translateX(0px); 
+    }
+}

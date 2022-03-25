@@ -5,69 +5,91 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="css/root_colors/root.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/settings.css">
     <link rel="stylesheet" href="css/colors/colors.css">
     <link rel="stylesheet" href="css/colors/icons.css">
-    <link rel="stylesheet" href="css/ui_adaptivity.css">
     <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/ui_adaptivity.css">
     <title>Погода</title>
 </head>
 <body>
     <section class="settings settings-disactive">
         <div class="settings__main-conteiner">
-            <div class="settings__background"></div>
+            <span class="settings__background"></span>
             <div class="settings-block">
                 <div class="settings-block__label">
                     <button class="settings-block__label-button"></button>
-                    <span class="settings-block__label-text">Настройки</span>
+                    <h2 class="settings-block__label-text">Настройки</h2>
                 </div>
                 <div class="main-content">
-                    <div class="ui-settings">
-                        <span class="ui-settings__label main-content__label">Настройки интерфейса:</span>
-                        <div class="ui-settings__wrapper">
-                            <button class="ui-theme ui-settings-theme ui-settings-block">
-                                <span class="ui-settings-theme__label ui-settings-block__label">
+                    <section class="settings-section ui-settings">
+                        <h2 class="settings-section__label main-content__label">Настройки интерфейса:</h2>
+                        <div class="settings-section__wrapper">
+                            <button class="ui-theme settings-section-theme settings-section-block">
+                                <span class="settings-section-theme__label settings-section-block__label">
                                     Темная тема
                                 </span>
-                                <div class="settings-switch">
+                                <span class="settings-switch">
                                     <span class="settings-switch__triger"></span>
-                                </div>
+                                </span>
                             </button>
-                            <button class="latest-towns-atr ui-settings-block">
-                                <span class="ui-settings-latest-towns__label ui-settings-block__label">
+                            <button class="latest-towns-atr settings-section-block">
+                                <span class="settings-section-latest-towns__label settings-section-block__label">
                                     Отображать недавние города
                                 </span>
-                                <div class="settings-switch">
+                                <span class="settings-switch">
                                     <span class="settings-switch__triger"></span>
-                                </div>
-                            </button>
-                            <button class="recommend-towns-art ui-settings-block">
-                                <span class="ui-settings-recommend-towns__label ui-settings-block__label">
-                                    Отображать рекомендованные города
                                 </span>
-                                <div class="settings-switch">
-                                    <span class="settings-switch__triger"></span>
-                                </div>
                             </button>
-                            <button class="weather-info-atr ui-settings-block">
-                                <span class="ui-settings-weather-info__label ui-settings-block__label">
+                            <button class="favorite-towns-atr settings-section-block">
+                                <span class="settings-section-favorite-towns__label settings-section-block__label">
+                                    Отображать избранные города
+                                </span>
+                                <span class="settings-switch">
+                                    <span class="settings-switch__triger"></span>
+                                </span>
+                            </button>
+                            <button class="weather-info-atr settings-section-block">
+                                <span class="settings-section-weather-info__label settings-section-block__label">
                                     Отображать подробную информацию о погоде
                                 </span>
-                                <div class="settings-switch">
+                                <span class="settings-switch">
                                     <span class="settings-switch__triger"></span>
-                                </div>
+                                </span>
                             </button>
-                            <button class="weather-forecast-atr ui-settings-block">
-                                <span class="ui-settings-weather-forecast__label ui-settings-block__label">
+                            <button class="weather-forecast-atr settings-section-block">
+                                <span class="settings-section-weather-forecast__label settings-section-block__label">
                                     Отображать прогноз погоды
                                 </span>
-                                <div class="settings-switch">
+                                <span class="settings-switch">
                                     <span class="settings-switch__triger"></span>
-                                </div>
+                                </span>
                             </button>
                         </div>
-                    </div>
+                    </section>
+                    <section class="settings-section search-settings">
+                        <h2 class="settings-section__label main-content__label">Настройки поиска:</h2>
+                        <div class="settings-section__wrapper">
+                            <button class="search-autocomplete-atr settings-section-block">
+                                <span class="settings-section-theme__label settings-section-block__label">
+                                    Показывать подсказки при поиске
+                                </span>
+                                <span class="settings-switch">
+                                    <span class="settings-switch__triger"></span>
+                                </span>
+                            </button>
+                            <button class="display-search-clear-button-atr settings-section-block">
+                                <span class="settings-section-block__label">
+                                    Отображать кнопку отчистки ввода
+                                </span>
+                                <span class="settings-switch">
+                                    <span class="settings-switch__triger"></span>
+                                </span>
+                            </button>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>
@@ -83,13 +105,16 @@
                 <span class="search__back-button--img"></span>
             </button>
             <div class="search__input-conteiner search-input-conteiner-colors">
-                <input type="text" class="search__input search-input-colors" id="search_input" placeholder="Введите название города..." autocomplete="off" value="">
+                <input type="text" class="search__input search-input-colors" id="search_input" focus_change="true" placeholder="Введите название города..." autocomplete="off" value="">
+                <button class="search__clear-button search-clear-button-colors"></button>
                 <button class="search__button search-button-colors" id="search_button">
                     <span class="search__button--img"></span>
                 </button>
             </div>
             <div class="search__modal-menu search__modal-menu--disactive">
-                <div class="modal-menu"></div>
+                <div class="modal-menu__scroll">
+                    <div class="modal-menu"></div>
+                </div>
             </div>
         </section>
         <div class="search__animation-conteiner search__animation-conteiner--disactive search-animation-conteiner-color"  id="search_animation">
@@ -105,50 +130,18 @@
 
         </div>
         <section class="latest-towns">
-            <h1 class="latest-towns__label label-colors">недавние города:</h1>
+            <h2 class="latest-towns__label label-colors">недавние города:</h2>
             <div class="latest-towns__content-conteiner">
             </div>
         </section>
-        <section class="recommend-towns">
-            <h1 class="recommend-towns__label label-colors">рекомендованные города:</h1>
-            <div class="recommend-towns__content-conteiner" id="recommend_towns_elements">
-                <div class="recommend-towns__button town-element-colors" id="town_button">
-                    <button class="recommend-towns__town-button-name town-name-colors" value="Санкт-Петербург">Санкт-Петербург</button>
-                    <button class="recommend-towns__close-button town-close-button-colors" ></button>
-                </div>
-                <div class="recommend-towns__button town-element-colors">
-                    <button class="recommend-towns__town-button-name town-name-colors" value="Москва">москва</button>
-                    <button class="recommend-towns__close-button town-close-button-colors"></button>
-                </div>
-                <div class="recommend-towns__button town-element-colors">
-                    <button class="recommend-towns__town-button-name town-name-colors" value="Берлин">берлин</button>
-                    <button class="recommend-towns__close-button town-close-button-colors"></button>
-                </div>
-                <div class="recommend-towns__button town-element-colors">
-                    <button class="recommend-towns__town-button-name town-name-colors" value="Париж">париж</button>
-                    <button class="recommend-towns__close-button town-close-button-colors"></button>
-                </div>
-                <div class="recommend-towns__button town-element-colors">
-                    <button class="recommend-towns__town-button-name town-name-colors" value="Минск">минск</button>
-                    <button class="recommend-towns__close-button town-close-button-colors"></button>
-                </div>
-                <div class="recommend-towns__button town-element-colors">
-                    <button class="recommend-towns__town-button-name town-name-colors" value="Киев">киев</button>
-                    <button class="recommend-towns__close-button town-close-button-colors"></button>
-                </div>
-                <div class="recommend-towns__button town-element-colors">
-                    <button class="recommend-towns__town-button-name town-name-colors" value="Нью-Йорк">Нью-Йорк</button>
-                    <button class="recommend-towns__close-button town-close-button-colors"></button>
-                </div>
-                <div class="recommend-towns__button town-element-colors">
-                    <button class="recommend-towns__town-button-name town-name-colors" value="Вашингтон">вашингтон</button>
-                    <button class="recommend-towns__close-button town-close-button-colors"></button>
-                </div>
+        <section class="favorite-towns">
+            <h2 class="favorite-towns__label label-colors">избранные города:</h2>
+            <div class="favorite-towns__content-conteiner" id="favorite_towns_elements">
             </div>
-            <div class="recommend-towns__add-button--center-conteiner" id="add_button_center">
-                <button class="recommend-towns__add-button town-element-colors" id="add_button">
-                    <span class="recommend-towns__add-button-before recommend-towns-add-button-before-colors" id="add_button_text_before">+</span>
-                    <span class="recommend-towns__add-button--content recommend-towns-add-button-content-colors" id="add_button_text">добавить город</span>
+            <div class="favorite-towns__add-button--center-conteiner" id="add_button_center">
+                <button class="favorite-towns__add-button town-element-colors" id="add_button">
+                    <span class="favorite-towns__add-button-before favorite-towns-add-button-before-colors" id="add_button_text_before">+</span>
+                    <span class="favorite-towns__add-button--content favorite-towns-add-button-content-colors" id="add_button_text">добавить город</span>
                 </button>
             </div>
         </section>
@@ -181,7 +174,7 @@
             </div>
             <div class="weather-forecast">
                 <div class="weather-forecast__content">
-                    <div class="forecast-day forecast-day-colors">
+                    <button class="forecast-day forecast-day-colors">
                         <div class="forecast-day__main-block">
                             <div class="forecast-day__date-conteiner">
                                 <span class="forecast-day__label forecast-day-label-colors">Затра</span>
@@ -195,8 +188,8 @@
                             <span class="forecast-day__wind">5</span>
                             <span class="forecast-day__humidity">80</span>
                         </div>
-                    </div>
-                    <div class="forecast-day forecast-day-colors">
+                    </button>
+                    <button class="forecast-day forecast-day-colors">
                         <div class="forecast-day__main-block">
                             <div class="forecast-day__date-conteiner">
                                 <span class="forecast-day__label forecast-day-label-colors">Пятница</span>
@@ -210,8 +203,8 @@
                             <span class="forecast-day__wind">5</span>
                             <span class="forecast-day__humidity">80</span>
                         </div>
-                    </div>
-                    <div class="forecast-day forecast-day-colors">
+                    </button>
+                    <button class="forecast-day forecast-day-colors">
                         <div class="forecast-day__main-block">
                             <div class="forecast-day__date-conteiner">
                                 <span class="forecast-day__label forecast-day-label-colors">Суббота</span>
@@ -225,8 +218,8 @@
                             <span class="forecast-day__wind">5</span>
                             <span class="forecast-day__humidity">80</span>
                         </div>
-                    </div>
-                    <div class="forecast-day forecast-day-colors">
+                    </button>
+                    <button class="forecast-day forecast-day-colors">
                         <div class="forecast-day__main-block">
                             <div class="forecast-day__date-conteiner">
                                 <span class="forecast-day__label forecast-day-label-colors">Воскресенье</span>
@@ -240,8 +233,8 @@
                             <span class="forecast-day__wind">5</span>
                             <span class="forecast-day__humidity">80</span>
                         </div>
-                    </div>
-                    <div class="forecast-day forecast-day-colors">
+                    </button>
+                    <button class="forecast-day forecast-day-colors">
                         <div class="forecast-day__main-block">
                             <div class="forecast-day__date-conteiner">
                                 <span class="forecast-day__label forecast-day-label-colors">Понедельник</span>
@@ -255,7 +248,7 @@
                             <span class="forecast-day__wind">5</span>
                             <span class="forecast-day__humidity">80</span>
                         </div>
-                    </div>
+                    </button>
                 </div>
             </div>
         </section>
@@ -302,8 +295,9 @@
             <h1 class="town-notification__label town-notification-label-color enter-town-notification__label">Введите название города</h1>
         </section>
     </main>
-    <script type="module" src="./js/product_js/main.js"></script>
+    <script type="module" src="./js/sourse_js/main.js"></script>
     <script type="module" src="./js/product_js/settings.js"></script>
     <script src="./js/sourse_js/window_scroll.js"></script>
+    <script src="./js/sourse_js/search_input_event.js"></script>
 </body>
 </html>

@@ -1,10 +1,12 @@
 {
   "name": "weather-app",
-  "version": "1.3.6",
-  "description": "Weather_app - v1.3.6.4",
+  "version": "1.3.7",
+  "description": "Weather_app - v1.3.7",
   "main": "server.js",
   "dependencies": {
+    "browserify": "^17.0.0",
     "core-js": "^3.21.0",
+    "geonames.js": "^3.0.6",
     "querystring": "^0.2.1",
     "underscore": "^1.13.2"
   },

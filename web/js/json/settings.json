@@ -6,15 +6,19 @@
         "latest-towns": {
             "display-latest-towns": true
         },
-        "recommend-towns": {
-            "display-recommend-towns": true,
-            "recommend-latest-towns": true,
-            "block-recommend-towns": false
+        "favorite-towns": {
+            "display-favorite-towns": true,
+            "favorite-latest-towns": true,
+            "block-favorite-towns": false
         },
         "weather-info": {
-            "dasplay-weather-additional-info": true,
-            "dasplay-weather-forecast": true,
-            "dasplay-weather-forecast-icons": true
+            "display-weather-additional-info": true,
+            "display-weather-forecast": true,
+            "display-weather-forecast-icons": true
         }
+    },
+    "search": {
+        "search-autocomplete": true,
+        "display-search-clear-button": true
     }
 }

@@ -1,7 +1,7 @@
-const json = require('../json/settings.json');
 
 document_events();
 new_town_button_event();
+load_favorite_towns();
 
 // global variables
 const add_button_text = document.querySelector("#add_button_text");
@@ -14,18 +14,21 @@ const town_not_found_label = document.querySelector("#town_not_found_label");
 const enter_town_notification = document.querySelector(".enter-town-notification");
 const search_input = document.querySelector("#search_input");
 const latest_towns = document.querySelector(".latest-towns");
-const recommend_towns_elements = document.querySelector("#recommend_towns_elements");
+const favorite_towns_elements = document.querySelector("#favorite_towns_elements");
 const search_animation = document.querySelector("#search_animation");
 const search_modal_menu = document.querySelector(".search__modal-menu");
 const key = '88d2ec6ab0319b11d3c9704f6ac3b98f';
-var all_last_places_array = [];
+
 var last_places_array = [];
+sessionStorage.setItem("last-places", JSON.stringify([]));
+
+var all_last_places_array = [];
 let click_counter = 0;
 let search_anable = true;
 let search_input_focused = false;
 let search_delay = 0;
 
-async function display_weather(place) {
+function display_weather(place) {
     print_weather_info(true);
 
     all_last_places_array.unshift(place);
@@ -55,90 +58,25 @@ async function display_weather(place) {
                     error_index = 0;
 
                     if (data.cod == 200) {
-                        const day_0_weather = data.list[0];
+
+                        sessionStorage.setItem("weather-foreacst", JSON.stringify(data));
 
                         if (search_anable) {
-                            let temp = Math.round(parseFloat(day_0_weather.main.temp)-273.15);
-        
-                            let temp_min = Math.round(parseFloat(day_0_weather.main.temp_min)-273.15);
-                            let temp_max = Math.round(parseFloat(day_0_weather.main.temp_max)-273.15);
-                            let temp_min_max = temp_min  + "/" + temp_max;
-            
-                            let wind = Math.round(day_0_weather.wind.speed);
-            
-                            let humidity = day_0_weather.main.humidity;
-            
-                            let status = day_0_weather.weather[0].description;
-            
-                            var weather_info_data = [temp, status, wind, temp_min_max, humidity];
-            
+                            const day_0_weather = data.list[0];
+
+                            var weather_data = write_weather_data(day_0_weather, true);
                             if (last_places_array[0] != place) {
                                 last_places_array.unshift(place);
+                                sessionStorage.setItem("last-places", JSON.stringify(last_places_array));
             
-                                add_last_town(place, temp, wind, humidity);
+                                console.log(weather_data);
+                                add_last_town(place, weather_data[0], weather_data[2], weather_data[4]);
                             }
     
-                            var weather_data = document.querySelectorAll('.weather_data');
+                            if (JSON.parse(localStorage.getItem("display-weather-forecast"))) {
     
-                            if (json["ui"]["weather-info"]["dasplay-weather-additional-info"]) {
-            
-                                let i = 0;
-                                weather_info_data.forEach(element => {
-                                    weather_data[i].textContent = element;
-                                    i++;
-                                });
-                            } else {
-                                for (let i = 0; i < 2; i++) {
-                                    weather_data[i].textContent = weather_info_data[i];
-                                }
-                            }
-    
-                            if (json["ui"]["weather-info"]["dasplay-weather-forecast"]) {
-    
-                                var today_date = new Date();
-                                let day_tomorrow = today_date.getDay();
-                                day_tomorrow++;
-    
-                                let day_of_week = "";
-    
-                                var forecast_week_day = document.querySelectorAll(".forecast-day__label");
-    
-                                let day_index = 0
-    
-                                if (day_tomorrow >= 6) {
-                                    day_tomorrow = 0;
-                                }
+                                set_week_day();
 
-                                for (let i = 0; i < forecast_week_day.length; i++) {
-    
-                                    if (day_tomorrow + day_index == 0) {
-                                        day_of_week = "Воскресенье";
-                                    } else if (day_tomorrow + day_index == 1) {
-                                        day_of_week = "Понедельник";
-                                    } else if (day_tomorrow + day_index == 2) {
-                                        day_of_week = "Вторник";
-                                    } else if (day_tomorrow + day_index == 3) {
-                                        day_of_week = "Среда";
-                                    } else if (day_tomorrow + day_index == 4) {
-                                        day_of_week = "Четрерг";
-                                    } else if (day_tomorrow + day_index == 5) {
-                                        day_of_week = "Пятница";
-                                    } else if (day_tomorrow + day_index == 6) {
-                                        day_of_week = "Суббота";
-                                    }
-                                    
-                                    if (i != 0) {
-                                        forecast_week_day[i].textContent = day_of_week;
-                                    }
-    
-                                    day_index++;
-    
-                                    if (day_index + day_tomorrow >= 6) {
-                                        day_index = 0;
-                                        day_tomorrow = 0;
-                                    }
-                                }
-    
                                 var forecast_day_temp_arr = document.querySelectorAll(".forecast-day__temp");
                                 var forecast_day_status_arr = document.querySelectorAll(".forecast-day__status");
                                 var forecast_day_wind_arr = document.querySelectorAll(".forecast-day__wind");
@@ -146,8 +84,12 @@ async function display_weather(place) {
     
                                 for (let i = 0; i < forecast_day_temp_arr.length; i++) {
                                     forecast_day_temp_arr[i].textContent = Math.round(parseFloat(data.list[i+1].main.temp)-273.15);
-                                    if (json["ui"]["weather-info"]["dasplay-weather-forecast-icons"]) {
-                                        forecast_day_status_arr[i].style = "background-image: url(./svg/light_theme/weather_icons/" + data.list[i+1].weather[0].icon + ".svg)";
+                                    if (JSON.parse(localStorage.getItem("display-weather-forecast"))) {
+                                        if (forecast_day_status_arr[i].classList.contains("light-icon-theme")) {
+                                            forecast_day_status_arr[i].style = "background-image: url(./svg/light_theme/weather_icons/" + data.list[i+1].weather[0].icon + ".svg)";
+                                        } else if (forecast_day_status_arr[i].classList.contains("dark-icon-theme")) {
+                                            forecast_day_status_arr[i].style = "background-image: url(./svg/dark_theme/weather_icons/" + data.list[i+1].weather[0].icon + ".svg)";
+                                        }
                                     }
                                     forecast_day_wind_arr[i].textContent = Math.round(data.list[i+1].wind.speed);
                                     forecast_day_humidity_arr[i].textContent = data.list[i+1].main.humidity;
@@ -202,8 +144,91 @@ async function display_weather(place) {
     }
 }
 
+function write_weather_data(data, is_return) {
+    if (!data) {
+        console.log("No data.");
+        return
+    }
+
+    let temp = Math.round(parseFloat(data.main.temp)-273.15);
+        
+    let temp_min = Math.round(parseFloat(data.main.temp_min)-273.15);
+    let temp_max = Math.round(parseFloat(data.main.temp_max)-273.15);
+    let temp_min_max = temp_min  + "/" + temp_max;
+
+    let wind = Math.round(data.wind.speed);
+
+    let humidity = data.main.humidity;
+
+    let status = data.weather[0].description;
+
+    var weather_info_data = [temp, status, wind, temp_min_max, humidity];
+
+    var weather_data = document.querySelectorAll('.weather_data');
+
+    if (JSON.parse(localStorage.getItem("display-additional-info"))) {
+        for (let i = 0; i < weather_info_data.length; i++) {
+            weather_data[i].textContent = weather_info_data[i];
+        }
+    } else {
+        for (let i = 0; i < 2; i++) {
+            weather_data[i].textContent = weather_info_data[i];
+        }
+    }
+    if (is_return) {
+        return weather_info_data;
+    }
+}
+
+function set_week_day() {
+
+    var today_date = new Date();
+    let day_tomorrow = today_date.getDay();
+    day_tomorrow++;
+
+    let day_of_week = "";
+
+    var forecast_week_day = document.querySelectorAll(".forecast-day__label");
+
+    let day_index = 0
+
+    if (day_tomorrow >= 6) {
+        day_tomorrow = 0;
+    }
+
+    for (let i = 0; i < forecast_week_day.length; i++) {
+
+        if (day_tomorrow + day_index == 0) {
+            day_of_week = "Воскресенье";
+        } else if (day_tomorrow + day_index == 1) {
+            day_of_week = "Понедельник";
+        } else if (day_tomorrow + day_index == 2) {
+            day_of_week = "Вторник";
+        } else if (day_tomorrow + day_index == 3) {
+            day_of_week = "Среда";
+        } else if (day_tomorrow + day_index == 4) {
+            day_of_week = "Четрерг";
+        } else if (day_tomorrow + day_index == 5) {
+            day_of_week = "Пятница";
+        } else if (day_tomorrow + day_index == 6) {
+            day_of_week = "Суббота";
+        }
+        
+        if (i != 0) {
+            forecast_week_day[i].textContent = day_of_week;
+        }
+
+        day_index++;
+
+        if (day_index + day_tomorrow >= 6) {
+            day_index = 0;
+            day_tomorrow = 0;
+        }
+    }
+}
+
 function print_weather_info(par) {
-    let recommend_towns = document.querySelector(".recommend-towns");
+    let favorite_towns = document.querySelector(".favorite-towns");
     let search_back_button = document.querySelector("#search_back_button");
     let search = document.querySelector(".search");
     let weather_template = document.querySelector(".weather-template");
@@ -211,8 +236,8 @@ function print_weather_info(par) {
     if (par) {
         search.style = "grid-template-columns: min-content 1fr;";
         search_back_button.style = "display: flex;";
-        if (json["ui"]["recommend-towns"]["display-recommend-towns"]) {
-            recommend_towns.style = "display: none;";
+        if (JSON.parse(localStorage.getItem("display-favorite-towns"))) {
+            favorite_towns.style = "display: none;";
         }
         weather_template.className = "weather-template";
         add_new_town.style = "display: none";
@@ -225,8 +250,8 @@ function print_weather_info(par) {
     } else {
         search.style = "";
         search_back_button.style = "";
-        if (json["ui"]["recommend-towns"]["display-recommend-towns"]) {
-            recommend_towns.style = "";
+        if (JSON.parse(localStorage.getItem("display-favorite-towns"))) {
+            favorite_towns.style = "";
         }
         weather_template.className = "weather-template";
         weather_template.style = "";
@@ -246,9 +271,72 @@ function print_weather_info(par) {
     }
 }
 
+function add_day_of_the_week_event() {
+
+    var forecast_day = document.querySelectorAll(".forecast-day");
+
+    for (let i = 0; i < forecast_day.length; i++) {
+        forecast_day[i].classList.add("day-number-" + (i  + 1));
+
+        day_event(forecast_day[i], forecast_day);
+    }
+
+    function day_event(element, arr) {
+        element.addEventListener("click", function() {
+            var data = JSON.parse(sessionStorage.getItem("weather-foreacst"));
+
+            if (!data) {
+                console.log("No data.");
+                return
+            }
+
+            if (element.classList.contains("forecast-day--active")) {
+                element.classList.remove("forecast-day--active");
+
+                write_weather_data(data.list[0]);
+                rephresh_weather_template();
+                return
+            }
+            
+            arr.forEach(element => {
+                if (element.classList.contains("forecast-day--active")) {
+                    element.classList.remove("forecast-day--active");
+                }
+            });
+
+            element.classList.add("forecast-day--active");
+            if (element.classList.contains("day-number-1")) {
+                write_weather_data(data.list[1]);
+            } else if (element.classList.contains("day-number-2")) {
+                write_weather_data(data.list[2]);
+            } else if (element.classList.contains("day-number-3")) {
+                write_weather_data(data.list[3]);
+            } else if (element.classList.contains("day-number-4")) {
+                write_weather_data(data.list[4]);
+            } else if (element.classList.contains("day-number-5")) {
+                write_weather_data(data.list[5]);
+            }
+
+            rephresh_weather_template();
+        });
+    }
+
+    function rephresh_weather_template() {
+        const weather_template = document.querySelector(".weather-template");
+
+        weather_template.classList.remove("weather-template--active");
+
+        let delay = setTimeout(function() {
+            weather_template.classList.add("weather-template--active");
+        }, 20);
+    }
+
+}
+
 function document_events() {
 
     search_events();
+    add_day_of_the_week_event();
 
     let settings_button_active = false;
 
@@ -289,15 +377,26 @@ function document_events() {
     });
 
     settings_close_button.addEventListener("click", function() {
+        settings_button_active = settings_close_event();
+    });
+
+    let settings_background = document.querySelector(".settings__background");
+
+    settings_background.addEventListener("click", function() {
+        settings_button_active = settings_close_event();
+    });
+
+    function settings_close_event() {
         settings.classList.add("settings-close-animation");
-        settings_button_active = false;
         document.body.style = "";
 
         let delay = setTimeout(function() {
             settings.classList.remove("settings-close-animation");
             settings.classList.add("settings-disactive");
         }, 199);
-    });
+
+        return false;
+    }
 
     let refresh_button = document.querySelector("#refresh_button");
 
@@ -320,15 +419,15 @@ function document_events() {
         print_weather_info(false);
     });
     
-    var town_close_button = document.querySelectorAll(".recommend-towns__close-button");
-    var town_button = document.querySelectorAll(".recommend-towns__button");
+    var town_close_button = document.querySelectorAll(".favorite-towns__close-button");
+    var town_button = document.querySelectorAll(".favorite-towns__button");
     
     town_close_button_event(town_close_button, town_button);
     town_button_event_focus(town_close_button, town_button, town_close_button, "focus");
     town_button_event_focus(town_close_button, town_button, town_close_button, "blur");
 
-    var town_name_button = document.querySelectorAll(".recommend-towns__town-button-name");
-    town_name_button_event(town_name_button, "recommend_towns");
+    var town_name_button = document.querySelectorAll(".favorite-towns__town-button-name");
+    town_name_button_event(town_name_button, "favorite_towns");
     town_button_event_focus(town_name_button, town_button, town_close_button, "focus");
     town_button_event_focus(town_name_button, town_button, town_close_button, "blur");
 
@@ -370,7 +469,6 @@ function search_events() {
     let search_input_conteiner = document.querySelector(".search__input-conteiner");
     let search_input = document.querySelector("#search_input");
     let search_button = document.querySelector("#search_button");
-    let search_modal_menu_remove_index = false;
 
     search_button.addEventListener('click', function() {
 
@@ -400,59 +498,85 @@ function search_events() {
         if (event.keyCode == 46) {
             search_input.value = "";
         }
-        let delay = setTimeout(function() {
-            search_modal_menu_remove_index = recommend_towns_for_search(document.getElementById("search_input").value, search_modal_menu_remove_index);
-        }, 50);
+    });
+    search_input.addEventListener("input", function() {
+        if (JSON.parse(localStorage.getItem("search-autocomplete"))) {
+            favorite_towns_for_search(document.getElementById("search_input").value);
+        }
     });
 
     let display_dark = document.querySelector(".display-dark");
 
     search_input.addEventListener('focus', function() {
-        search_input_focused = true;
+        if (search_input.getAttribute("focus_change") == "true") {
+            search_input_focused = true;
 
-        search_input_conteiner.style = "box-shadow: 0px 0px 18px #0000001f;";
-        display_dark.className = "display-dark display-dark-colors";
-        document.body.style = "max-height: 100vh; overflow: hidden;";
-        search_modal_menu_remove_index = recommend_towns_for_search(document.getElementById("search_input").value, search_modal_menu_remove_index);
+            search_input_conteiner.style = "box-shadow: 0px 0px 18px #0000001f;";
+            display_dark.className = "display-dark display-dark-colors";
+            document.body.style = "max-height: 100vh; overflow: hidden;";
+            if (JSON.parse(localStorage.getItem("search-autocomplete"))) {
+                favorite_towns_for_search(document.getElementById("search_input").value);
+            }
+        }
     });
     
     search_input.addEventListener('blur', function() {
-        search_input_focused = false;
-        search_input_conteiner.style = "";
-        display_dark.className = "display-dark display-dark-colors display-dark--disactive-animation";
-
-        if (search_modal_menu_remove_index) {
-            search_modal_menu.className = "search__modal-menu modal-menu-colors search__modal-menu--disactive-animation";
-            search_modal_menu_remove_index = false;
-        }
+        
         let delay = setTimeout(function() {
-            display_dark.className = "display-dark display-dark--disactive";
-            search_modal_menu.className = "search__modal-menu search__modal-menu--disactive";
-            document.body.style = "overflow: visible;";
-        }, 100);
+            if (search_input.getAttribute("focus_change") == "true") {
 
+                search_input_focused = false;
+                search_input_conteiner.style = "";
+                display_dark.className = "display-dark display-dark-colors display-dark--disactive-animation";
+        
+                if (!search_modal_menu.classList.contains("search__modal-menu--disactive")) {
+                    search_modal_menu.className = "search__modal-menu modal-menu-colors search__modal-menu--disactive-animation";
+                }
+                let delay = setTimeout(function() {
+                    display_dark.className = "display-dark display-dark--disactive";
+                    search_modal_menu.className = "search__modal-menu search__modal-menu--disactive";
+                    document.body.style = "overflow: visible;";
+                }, 100);
+            }
+        }, 100);
     });
 }
 
-function recommend_towns_for_search(place, search_modal_menu_remove_index) {
+function favorite_towns_for_search(place) {
     
-    if (place) {
+    if (!place) {
+        if (!search_modal_menu.classList.contains("search__modal-menu--disactive")) {
+            search_modal_menu.className = "search__modal-menu modal-menu-colors search__modal-menu--disactive-animation";
+        }
+        let delay = setTimeout(function() {
+            search_modal_menu.className = "search__modal-menu search__modal-menu--disactive";
+        }, 90);
 
-        var search_towns_arr = ['всеволожск', "санкт-петербург", "москва", "минск", "севастополь", "екатеренбург", "новосибирск"];
-        var append_search_towns = [];
+        return
+    }
 
-        let town_counter = 0;
-    
-        for (let i = 0; i < search_towns_arr.length; i++) {
-            if (search_towns_arr[i].indexOf(place) > -1) {
-                append_search_towns.push(search_towns_arr[i]);
-                town_counter++;
+    const user_name = "si1og";
+    let town_counter = 0;
+    var append_search_towns = [];
+
+    fetch("http://api.geonames.org/postalCodeSearchJSON?placename_startsWith=" + place + "&maxRows=10&username=" + user_name + "&featureClass=p&lang=ru&country=RU")  
+    .then(function(resp) { return resp.json() })
+    .then(function(data) {
+        for (let i = 0; i < data["postalCodes"].length; i++) {
+            if (i > 0) {
+                if (data["postalCodes"][i].adminCode1 != data["postalCodes"][i-1].adminCode1) {
+                    append_search_towns.push(data["postalCodes"][i].placeName);
+                }
+            } else {
+                append_search_towns.push(data["postalCodes"][i].placeName);
             }
         }
+
+        town_counter = append_search_towns.length;
+
         if (!town_counter) {
-            if (search_modal_menu_remove_index) {
+            if (!search_modal_menu.classList.contains("search__modal-menu--disactive")) {
                 search_modal_menu.className = "search__modal-menu modal-menu-colors search__modal-menu--disactive-animation";
-                search_modal_menu_remove_index = false;
             }
 
             var search_button_remove = document.querySelectorAll(".modal-menu__town-button");
@@ -460,13 +584,13 @@ function recommend_towns_for_search(place, search_modal_menu_remove_index) {
                 for (let i = 0; i < search_button_remove.length; i++) {
                     let delay = setTimeout(function() {
                         search_button_remove[i].remove();
-                    }, 100);
+                    }, 90);
                 }
             }
 
             let delay = setTimeout(function() {
                 search_modal_menu.className = "search__modal-menu search__modal-menu--disactive";
-            }, 100);
+            }, 90);
         } else {
 
             var search_button_remove = document.querySelectorAll(".modal-menu__town-button");
@@ -476,9 +600,8 @@ function recommend_towns_for_search(place, search_modal_menu_remove_index) {
                 }
             }
 
-            if (!search_modal_menu_remove_index) {
+            if (search_modal_menu.classList.contains("search__modal-menu--disactive")) {
                 search_modal_menu.className = "search__modal-menu modal-menu-colors";
-                search_modal_menu_remove_index = true;
             }
 
             for (let i = 0; i < append_search_towns.length; i++) {
@@ -496,20 +619,10 @@ function recommend_towns_for_search(place, search_modal_menu_remove_index) {
                     display_weather(place);
 
                     search_modal_menu.className = "search__modal-menu search__modal-menu--disactive";
-                    search_modal_menu_remove_index = false;
                 })
             }
         }
-    } else {
-        if (search_modal_menu_remove_index) {
-            search_modal_menu.className = "search__modal-menu modal-menu-colors search__modal-menu--disactive-animation";
-            search_modal_menu_remove_index = false;
-        }
-        let delay = setTimeout(function() {
-            search_modal_menu.className = "search__modal-menu search__modal-menu--disactive";
-        }, 100);
-    }
-    return search_modal_menu_remove_index;
+    });
 }
 
 function show_add_new_town_button() {
@@ -534,7 +647,7 @@ function hide_add_new_town_button() {
     let add_new_town_delay = setTimeout(function() {
         add_new_town.className = "add-new-town";
         add_new_town.style = "display: none;";
-    }, 200);
+    }, 190);
 
     return 0;
 }
@@ -547,11 +660,11 @@ function new_town_button_event() {
         if (new_town) {
             let delay = setTimeout(function() {
                 new_town_button.classList.add("add-new-town__button--active", "add-new-town-button-active-colors");
-            }, 200);
-            var recommend_towns_arr = document.querySelectorAll(".recommend-towns__town-button-name");
+            }, 190);
+            var favorite_towns_arr = document.querySelectorAll(".favorite-towns__town-button-name");
             let new_town_index = true;
 
-            recommend_towns_arr.forEach(element => {
+            favorite_towns_arr.forEach(element => {
                 if (element.value == new_town) {
                     new_town_index = false;
                 }
@@ -564,7 +677,7 @@ function new_town_button_event() {
                     if (data.cod == "200") {
     
                         clearTimeout(delay);
-                        addendum_new_town(new_town)
+                        addendum_new_town(new_town, "add-new-town")
                         new_town_button.className = "add-new-town__button add-new-town-button-colors";
                         
                     } else {
@@ -580,78 +693,120 @@ function new_town_button_event() {
     }
 } 
 
- function addendum_new_town(town) {
+ function addendum_new_town(town, modification) {
 
-    let recommend_towns = document.querySelector("#recommend_towns_elements");
+    let favorite_towns = document.querySelector("#favorite_towns_elements");
 
-    let new_recommend_town = document.createElement("div");
-    new_recommend_town.className = "recommend-towns__button town-element-colors recommend-towns__button--append-animation";
+    let new_favorite_town = document.createElement("div");
+    new_favorite_town.className = "favorite-towns__button town-element-colors favorite-towns__button--append-animation";
 
-    let recommend_town_name_button = document.createElement("button");
-    recommend_town_name_button.className = "recommend-towns__town-button-name town-name-colors";
-    recommend_town_name_button.value = town;
-    recommend_town_name_button.textContent = town;
+    let favorite_town_name_button = document.createElement("button");
+    favorite_town_name_button.className = "favorite-towns__town-button-name town-name-colors";
+    favorite_town_name_button.value = town;
+    favorite_town_name_button.textContent = town;
 
-    let recommend_town_close_button = document.createElement("button");
-    recommend_town_close_button.className = "recommend-towns__close-button town-close-button-colors";
+    let favorite_town_close_button = document.createElement("button");
+    favorite_town_close_button.className = "favorite-towns__close-button town-close-button-colors";
 
-    let recommend_towns_close_button_img = document.createElement("span");
-    recommend_towns_close_button_img.className = "recommend-towns__close-button--img";
+    let favorite_towns_close_button_img = document.createElement("span");
+    favorite_towns_close_button_img.className = "favorite-towns__close-button--img";
 
     let delete_notification = false;
 
-    var recommend_towns_notification_conteiner = document.querySelectorAll(".rocommend-towns__no-town-notification");
-    if (recommend_towns_notification_conteiner.length >= 1) {
-        recommend_towns_notification_conteiner[0].className = "rocommend-towns__no-town-notification rocommend-towns__no-town-notification--back";
+    var favorite_towns_notification_conteiner = document.querySelectorAll(".favorite-towns__no-town-notification");
+    if (favorite_towns_notification_conteiner.length >= 1) {
+        favorite_towns_notification_conteiner[0].className = "favorite-towns__no-town-notification favorite-towns__no-town-notification--back";
         delete_notification = true;
         let delay = setTimeout(function() {
-            recommend_towns_notification_conteiner[0].remove();
-        }, 200);
+            favorite_towns_notification_conteiner[0].remove();
+        }, 190);
     }
 
     if (delete_notification) {
         let delay_2 = setTimeout(function() {
-            recommend_towns.append(new_recommend_town);
-            new_recommend_town.append(recommend_town_name_button);
-            new_recommend_town.append(recommend_town_close_button);
-            recommend_town_close_button.append(recommend_towns_close_button_img);
-        
-            town_name_button_event([recommend_town_name_button], "recommend_towns");
-            town_close_button_event([recommend_town_close_button], [new_recommend_town]);
-
-            let delay_2 = setTimeout(function() {
-                new_recommend_town.className = "recommend-towns__button town-element-colors";
-            }, 200);
-
-            addendum_new_town_count();
-        }, 200);
+            add_new_town_function(favorite_towns, new_favorite_town, favorite_town_close_button, favorite_town_name_button, favorite_towns_close_button_img, town);
+        }, 190);
     } else {
-        recommend_towns.append(new_recommend_town);
-        new_recommend_town.append(recommend_town_name_button);
-        new_recommend_town.append(recommend_town_close_button);
-        recommend_town_close_button.append(recommend_towns_close_button_img);
-    
-        town_name_button_event([recommend_town_name_button], "recommend_towns");
-        town_close_button_event([recommend_town_close_button], [new_recommend_town]);
-        
-        let delay_2 = setTimeout(function() {
-            new_recommend_town.className = "recommend-towns__button town-element-colors";
-        }, 200);
+        add_new_town_function(favorite_towns, new_favorite_town, favorite_town_close_button, favorite_town_name_button, favorite_towns_close_button_img, town);
+    }
 
-        addendum_new_town_count();
+
+    function add_new_town_function(favorite_towns_elements, new_favorite_town, favorite_town_close_button, favorite_town_name_button, favorite_towns_close_button_img, town) {
+        favorite_towns_elements.append(new_favorite_town);
+        new_favorite_town.append(favorite_town_name_button);
+        new_favorite_town.append(favorite_town_close_button);
+        favorite_town_close_button.append(favorite_towns_close_button_img);
+
+        town_name_button_event([favorite_town_name_button], "favorite_towns");
+        town_close_button_event([favorite_town_close_button], [new_favorite_town]);
+
+        town_button_event_focus([favorite_town_name_button], [new_favorite_town], [favorite_town_close_button], "focus");
+        town_button_event_focus([favorite_town_name_button], [new_favorite_town], [favorite_town_close_button], "blur");
+        
+        town_button_event_focus([favorite_town_close_button], [new_favorite_town], [favorite_town_close_button], "focus");
+        town_button_event_focus([favorite_town_close_button], [new_favorite_town], [favorite_town_close_button], "blur");
+        
+        var favorite_towns_arr = JSON.parse(localStorage.getItem("favorite-towns"));
+        if (!favorite_towns_arr) {
+            favorite_towns_arr = [];
+        }
+
+        favorite_towns_arr.push(town);
+
+        if (modification == "add-new-town") {
+            let delay_2 = setTimeout(function() {
+                localStorage.setItem("favorite-towns", JSON.stringify(favorite_towns_arr));
+                new_favorite_town.className = "favorite-towns__button town-element-colors";
+            }, 190);
+        } else if (modification == "load-page") {
+            new_favorite_town.className = "favorite-towns__button town-element-colors";
+        }
+
+        addendum_new_town_count(favorite_towns_elements);
     }
 }
 
-function addendum_new_town_count() {
-    let town_button_count = document.querySelectorAll(".recommend-towns__button").length;
+function load_favorite_towns() {
+    var towns_arr = JSON.parse(localStorage.getItem("favorite-towns"));
+
+    if (towns_arr) {
+        if (towns_arr.length >= 1) {
+            towns_arr.forEach(element => {
+                addendum_new_town(element, "load-page");
+            });
+        } else {
+            create_notification("removed-favorite-towns");
+        }
+    } else {
+        create_notification("no-favorite-towns");
+    }
+}
+
+function create_notification(modification) {
+    let favorite_towns = document.querySelector("#favorite_towns_elements");
+    let favorite_towns_notification_conteiner = document.createElement("p");
+    favorite_towns_notification_conteiner.className = "favorite-towns__no-town-notification";
+    let label_string = ""
+    if (modification == "no-favorite-towns") {
+        label_string = "У вас пока нет избранных городов";
+    } else if (modification == "removed-favorite-towns") {
+        label_string = "Нет избранных городов";
+    }
+    favorite_towns_notification_conteiner.textContent = label_string;
+    favorite_towns.append(favorite_towns_notification_conteiner);
+    favorite_towns.classList.add("favorite-towns__content-conteiner--1-colum");
+}
+
+function addendum_new_town_count(favorite_towns_elements) {
+    let town_button_count = document.querySelectorAll(".favorite-towns__button").length;
     if (town_button_count >= 4) {
-        recommend_towns_elements.className = "recommend-towns__content-conteiner";
+        favorite_towns_elements.className = "favorite-towns__content-conteiner";
     } else if (town_button_count == 3) {
-        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--3-colums";
+        favorite_towns_elements.className = "favorite-towns__content-conteiner favorite-towns__content-conteiner--3-colums";
     } else if (town_button_count == 2) {
-        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--2-colums";
+        favorite_towns_elements.className = "favorite-towns__content-conteiner favorite-towns__content-conteiner--2-colums";
     } else if (town_button_count == 1) {
-        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--1-colum";
+        favorite_towns_elements.className = "favorite-towns__content-conteiner favorite-towns__content-conteiner--1-colum";
     }
 }
 
@@ -734,6 +889,10 @@ function add_last_town(town, temp, wind, humidity) {
 
         last_town_buttons = document.querySelectorAll(".latest-towns__town-button");
         last_town_buttons[last_town_buttons.length - 1].remove();
+
+        let array_index = last_places_array.indexOf(last_places_array[last_town_buttons.length - 1]);
+        last_places_array.splice(array_index, 1);
+        sessionStorage.setItem("last-places", JSON.stringify(last_places_array));
     } else {
         latest_towns_content.prepend(last_town_button);
         last_town_button.append(last_town_button_content);
@@ -758,7 +917,7 @@ function town_button_event_focus(focus_button_arr, town_button_arr, close_button
             if (event == "focus") {
                 for (let i = 0; i < focus_button_arr.length; i++) {
                     focus_button_arr[i].addEventListener('focus', function() {
-                        town_button_arr[i].className = "recommend-towns__button town-element-colors--active recommend-towns__button--active";
+                        town_button_arr[i].classList.add("favorite-towns__button--active");
                         close_button_arr[i].style = "opacity: 1";
                     });
                 }
@@ -766,7 +925,7 @@ function town_button_event_focus(focus_button_arr, town_button_arr, close_button
             else if (event == "blur") {
                 for (let i = 0; i < focus_button_arr.length; i++) {
                     focus_button_arr[i].addEventListener('blur', function() {
-                        town_button_arr[i].className = "recommend-towns__button town-element-colors";
+                        town_button_arr[i].classList.remove("favorite-towns__button--active");
                         close_button_arr[i].style = "";
                     });
                 }
@@ -780,33 +939,40 @@ function town_close_button_event(close_button_arr, town_button_arr) {
         if (close_button_arr.length == town_button_arr.length) {
             for (let i = 0; i < close_button_arr.length; i++) {
                 close_button_arr[i].addEventListener('click', function() {
-                    remove_recommend_towns_element(town_button_arr[i]);
+                    remove_favorite_towns_element(town_button_arr[i]);
                 });
             }
         }
     }
 }
 
-function remove_recommend_towns_element(element) {
+function remove_favorite_towns_element(element) {
     element.remove();
-    var town_button_count = document.querySelectorAll(".recommend-towns__button");
+    var town_button_count = document.querySelectorAll(".favorite-towns__button");
     if (town_button_count.length == 3) {
-        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--3-colums";
+        favorite_towns_elements.className = "favorite-towns__content-conteiner favorite-towns__content-conteiner--3-colums";
     } else if (town_button_count.length == 2) {
-        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--2-colums";
+        favorite_towns_elements.className = "favorite-towns__content-conteiner favorite-towns__content-conteiner--2-colums";
     } else if (town_button_count.length == 1) {
-        recommend_towns_elements.className = "recommend-towns__content-conteiner recommend-towns__content-conteiner--1-colum";
+        favorite_towns_elements.className = "favorite-towns__content-conteiner favorite-towns__content-conteiner--1-colum";
     } else if (town_button_count.length == 0) {
-        let recommend_towns_notification_conteiner = document.createElement("p");
-        recommend_towns_notification_conteiner.className = "rocommend-towns__no-town-notification";
-        recommend_towns_notification_conteiner.textContent = "Нет рекомендованных городов";
-        recommend_towns_elements.append(recommend_towns_notification_conteiner);
+        create_notification("removed-favorite-towns");
+    }
+
+    var favorite_towns_arr = JSON.parse(localStorage.getItem("favorite-towns"));
+
+    if (favorite_towns_arr) {
+        var town_buttons = element.getElementsByClassName("favorite-towns__town-button-name");
+        let index = favorite_towns_arr.indexOf(town_buttons[0].value);
+        favorite_towns_arr.splice(index, 1);
+        localStorage.setItem("favorite-towns", JSON.stringify(favorite_towns_arr));
     }
 }
 
 function remove_latest_towns_element(element, index) {
     element.remove();
     last_places_array.splice(index, 1);
+    sessionStorage.setItem("last-places", JSON.stringify(last_places_array));
 
     const latest_towns_content = document.querySelector(".latest-towns__content-conteiner");
     var town_button_count = document.querySelectorAll(".latest-towns__town-button");
@@ -825,6 +991,7 @@ function town_name_button_event(town_button_arr, button_type) {
     if (town_button_arr.length >= 1) {
         let weather_function = true;
         let delay = 0;
+        
         town_button_arr.forEach(element => {
             element.addEventListener('click', function(event) {
                 if (weather_function) {
@@ -836,27 +1003,24 @@ function town_name_button_event(town_button_arr, button_type) {
                 }
                 weather_function = true;
             });
-            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
-                element.addEventListener("mousedown", function() {
-                    clearTimeout(delay);
-                    remove_indicate_menu(false);
-                    weather_function = true;
-                    delay = setTimeout(function() {
-                        indicate_menu_add(element, button_type);
-                        weather_function = false;
-                    }, 250);
-                });
-            } else {
-                element.addEventListener("focus", function() {
-                    clearTimeout(delay);
-                    remove_indicate_menu(false);
-                    weather_function = true;
-                    delay = setTimeout(function() {
-                        indicate_menu_add(element, button_type);
-                        weather_function = false;
-                    }, 100);
-                });
+            let event_name = "focus";
+            let event_duration = 100;
+
+            if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) { 
+                event_name = "mousedown";
+                event_duration = 250;
             }
+
+            element.addEventListener(event_name, function() {
+                clearTimeout(delay);
+                remove_indicate_menu(false);
+                weather_function = true;
+                delay = setTimeout(function() {
+                    indicate_menu_add(element, button_type);
+                    weather_function = false;
+                }, event_duration);
+            });
+            
             element.addEventListener("blur", function() {
                 clearTimeout(delay);
                 remove_indicate_menu(false);
@@ -868,28 +1032,30 @@ function town_name_button_event(town_button_arr, button_type) {
 function remove_indicate_menu(event) {
     var indicate_menu_elements = document.querySelectorAll(".indicate-menu");
     if (indicate_menu_elements.length >= 1) {
-        indicate_menu_elements.forEach(function(element) {
-            if (!event) {
+        indicate_menu_elements.forEach(element => {
 
-                let element_remove_className = "";
-
-                if (element.className.indexOf("top-animation") != -1) {
-                    element_remove_className = "top-animation-remove";
-                } else if (element.className.indexOf("bottom-animation") != -1) {
-                    element_remove_className = "bottom-animation-remove";
-                } else if (element.className.indexOf("right-animation") != -1) {
-                    element_remove_className = "right-animation-remove";
-                } else if (element.className.indexOf("left-animation") != -1) {
-                    element_remove_className = "left-animation-remove";
-                }
-
-                element.className = "indicate-menu indicate-menu-colors indicate-menu--remove-animation " + element_remove_className;
-                let remove_delay = setTimeout(function() {
-                    element.remove();
-                }, 300);
-            } else {
+            if (event) {
                 element.remove(); 
+                return
             }
+
+            let element_remove_className = "";
+
+            if (element.className.indexOf("top-animation") != -1) {
+                element_remove_className = "top-animation-remove";
+            } else if (element.className.indexOf("bottom-animation") != -1) {
+                element_remove_className = "bottom-animation-remove";
+            } else if (element.className.indexOf("right-animation") != -1) {
+                element_remove_className = "right-animation-remove";
+            } else if (element.className.indexOf("left-animation") != -1) {
+                element_remove_className = "left-animation-remove";
+            }
+
+            element.className = "indicate-menu indicate-menu-colors indicate-menu--remove-animation " + element_remove_className;
+            let remove_delay = setTimeout(function() {
+                element.remove();
+            }, 290);
+
         });
     }
 }
@@ -910,7 +1076,7 @@ function indicate_menu_add(element, button_type) {
 
     if (button_type == "latest_towns") {
         indicate_menu_page_position(element, indicate_menu, 11, 15);
-    } else if (button_type == "recommend_towns") {
+    } else if (button_type == "favorite_towns") {
         indicate_menu_page_position(element.parentElement, indicate_menu, 11, 15);
     }
     
@@ -927,8 +1093,8 @@ function indicate_menu_add(element, button_type) {
             }
 
             remove_latest_towns_element(element, index);
-        } else if (button_type == "recommend_towns") {
-            remove_recommend_towns_element(element.parentElement);
+        } else if (button_type == "favorite_towns") {
+            remove_favorite_towns_element(element.parentElement);
         }
     });
     indicate_menu_search_button.addEventListener("click", function() {

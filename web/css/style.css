@@ -50,11 +50,30 @@ main {
     position: absolute;
     width: calc(100% - 30px);
     max-width: 830px;
-    border-radius: 20px;
+    max-height: 300px;
     overflow: hidden;
+    border-radius: 20px;
     animation-name: pop_up_app;
     animation-duration: .2s;
     animation-timing-function: ease;
+}
+.modal-menu__scroll {
+    max-width: 830px;
+    max-height: 300px;
+    overflow-x: hidden;
+}
+.modal-menu__scroll::-webkit-scrollbar {
+    background: #00000000;
+    width: 5px;
+}
+.modal-menu__scroll::-webkit-scrollbar-track {
+    background: #00000000;
+}
+.modal-menu__scroll::-webkit-scrollbar-thumb {
+    background: #0000001c;
+}
+.modal-menu__scroll::-webkit-scrollbar-thumb:hover {
+    background: #00000027;
 }
 .search__modal-menu--disactive-animation {
     animation-name: pop_up_remove_transform;
@@ -68,7 +87,7 @@ main {
     display: flex;
     flex-direction: column;
     padding: 16px 0;
-    transition: .2s ease;
+    transition: .2s ease, background 1ms, color 1ms;
 }
 .modal-menu__town-button {
     position: relative;
@@ -117,14 +136,17 @@ main {
     transform: translateX(-3px);
 }
 .search__input-conteiner {
+    position: relative;
     display: grid;
-    grid-template-columns: 1fr min-content;;
+    grid-template-columns: 1fr min-content;
+    grid-template-rows: 1fr;
     height: 60px;
     border: none;
     border-radius: 20px; 
     padding: 5px;
     box-sizing: border-box;
-    transition: box-shadow .2s ease, background .2s ease;
+    transition: box-shadow .2s ease;
+    overflow: hidden;
 }
 .search__input-conteiner:hover,
 .add-new-town__town-input:hover,
@@ -143,18 +165,61 @@ main {
     font-family: "Roboto", sans-serif;
     font-size: clamp(18px, 4vw, 21px);
     color: var(--main-text-color);
-    transition: background .2s ease;
 }
 .search__button {
     display: flex;
     justify-content: center;
     align-items: center;
+    grid-column-start: 3;
     width: 50px;
     height: 50px;
     border: none;
     outline: none;
     border-radius: 20px;
     transition: .2s ease;
+    z-index: 5;
+}
+.search__clear-button {
+    position: relative;
+    display: none;
+    width: 50px;
+    height: 50px;
+    border: none;
+    outline: none;
+    border-radius: 20px;
+    background: none;
+    transition: .2s ease;
+    animation-name: main_section_app;
+    animation-duration: .2s;
+    animation-timing-function: ease;
+    z-index: 5;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: 35px 35px !important;
+}
+.search__clear-button:after {
+    position: absolute;
+    top: 4px;
+    left: calc(100% + 10px);
+    content: "";
+    width: 1px;
+    height: calc(100% - 8px);
+    background: #b4b4b4;
+}
+.search-clear-remove-animaton {
+    animation-name: main_section_back;
+    animation-duration: .2s;
+    animation-timing-function: ease;
+}
+.search-input__right-animation {
+    animation-name: search-input-right;
+    animation-duration: .2s;
+    animation-timing-function: ease;
+}
+.search-input__left-animation {
+    animation-name: search-input-left;
+    animation-duration: .2s;
+    animation-timing-function: ease;
 }
 .search__button--img {
     background-position: center;
@@ -162,9 +227,12 @@ main {
     background-size: contain;
     width: 35px;
     height: 35px;
+    transition: .2s ease, background 1ms, color 1ms;
 }
 .search__button:hover,
-.search__button:focus {
+.search__button:focus,
+.search__clear-button:hover,
+.search__clear-button:focus {
     cursor: pointer;
 }
 .search-scroll {
@@ -179,7 +247,7 @@ main {
     box-shadow: 0px 0px 18px #0000001f;
     animation-name: app_search;
     animation-duration: .1s;
-    animation-direction: ease;
+    animation-timing-function: ease;
 }
 .search-scroll .search__modal-menu {
     top: 84px;
@@ -209,7 +277,7 @@ main {
     display: none;
     animation-name: main_section_app;
     animation-duration: .2s;
-    animation-direction: ease;
+    animation-timing-function: ease;
 }
 .last_town_button--content {
     display: flex;
@@ -274,7 +342,7 @@ main {
     font-size: 16px;
 }
 .latest-towns__label,
-.recommend-towns__label {    
+.favorite-towns__label {    
     width: max-content;
     padding: 10px;
     margin: 10px 0 clamp(3px, 1vw, 7px) 0;
@@ -286,10 +354,10 @@ main {
     box-sizing: border-box;
 }
 .latest-towns__label::first-letter,
-.recommend-towns__label::first-letter,
-.recommend-towns__town-button-name::first-letter,
+.favorite-towns__label::first-letter,
+.favorite-towns__town-button-name::first-letter,
 .weather-main__status::first-letter,
-.recommend-towns__add-button--content::first-letter,
+.favorite-towns__add-button--content::first-letter,
 .weather-other__label::first-letter,
 .add-new-town__button--text::first-letter,
 .latest-towns__town-name-button::first-letter,
@@ -298,15 +366,15 @@ main {
 .forecast-day__status::first-letter {
     text-transform: uppercase;
 }
-.recommend-towns {
+.favorite-towns {
     display: grid;
     grid-template-rows: min-content 1fr min-content;
     grid-row-gap: clamp(10px, 5vw, 20px);
     animation-name: main_section_app;
     animation-duration: .2s;
-    animation-direction: ease;
+    animation-timing-function: ease;
 }
-.recommend-towns__content-conteiner,
+.favorite-towns__content-conteiner,
 .latest-towns__content-conteiner {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -314,7 +382,7 @@ main {
     grid-gap: 20px;
     padding: 0 0 0 20px;
 }
-.recommend-towns__button,
+.favorite-towns__button,
 .latest-towns__town-button {
     display: block;
     position: relative;
@@ -323,11 +391,11 @@ main {
     border: none;
     outline: none;
     border-radius: 20px;
-    transition: .2s ease;
+    transition: all .2s ease, background 1ms, color 1ms;
     box-sizing: border-box;
     user-select: none; 
 }
-.recommend-towns__button--append-animation {
+.favorite-towns__button--append-animation {
     animation-name: pop_up_app;
     animation-duration: .2s;
     animation-timing-function: ease;
@@ -343,7 +411,7 @@ main {
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
 }
-.recommend-towns__town-button-name {
+.favorite-towns__town-button-name {
     height: 100%;
     width: calc(100% - 30px);
     padding: 10px 6px 10px 16px;
@@ -355,7 +423,7 @@ main {
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
 }
-.recommend-towns__close-button {
+.favorite-towns__close-button {
     display: block;
     background-position: center !important;
     background-repeat: no-repeat !important;
@@ -372,43 +440,39 @@ main {
     opacity: 0;
     transition: .2s ease;
 }
-.recommend-towns__button--active {
+.favorite-towns__button--active {
     cursor: pointer;
-    box-shadow: 0px 3px 18px #0000001f;
+    box-shadow: var(--box-shadow-active) !important;
     transform: translateY(-3px);
 }
-.recommend-towns__button:hover,
+.favorite-towns__button:hover,
 .latest-towns__town-button:hover,
 .latest-towns__town-button:focus {
     cursor: pointer;
     transform: translateY(-3px);
 }
-.recommend-towns__button--active {
-    box-shadow: 0px 3px 18px #0000001f;
-    transform: translateY(-3px);
-}
-.recommend-towns__button:hover .recommend-towns__close-button {
+.favorite-towns__button:hover .favorite-towns__close-button {
     opacity: 1;
 }
-.recommend-towns__town-button-name:hover {
+.favorite-towns__town-button-name:hover {
     cursor: pointer;
 } 
-.recommend-towns__close-button:hover,
-.recommend-towns__close-button:focus {
+.favorite-towns__close-button:hover,
+.favorite-towns__close-button:focus {
     cursor: pointer;
-    background: #0000001c;
+    background: var(--town-close-button-background-active);
     opacity: 1;
 }
-.recommend-towns__close-button:hover .recommend-towns__button {
+.favorite-towns__close-button:hover .favorite-towns__button {
     background: #ff8a8a69;
 } 
-.recommend-towns__add-button--center-conteiner {
+.favorite-towns__add-button--center-conteiner {
     display: flex;
     justify-content: center;
     padding: 0 0 0 20px;
-    transition: .2s ease;
+    transition: .2s ease, background 1ms, color 1ms;
 }
-.recommend-towns__add-button {
+.favorite-towns__add-button {
     position: relative;
     display: flex;
     justify-content: right;
@@ -418,16 +482,16 @@ main {
     border: none;
     outline: none;
     border-radius: 20px;
-    transition: .2s ease;
+    transition: .2s ease, background 1ms, color 1ms;
 }
-.recommend-towns__add-button--content {
+.favorite-towns__add-button--content {
     position: relative;
     text-align: right;
     font-size: clamp(15px, 4vw, 16px);
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
 }
-.recommend-towns__add-button-before {
+.favorite-towns__add-button-before {
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -441,14 +505,14 @@ main {
     line-height: 10px;
     font-weight: 500;
 }
-.recommend-towns__add-button:hover,
-.recommend-towns__add-button:focus,
+.favorite-towns__add-button:hover,
+.favorite-towns__add-button:focus,
 .add-new-town__button:hover,
 .add-new-town__button:focus {
     cursor: pointer;
     transform: translateY(-3px);
 }
-.rocommend-towns__no-town-notification {
+.favorite-towns__no-town-notification {
     position: relative;
     top: 7px;
     margin: 70px auto 0 auto;
@@ -456,17 +520,17 @@ main {
     font-size: clamp(20px, 5vw, 24px);
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
-    color: #000000dc;
+    color: var(--add-new-town-text-color);
     animation-name: main_section_app;
     animation-duration: .2s;
     animation-iteration-count: 1;
 }
-.rocommend-towns__no-town-notification--back {
+.favorite-towns__no-town-notification--back {
     animation-name: main_section_back;
     animation-duration: .2s;
     animation-iteration-count: 1;
 }
-.rocommend-towns__no-town-notification::before {
+.favorite-towns__no-town-notification::before {
     position: absolute;
     content: "";
     top: calc(clamp(60px, 14vw, 70px) * -1);
@@ -688,7 +752,7 @@ main {
     text-align: center;
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
-    transition: .2s ease;
+    transition: .2s ease, background 1ms;
 }
 .add-new-town__town-input {
     min-height: 30px;
@@ -941,10 +1005,13 @@ main {
 .forecast-day {
     display: flex;
     flex-direction: column;
+    background: none;
+    outline: none;
+    border: 2px solid #00000000;
     gap: 15px;
     padding: 10px;
     border-radius: 20px;
-    transition: .2s ease;
+    transition: .2s ease, background .1s, outline 1ms;
 }
 .forecast-day:hover,
 .forecast-day:focus {
@@ -956,6 +1023,7 @@ main {
     flex-direction: column;
     justify-content: flex-start;
     gap: 12px;
+    width: 100%;
 }
 .forecast-day__date-conteiner {
     display: flex;
@@ -973,6 +1041,7 @@ main {
 }
 .forecast-day__main-information {
     position: relative;
+    width: 100%;
     display: flex;
     gap: 6px;
     padding: 0 0 0 8px;
@@ -1060,4 +1129,9 @@ main {
     animation-name: active-animation;
     animation-duration: .1s;
     animation-timing-function: ease;
+}
+
+
+.input-value {
+    grid-template-columns: 1fr 70px 50px;
 }

@@ -1,14 +1,14 @@
 
 @media(max-width: 845px) {
     .latest-towns__content-conteiner,
-    .recommend-towns__content-conteiner {
+    .favorite-towns__content-conteiner {
         grid-template-columns: repeat(3, 1fr);
         grid-template-rows: repeat(auto-fit, auto);
     }
-    .recommend-towns__close-button {
+    .favorite-towns__close-button {
         display: none;
     }
-    .recommend-towns__town-button-name {
+    .favorite-towns__town-button-name {
         width: 100%;
         margin: 0px;
     }
@@ -40,7 +40,7 @@
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(auto-fit, auto);
 } 
-.recommend-towns__content-conteiner--3-colums {
+.favorite-towns__content-conteiner--3-colums {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(auto-fit, auto);
 } 
@@ -74,7 +74,7 @@
 }
 @media(max-width: 720px) {
     .latest-towns__content-conteiner,
-    .recommend-towns__content-conteiner {
+    .favorite-towns__content-conteiner {
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: repeat(auto-fit, auto);
     }
@@ -83,7 +83,7 @@
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(auto-fit, auto);
 } 
-.recommend-towns__content-conteiner--2-colums {
+.favorite-towns__content-conteiner--2-colums {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(auto-fit, auto);
 } 
@@ -108,11 +108,11 @@
         margin: 0;
     }
     .latest-towns__content-conteiner,
-    .recommend-towns__content-conteiner {
+    .favorite-towns__content-conteiner {
         grid-template-columns: repeat(1, 1fr);
         grid-template-rows: repeat(auto-fit, auto);
     }
-    .recommend-towns__content-conteiner,
+    .favorite-towns__content-conteiner,
     .latest-towns__content-conteiner {
         padding: 0 0 0 15px;
     }
@@ -129,6 +129,14 @@
     .search__button {
         width: 46px;
         height: 46px;
+    }
+    .input-value {
+        grid-template-columns: 1fr 66px 46px;
+    }
+    .search__clear-button {
+        width: 46px;
+        height: 46px;
+        background-size: 33px 33px !important;
     }
     .search__modal-menu {
         top: 90px;
@@ -171,12 +179,28 @@
     .settings-block__label-text {
         font-size: 32px;
     }
+    @keyframes search-input-right {
+        0% {
+            width: 100%;
+        }
+        100% {
+            width: calc(100% + 66px);
+        }
+    }
+    @keyframes search-input-left {
+        0% {
+            transform: translateX(33px); 
+        }
+        100% {
+            transform: translateX(0px); 
+        }
+    }
 }
 .latest-towns__content-conteiner--1-colum {
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(auto-fit, auto);
 } 
-.recommend-towns__content-conteiner--1-colum {
+.favorite-towns__content-conteiner--1-colum {
     grid-template-columns: repeat(1, 1fr);
     grid-template-rows: repeat(auto-fit, auto);
 } 
@@ -208,7 +232,7 @@
     .search-scroll .search__back-button {
         top: 10px;
     }
-    .recommend-towns__content-conteiner,
+    .favorite-towns__content-conteiner,
     .latest-towns__content-conteiner {
         padding: 0 0 0 10px;
     }
@@ -243,5 +267,32 @@
     }
     .settings-block {
         padding: 40px 25px;
+    }
+    .input-value {
+        grid-template-columns: 1fr 54px 40px;
+    }
+    .search__clear-button {
+        width: 40px;
+        height: 40px;
+        background-size: 30px 30px !important;
+    }
+    .search__clear-button::after {
+        left: calc(100% + 7px);
+    }
+    @keyframes search-input-right {
+        0% {
+            width: 100%;
+        }
+        100% {
+            width: calc(100% + 54px);
+        }
+    }
+    @keyframes search-input-left {
+        0% {
+            transform: translateX(27px); 
+        }
+        100% {
+            transform: translateX(0px); 
+        }
     }
 }

@@ -24,15 +24,17 @@ window.addEventListener("load", function() {
         localStorage.setItem("display-search-clear-button", json.search["display-search-clear-button"]);
     }
 
-    if (JSON.parse(localStorage.getItem("dark-theme"))) {
+
+    // only in theme conditional
+    function dark_theme_active() {
         document.body.setAttribute('theme', "dark");
 
         forecast_day_status_arr.forEach(element => {
             element.classList.add("dark-icon-theme");
         });
+    }
 
-        set_active_atribute("ui-theme");
-    } else {
+    function dark_theme_disactive() {
         document.body.setAttribute('theme', "light");
 
         forecast_day_status_arr.forEach(element => {
@@ -40,47 +42,81 @@ window.addEventListener("load", function() {
         });
     }
 
-    if (JSON.parse(localStorage.getItem("display-latest-towns"))) {
+
+    let ui_theme = localStorage.getItem("dark-theme");
+
+    if (ui_theme == "true") {
+        dark_theme_active();
         
-        set_active_atribute("latest-towns-atr");
-    } else {
-        latest_towns.classList.add("disactive");
+        set_active_atribute("ui-theme");
+    } else if (ui_theme == "false") {
+        dark_theme_disactive();
+
+    } else if (ui_theme == "fully_disactive") {
+        set_atribute("ui-theme", "fully_disactive");
+        dark_theme_disactive();
+
+    } else if (ui_theme == "fully_active") {
+        set_atribute("ui-theme", "fully_active");
+        dark_theme_active();
     }
 
-    if (JSON.parse(localStorage.getItem("display-favorite-towns"))) {
+    set_element_action("display-latest-towns", "latest-towns-atr", latest_towns);
+    set_element_action("display-favorite-towns", "favorite-towns-atr", favorite_towns);
+    set_element_action("display-weather-forecast", "weather-forecast-atr", weather_forecast);
+    set_element_action("display-additional-info", "weather-info-atr", weather_info);
 
-        set_active_atribute("favorite-towns-atr");
-    } else {
-        favorite_towns.classList.add("disactive");
-    }
+    set_element_action_search("search-autocomplete", "search-autocomplete-atr");
+    set_element_action_search("display-search-clear-button", "display-search-clear-button-atr");
 
-    if (JSON.parse(localStorage.getItem("display-weather-forecast"))) {
-
-        set_active_atribute("weather-forecast-atr");
-    } else {
-        weather_forecast.classList.add("disactive");
-    }
-
-    if (JSON.parse(localStorage.getItem("display-additional-info"))) {
-
-        set_active_atribute("weather-info-atr");
-    } else {
-        weather_info.classList.add("disactive");
-    } 
-
-    if (JSON.parse(localStorage.getItem("search-autocomplete"))) {
-        set_active_atribute("search-autocomplete-atr");
-    }
-
-    if (JSON.parse(localStorage.getItem("display-search-clear-button"))) {
-        set_active_atribute("display-search-clear-button-atr");
-    }
 });
+
+function set_element_action_search(localStorage_index, element_atr) {
+    let element = localStorage.getItem(localStorage_index);
+
+    if (element == "true") {
+        set_active_atribute(element_atr);
+
+    } else if (element == "fully_active") {
+        set_atribute(element_atr, "fully_active");
+
+    } else if (element == "fully_disactive") {
+        set_atribute(element_atr, "fully_disactive");
+
+    }
+}
+
+function set_element_action(localStorage_index, element_atr, function_element) {
+    let element = localStorage.getItem(localStorage_index);
+
+    if (element == "true") {
+        set_active_atribute(element_atr);
+
+    } else if (element == "false"){
+        function_element.classList.add("disactive");
+
+    } else if (element == "fully_disactive") {
+        set_atribute(element_atr, "fully_disactive");
+        function_element.classList.add("disactive");
+
+    } else if (element == "fully_active") {
+        set_atribute(element_atr, "fully_active");
+
+    }
+}
 
 function set_active_atribute(arg) {
     for (let i = 0; i < ui_settings_block.length; i++) {
         if (ui_settings_block[i].classList.contains(arg)) {
             ui_settings_block[i].classList.add("settings-section-block--active");
+        }
+    }
+}
+
+function set_atribute(arg, atr) {
+    for (let i = 0; i < ui_settings_block.length; i++) {
+        if (ui_settings_block[i].classList.contains(arg)) {
+            ui_settings_block[i].classList.add(atr);
         }
     }
 }
@@ -98,28 +134,15 @@ for (let i = 0; i < ui_settings_block.length; i++) {
                 replace_dir_name(/dark_theme/gi, "light_theme", "light");
                 localStorage.setItem('dark-theme', false);
             }
-            if (ui_settings_block[i].classList.contains("latest-towns-atr")) {
-                disactive_element(latest_towns);
-                localStorage.setItem('display-latest-towns', false);
-            }
-            if (ui_settings_block[i].classList.contains("favorite-towns-atr")) {
-                disactive_element(favorite_towns);
-                localStorage.setItem('display-favorite-towns', false);
-            }
-            if (ui_settings_block[i].classList.contains("weather-forecast-atr")) {
-                disactive_element(weather_forecast);
-                localStorage.setItem('display-weather-forecast', false);
-            }
-            if (ui_settings_block[i].classList.contains("weather-info-atr")) {
-                disactive_element(weather_info);
-                localStorage.setItem('display-additional-info', false);
-            }
-            if (ui_settings_block[i].classList.contains("search-autocomplete-atr")) {
-                localStorage.setItem('search-autocomplete', false);
-            }
-            if (ui_settings_block[i].classList.contains("display-search-clear-button-atr")) {
-                localStorage.setItem('display-search-clear-button', false);
-            }
+
+            disactive_atr(ui_settings_block[i], "latest-towns-atr", latest_towns, 'display-latest-towns');
+            disactive_atr(ui_settings_block[i], "favorite-towns-atr", favorite_towns, 'display-favorite-towns');
+            disactive_atr(ui_settings_block[i], "weather-forecast-atr", weather_forecast, 'display-weather-forecast');
+            disactive_atr(ui_settings_block[i], "weather-info-atr", weather_info, 'display-additional-info');
+            
+            disactive_atr_search(ui_settings_block[i], "search-autocomplete-atr", 'search-autocomplete');
+            disactive_atr_search(ui_settings_block[i], "display-search-clear-button-atr", 'display-search-clear-button');
+
         } else {
             ui_settings_block[i].classList.add("settings-section-block--active");
             if (ui_settings_block[i].classList.contains("ui-theme")) {
@@ -128,31 +151,48 @@ for (let i = 0; i < ui_settings_block.length; i++) {
                 replace_dir_name(/light_theme/gi, "dark_theme", "dark");
                 localStorage.setItem('dark-theme', true);
             }
-            if (ui_settings_block[i].classList.contains("latest-towns-atr")) {
-                active_element(latest_towns);
-                localStorage.setItem('display-latest-towns', true);
-            }
-            if (ui_settings_block[i].classList.contains("favorite-towns-atr")) {
-                active_element(favorite_towns);
-                localStorage.setItem('display-favorite-towns', true);
-            }
-            if (ui_settings_block[i].classList.contains("weather-forecast-atr")) {
-                active_element(weather_forecast);
-                localStorage.setItem('display-weather-forecast', true);
-            }
-            if (ui_settings_block[i].classList.contains("weather-info-atr")) {
-                active_element(weather_info);
-                localStorage.setItem('display-additional-info', true);
-            }
-            if (ui_settings_block[i].classList.contains("search-autocomplete-atr")) {
-                localStorage.setItem('search-autocomplete', true);
-            }
-            if (ui_settings_block[i].classList.contains("display-search-clear-button-atr")) {
-                localStorage.setItem('display-search-clear-button', true);
-            }
+
+            active_atr(ui_settings_block[i], "latest-towns-atr", latest_towns, 'display-latest-towns');
+            active_atr(ui_settings_block[i], "favorite-towns-atr", favorite_towns, 'display-favorite-towns');
+            active_atr(ui_settings_block[i], "weather-forecast-atr", weather_forecast, 'display-weather-forecast');
+            active_atr(ui_settings_block[i], "weather-info-atr", weather_info, 'display-additional-info');
+            
+            active_atr_search(ui_settings_block[i], "search-autocomplete-atr", 'search-autocomplete');
+            active_atr_search(ui_settings_block[i], "display-search-clear-button-atr", 'display-search-clear-button');
         }
     });
 
+}
+
+function disactive_atr_search(element, element_className, localStorage_index) {
+    if (element.classList.contains(element_className)) {
+        localStorage.setItem(localStorage_index, false);
+    }
+}
+
+function active_atr_search(element, element_className, localStorage_index) {
+    if (element.classList.contains(element_className)) {
+        localStorage.setItem(localStorage_index, true);
+    }
+}
+
+function disactive_atr(element, element_className, function_element, localStorage_index) {
+    if (element.classList.contains(element_className)) {
+        disactive_element(function_element);
+        localStorage.setItem(localStorage_index, false);
+    }
+}
+
+function delete_atr(atr_name, art) {
+    const element = document.querySelector("." + atr_name);
+    element.classList.remove(art);
+} 
+
+function active_atr(element, element_className, function_element, localStorage_index) {
+    if (element.classList.contains(element_className)) {
+        active_element(function_element);
+        localStorage.setItem(localStorage_index, true);
+    }
 }
 
 function replace_dir_name(replace_in, replace_to, theme) {
@@ -192,3 +232,20 @@ function active_element(element) {
         element.classList.remove("disactive");
     }
 }
+
+function try_to_get_towns() {
+    fetch("http://api.geonames.org/postalCodeSearchJSON?placename_startsWith=" + "d" + "&maxRows=10&username=" + "si1og" + "&featureClass=p&lang=ru&country=RU")  
+    .then(function(resp) { return resp.json() })
+    .then(function(data) { 
+        delete_atr("search-autocomplete-atr", "fully_disactive");
+        if (localStorage.getItem("search-autocomplete") != "false") {
+            localStorage.setItem("search-autocomplete", "true");
+        }
+    })
+    .catch(function() {
+        set_atribute("search-autocomplete-atr", "fully_disactive");
+        localStorage.setItem("search-autocomplete", "fully_disactive");
+    })
+}
+
+try_to_get_towns();

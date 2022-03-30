@@ -69,7 +69,6 @@ function display_weather(place) {
                                 last_places_array.unshift(place);
                                 sessionStorage.setItem("last-places", JSON.stringify(last_places_array));
             
-                                console.log(weather_data);
                                 add_last_town(place, weather_data[0], weather_data[2], weather_data[4]);
                             }
     
@@ -500,7 +499,7 @@ function search_events() {
         }
     });
     search_input.addEventListener("input", function() {
-        if (JSON.parse(localStorage.getItem("search-autocomplete"))) {
+        if (localStorage.getItem("search-autocomplete") == "true") {
             favorite_towns_for_search(document.getElementById("search_input").value);
         }
     });
@@ -514,7 +513,7 @@ function search_events() {
             search_input_conteiner.style = "box-shadow: 0px 0px 18px #0000001f;";
             display_dark.className = "display-dark display-dark-colors";
             document.body.style = "max-height: 100vh; overflow: hidden;";
-            if (JSON.parse(localStorage.getItem("search-autocomplete"))) {
+            if (localStorage.getItem("search-autocomplete") == "true") {
                 favorite_towns_for_search(document.getElementById("search_input").value);
             }
         }

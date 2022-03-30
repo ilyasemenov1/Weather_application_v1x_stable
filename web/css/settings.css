@@ -265,3 +265,25 @@
     left: calc(100% - 23px);
     background: #598be9;
 }
+.fully_active .settings-switch {
+    background: #75a2f621;
+}
+.fully_active .settings-switch__triger {
+    left: calc(100% - 23px);
+    background: #43587e;
+}
+.fully_disactive .settings-switch {
+    background: #d8d8d821;
+}
+.fully_disactive .settings-switch__triger {
+    background: #979797;
+    left: 0px !important;
+}
+.fully_active .settings-section-block__label,
+.fully_disactive .settings-section-block__label {
+    opacity: .7;
+}
+.fully_active,
+.fully_disactive {
+    pointer-events: none;
+}

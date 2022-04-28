@@ -1,6 +1,6 @@
 
+load_styles();;
 document_events();
-new_town_button_event();
 load_favorite_towns();
 
 // global variables
@@ -65,12 +65,24 @@ function display_weather(place) {
                             const day_0_weather = data.list[0];
 
                             var weather_data = write_weather_data(day_0_weather, true);
-                            if (last_places_array[0] != place) {
-                                last_places_array.unshift(place);
-                                sessionStorage.setItem("last-places", JSON.stringify(last_places_array));
-            
-                                add_last_town(place, weather_data[0], weather_data[2], weather_data[4]);
+
+                            function find_town(arr, place) {
+                                let return_conditional = true;
+
+                                arr.forEach(element => {
+                                    if (element == place) {
+                                        return_conditional = false;
+                                    }
+                                });
+
+                                return return_conditional;
                             }
+                                if (find_town(last_places_array, place)) {
+                                    last_places_array.unshift(place);
+                                    sessionStorage.setItem("last-places", JSON.stringify(last_places_array));
+                
+                                    add_last_town(place, weather_data[0], weather_data[2], weather_data[4]);
+                                }   
     
                             if (JSON.parse(localStorage.getItem("display-weather-forecast"))) {
     
@@ -98,6 +110,7 @@ function display_weather(place) {
                             clearTimeout(search_delay);
                             search_animation.classList.add("search__animation-conteiner--disactive");
                             search_animation.classList.remove("search__animation-conteiner--scroll");
+                            weather_template.classList.remove("disactive");
                             weather_template.classList.add("weather-template--active");
                         }
                     } else if (data.cod == 404) {
@@ -107,7 +120,7 @@ function display_weather(place) {
                             search_animation.classList.remove("search__animation-conteiner--scroll");
     
                             town_not_found_label.textContent = " \"" + place + "\" ";
-                            town_not_found.style = "display: flex;";
+                            town_not_found.classList.remove("disactive", "town-not-found-notification--disabled");
                         }
                     }
                 })
@@ -126,7 +139,7 @@ function display_weather(place) {
                             town_not_found_notification__label_after.textContent = "";
     
                             town_not_found_label.textContent = "Произошла ошибка при поиске";
-                            town_not_found.style = "display: flex;";
+                            town_not_found.classList.remove("disactive", "town-not-found-notification--disabled");
                         }
                     }, 10);
                 }); 
@@ -135,11 +148,11 @@ function display_weather(place) {
             }
         } else {
             print_weather_info(true);
-            enter_town_notification.style = "display: flex;";
+            enter_town_notification.classList.remove("disactive");
         }
     } else {
         print_weather_info(true);
-        no_connection.style = "display: flex;";
+        no_connection.classList.remove("disactive");
     }
 }
 
@@ -181,6 +194,7 @@ function write_weather_data(data, is_return) {
 
 function set_week_day() {
 
+    var week_days = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
     var today_date = new Date();
     let day_tomorrow = today_date.getDay();
     day_tomorrow++;
@@ -191,27 +205,13 @@ function set_week_day() {
 
     let day_index = 0
 
-    if (day_tomorrow >= 6) {
+    if (day_tomorrow > 6) {
         day_tomorrow = 0;
     }
 
     for (let i = 0; i < forecast_week_day.length; i++) {
 
-        if (day_tomorrow + day_index == 0) {
-            day_of_week = "Воскресенье";
-        } else if (day_tomorrow + day_index == 1) {
-            day_of_week = "Понедельник";
-        } else if (day_tomorrow + day_index == 2) {
-            day_of_week = "Вторник";
-        } else if (day_tomorrow + day_index == 3) {
-            day_of_week = "Среда";
-        } else if (day_tomorrow + day_index == 4) {
-            day_of_week = "Четрерг";
-        } else if (day_tomorrow + day_index == 5) {
-            day_of_week = "Пятница";
-        } else if (day_tomorrow + day_index == 6) {
-            day_of_week = "Суббота";
-        }
+        day_of_week = week_days[day_tomorrow + day_index];
         
         if (i != 0) {
             forecast_week_day[i].textContent = day_of_week;
@@ -232,39 +232,47 @@ function print_weather_info(par) {
     let search = document.querySelector(".search");
     let weather_template = document.querySelector(".weather-template");
     let add_new_town = document.querySelector(".add-new-town");
+    let no_connection = document.querySelector(".no-connection-notification");
+    let town_not_found = document.querySelector(".town-not-found-notification");
+    let enter_town_notification = document.querySelector(".enter-town-notification");
+    let town_not_found_label = document.querySelector(".town-not-found-notification__label--content");
+
+    function set_disactive_param() {
+        var block_arr = [add_new_town, no_connection, town_not_found, enter_town_notification];
+        block_arr.forEach(element => {
+            element.classList.add("disactive");
+        })
+    }
     if (par) {
+        set_disactive_param();
+        if (JSON.parse(localStorage.getItem("display-favorite-towns"))) {
+            favorite_towns.classList.add("disactive");
+        }
+
         search.style = "grid-template-columns: min-content 1fr;";
         search_back_button.style = "display: flex;";
-        if (JSON.parse(localStorage.getItem("display-favorite-towns"))) {
-            favorite_towns.style = "display: none;";
-        }
         weather_template.className = "weather-template";
-        add_new_town.style = "display: none";
-        no_connection.style = "display: none;";
-        town_not_found.style = "display: none;";
         town_not_found_label.textContent = "";
-        enter_town_notification.style = "display: none;";
         click_counter = hide_add_new_town_button();
-        latest_towns.style = "display: none";
+        latest_towns.classList.add("disactive");
     } else {
+        var last_places_array_ = JSON.parse(sessionStorage.getItem("last-places"));
+        set_disactive_param();
+
+        if (JSON.parse(localStorage.getItem("display-favorite-towns"))) {
+            favorite_towns.classList.remove("disactive");
+        }
+        if (last_places_array_.length >= 1) {
+            latest_towns.classList.remove("disactive");
+        }
+        clearTimeout(search_delay);
+
         search.style = "";
         search_back_button.style = "";
-        if (JSON.parse(localStorage.getItem("display-favorite-towns"))) {
-            favorite_towns.style = "";
-        }
         weather_template.className = "weather-template";
         weather_template.style = "";
         search_input.value = "";
-        add_new_town.className = "add-new-town";
-        add_new_town.style = "display: none";
-        no_connection.style = "display: none;";
-        town_not_found.style = "display: none;";
         town_not_found_label.textContent = "";
-        enter_town_notification.style = "display: none;";
-        if (last_places_array.length >= 1) {
-            latest_towns.style = "display: grid";
-        }
-        clearTimeout(search_delay);
         search_animation.classList.add("search__animation-conteiner--disactive");
         search_anable = false;
     }
@@ -332,15 +340,33 @@ function add_day_of_the_week_event() {
 
 }
 
+function default_town_event() {
+    let default_town = localStorage.getItem("default-town");
+
+    if (default_town) {
+        print_weather_info(true);
+        display_weather(default_town);
+    }
+}
+
 function document_events() {
 
+    if_default_town();
     search_events();
     add_day_of_the_week_event();
 
     let settings_button_active = false;
+    let alt_passed = false;
+
+    window.addEventListener("keyup", function(event) {
+        if (event.keyCode == 18) {
+            alt_passed = false;
+        }
+    });
 
     window.addEventListener("keydown", function(event) {
-        if (event.keyCode == 27) {
+
+        function back_event() {
             if (!search_input_focused && !settings_button_active) {
                 print_weather_info(false);
             }
@@ -353,6 +379,16 @@ function document_events() {
                     settings.className = "settings settings-disactive";
                 }, 199);
             }
+        }
+
+        if (event.keyCode == 18) {
+            alt_passed = true;
+        }
+        if (event.keyCode == 37 && alt_passed) {
+            back_event();
+        }  
+        if (event.keyCode == 27) {
+            back_event();
         }
         if (event.keyCode == 111) {
             let delay = this.setTimeout(function() {
@@ -401,9 +437,17 @@ function document_events() {
 
     refresh_button.addEventListener('click', function() {
 
+    if (is_online()) {
         print_weather_info(true);
 
         display_weather(all_last_places_array[0]);
+    } else {
+        no_connection.classList.add("disactive");
+
+        let delay = setTimeout(function() {
+            no_connection.classList.remove("disactive");
+        }, 50);
+    }
     });
     
     let home_button = document.querySelector("#home_button");
@@ -462,7 +506,28 @@ function document_events() {
             click_counter = hide_add_new_town_button();
         }
     });
+
+    function if_default_town() {
+        let default_town = localStorage.getItem("default-town");
+        let favorite_towns = document.querySelector(".favorite-towns");
+        let latest_towns = document.querySelector(".latest-towns");
+        let search_back_button = document.querySelector(".search__back-button");
+        let favorite_towns_load = document.querySelector(".favorite-towns-for-loading");
+
+        if (!default_town) {
+            var block_arr = [favorite_towns, latest_towns];
+    
+            block_arr.forEach(element => {
+                element.classList.remove("disactive");
+            })
+        } else {
+            search.style = "grid-template-columns: min-content 1fr;";
+            search_back_button.style = "display: flex;";
+        }
+    }
+
 }
+
 
 function search_events() {
     let search_input_conteiner = document.querySelector(".search__input-conteiner");
@@ -512,7 +577,6 @@ function search_events() {
 
             search_input_conteiner.style = "box-shadow: 0px 0px 18px #0000001f;";
             display_dark.className = "display-dark display-dark-colors";
-            document.body.style = "max-height: 100vh; overflow: hidden;";
             if (localStorage.getItem("search-autocomplete") == "true") {
                 favorite_towns_for_search(document.getElementById("search_input").value);
             }
@@ -630,7 +694,7 @@ function show_add_new_town_button() {
     add_button_text.textContent = "Добавление нового города";
     add_button_text_before.textContent = "-";
     add_button_text_before.style = "padding: 0 0 2px 0; height: 22px;";
-    add_new_town.style = "display: flex;";
+    add_new_town.classList.remove("disactive");
     new_town_input_select.value = "";
 
     return 1;
@@ -641,11 +705,11 @@ function hide_add_new_town_button() {
     add_button_text.textContent = "Добавить город";
     add_button_text_before.textContent = "+";
     add_button_text_before.style = "";
-    add_new_town.className = "add-new-town add-new-town__back-animation";
+    add_new_town.classList.add("add-new-town__back-animation");
 
     let add_new_town_delay = setTimeout(function() {
-        add_new_town.className = "add-new-town";
-        add_new_town.style = "display: none;";
+        add_new_town.classList.remove("add-new-town__back-animation");
+        add_new_town.classList.add("disactive")
     }, 190);
 
     return 0;
@@ -1155,4 +1219,33 @@ function is_online() {
         return false;
 
     }
+}
+
+function load_styles() {
+
+    var links = [
+        "css/style.css",
+        "css/settings.css",
+        "css/colors/colors.css",
+        "css/ui_adaptivity.css",
+        "css/animations.css",
+        "css/colors/icons.css"
+    ];
+
+    for (let i = 0; i < links.length; i++) {
+        let link = document.createElement('link');
+        link.type = 'text/css';
+        link.rel = 'stylesheet';
+        link.href = links[i];
+
+        document.head.appendChild(link);
+    }
+
+    window.addEventListener("load", function() {
+        let script = document.createElement('script');
+        script.src = "./js/sourse_js/page_load.js";
+
+        document.body.appendChild(script);
+        default_town_event();
+    });
 }

@@ -5,6 +5,9 @@ const latest_towns = document.querySelector(".latest-towns");
 const favorite_towns = document.querySelector(".favorite-towns");
 const weather_forecast = document.querySelector(".weather-forecast");
 const weather_info = document.querySelector(".weather-other");
+const default_town_button = document.querySelector("#default-town-button");
+const town_input = document.querySelector("#default-town-input");
+const town_input_conteinet = document.querySelector(".settings-section__input--conteiner");
 
 const json = require("../json/settings.json");
 
@@ -103,6 +106,17 @@ function set_element_action(localStorage_index, element_atr, function_element) {
         set_atribute(element_atr, "fully_active");
 
     }
+}
+
+// only in set_element_action
+function set_const_atr() {
+    var fully_disactive = document.querySelectorAll(".fully_disactive");
+    var fully_active = document.querySelectorAll(".fully_active");
+    var element_arr = [...fully_disactive, ...fully_active];
+
+    element_arr.forEach(element => {
+        element.tabIndex = -1;
+    });
 }
 
 function set_active_atribute(arg) {
@@ -245,7 +259,133 @@ function try_to_get_towns() {
     .catch(function() {
         set_atribute("search-autocomplete-atr", "fully_disactive");
         localStorage.setItem("search-autocomplete", "fully_disactive");
+        set_const_atr();
     })
 }
 
 try_to_get_towns();
+default_town_input();
+default_town();
+
+function default_town() {
+    let default_town_ = localStorage.getItem("default-town");
+    
+    if (default_town_) {
+        town_input.value = default_town_;
+        set_default_town_input();
+        default_town_button.classList.add("settings-section__add-button--complete");
+        default_town_button.classList.remove("settings-section__add-button--plus-img");
+    }
+}
+
+function default_town_input() {
+    town_input.addEventListener("input", function() {
+        if (default_town_button.classList.contains("settings-section__add-button--complete")) {
+            remove_default_town();
+        }
+
+        if (town_input.value) {
+            set_default_town_input();
+        } else {
+            hide_default_town_input();
+        }
+    });
+
+    town_input.addEventListener("keydown", function(event) {
+       if (event.keyCode == 13) {
+           default_town_button_event();
+       } 
+    });
+}
+
+function set_default_town_input() {
+    default_town_button.classList.remove("settings-section__add-button--back");
+    default_town_button.classList.remove("disactive");
+    town_input_conteinet.classList.remove("settings-section__input--conteiner-no-content");
+    town_input.classList.add("settings-section__input--back-animation");
+}
+
+function hide_default_town_input() {
+    town_input.classList.remove("settings-section__input--back-animation");
+    default_town_button.classList.add("settings-section__add-button--back")
+    town_input.classList.add("settings-section__input--animation");
+
+    setTimeout(function() {
+        default_town_button.classList.add("disactive");
+        town_input_conteinet.classList.add("settings-section__input--conteiner-no-content");
+        town_input.classList.remove("settings-section__input--animation");
+    }, 180);
+}
+
+default_town_button.addEventListener("click", function() {
+    default_town_button_event();
+});
+
+function remove_default_town() {
+    localStorage.setItem("default-town", "");
+
+    default_town_button.classList.remove("settings-section__add-button--complete");
+    default_town_button.classList.add("settings-section__add-button--plus-img");
+}
+
+function default_town_button_event() {
+    const animation = document.querySelector(".add-main-town-animation");
+    const key = '88d2ec6ab0319b11d3c9704f6ac3b98f';
+    let place = town_input.value;
+
+    let delay = setTimeout(function() {
+        default_town_button.classList.remove("settings-section__add-button--plus-img");
+        animation.classList.remove("disactive");
+    }, 200);
+
+    if (default_town_button.classList.contains("settings-section__add-button--complete")) {
+        remove_default_town();
+
+        clearTimeout(delay);
+        town_input.value = "";
+        hide_default_town_input();
+
+    } else {
+        fetch("https://api.openweathermap.org/data/2.5/weather?q=" + place + ",&appid=" + key + "&lang=ru")  
+        .then(function(resp) { return resp.json() })
+        .then(function(data) {
+            console.log(data);
+            if (data.cod == "200") {
+                clearTimeout(delay);
+                animation_disactive();
+                
+                setTimeout(function() {
+                    default_town_button.classList.remove("settings-section__add-button--plus-img");
+                    default_town_button.classList.add("settings-section__add-button--complete");
+                    localStorage.setItem("default-town", place);
+                }, 200)
+            } else {
+                add_plus_icon(delay);
+            }   
+        })
+        .catch(function() {
+            add_plus_icon(delay);
+        });
+    }
+
+    function add_plus_icon(delay) {
+        clearTimeout(delay);
+        animation_disactive();
+
+        setTimeout(function() {
+            default_town_button.classList.add("settings-section__add-button--plus-img");
+        }, 200);
+    }
+
+    function animation_disactive() {
+        animation.classList.remove("set-add-main-town-animation");
+        animation.classList.add("hide-add-main-town-animation");
+
+        setTimeout(function() {
+            animation.classList.remove("hide-add-main-town-animation");
+            animation.classList.add("disactive");
+            animation.classList.add("set-add-main-town-animation");
+        }, 200);
+    }
+}
+set_const_atr();

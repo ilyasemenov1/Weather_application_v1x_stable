@@ -6,16 +6,17 @@
     <link rel="stylesheet" href="css/root_colors/root.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#ffffff">
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/settings.css">
-    <link rel="stylesheet" href="css/colors/colors.css">
-    <link rel="stylesheet" href="css/colors/icons.css">
-    <link rel="stylesheet" href="css/animations.css">
-    <link rel="stylesheet" href="css/ui_adaptivity.css">
+    <meta name="description" content="Приложение погоды, способное показывать прогноз в любой точке мира.">
+    <link rel="stylesheet" href="css/on_page_loading.css" rel="preload" as="style">
     <title>Погода</title>
 </head>
 <body>
-    <section class="settings settings-disactive">
+    <button class="settings-button settings-button-colors loading-disactive">
+        <span class="settings-button__popup">
+            Настройки
+        </span>
+    </button>
+    <section class="settings settings-disactive loading-disactive">
         <div class="settings__main-conteiner">
             <span class="settings__background"></span>
             <div class="settings-block">
@@ -90,24 +91,39 @@
                             </button>
                         </div>
                     </section>
+                    <section class="settings-section app-settings">
+                        <h2 class="settings-section__label main-content__label">Город по умолчанию:</h2>
+                        <div class="settings-section__wrapper">
+                            <div class="settings-section__input--conteiner settings-section__input--conteiner-no-content">
+                                <input class="settings-section__input" id="default-town-input" type="text" autocomplete="off" placeholder="Введите название города...">
+                                <button class="settings-section__add-button town-not-added disactive settings-section__add-button--plus-img" id="default-town-button">
+                                    <span class="add-main-town-animation set-add-main-town-animation disactive">
+                                        <span class="animation">
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                            <span></span>
+                                        </span>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </div>
         </div>
     </section>
-    <button class="settings-button settings-button-colors">
-        <span class="settings-button__popup">
-            Настройки
-        </span>
-    </button>
     <main>
-        <section class="search">
-            <button class="search__back-button search-back-button-colors" id="search_back_button">
-                <span class="search__back-button--img"></span>
-            </button>
+        <section class="search loading-disactive">
+            <div class="search__back-button--filter">
+                <button class="search__back-button search-back-button-colors" id="search_back_button" aria-label="Назад">
+                    <span class="search__back-button--img"></span>
+                </button>
+            </div>
             <div class="search__input-conteiner search-input-conteiner-colors">
                 <input type="text" class="search__input search-input-colors" id="search_input" focus_change="true" placeholder="Введите название города..." autocomplete="off" value="">
-                <button class="search__clear-button search-clear-button-colors"></button>
-                <button class="search__button search-button-colors" id="search_button">
+                <button class="search__clear-button search-clear-button-colors" aria-label="Отчистить ввод"></button>
+                <button class="search__button search-button-colors" id="search_button" aria-label="Поиск">
                     <span class="search__button--img"></span>
                 </button>
             </div>
@@ -117,7 +133,8 @@
                 </div>
             </div>
         </section>
-        <div class="search__animation-conteiner search__animation-conteiner--disactive search-animation-conteiner-color"  id="search_animation">
+        <div class="search-loading loading-element loading-disactive animate"></div>
+        <div class="search__animation-conteiner search__animation-conteiner--disactive search-animation-conteiner-color loading-disactive"  id="search_animation">
             <span class="animation search_animation">
                 <span></span>
                 <span></span>
@@ -125,16 +142,16 @@
                 <span></span>
             </span>
         </div>
-        <div class="display-dark display-dark--disactive"></div>
-        <div class="search-background">
+        <div class="display-dark display-dark--disactive loading-disactive"></div>
+        <div class="search-background loading-disactive">
 
         </div>
-        <section class="latest-towns">
+        <section class="latest-towns disactive loading-disactive">
             <h2 class="latest-towns__label label-colors">недавние города:</h2>
             <div class="latest-towns__content-conteiner">
             </div>
         </section>
-        <section class="favorite-towns">
+        <section class="favorite-towns disactive loading-disactive">
             <h2 class="favorite-towns__label label-colors">избранные города:</h2>
             <div class="favorite-towns__content-conteiner" id="favorite_towns_elements">
             </div>
@@ -145,14 +162,73 @@
                 </button>
             </div>
         </section>
-        <section class="weather-template">
+        <div class="favorite-towns-for-loading loading-element loading-disactive">
+            <h2 class="favorite-towns-for-loading__label animate"></h2>
+            <div class="favorite-towns-for-loading__content-conteiner"></div>
+            <div class="favorite-towns-for-loading__add-button--center-conteiner">
+                <span class="favorite-towns-for-loading__add-button animate"></span>
+            </div>
+        </div>
+        <script>
+            if (localStorage.getItem("dark-theme") == "true") {
+                document.body.style = "background: #3d3d3f;";
+            }
+    
+            let loading_favotite_towns = document.querySelector(".favorite-towns-for-loading");
+            let search_loading = document.querySelector(".search-loading");
+
+            if (localStorage.getItem("default-town")) {
+                setTimeout(function() {
+                    search_loading.classList.remove("loading-disactive");
+                }, 90);
+            } else {
+                var elements = [loading_favotite_towns, search_loading];
+                setTimeout(function() {
+                    elements.forEach(element => {
+                        element.classList.remove("loading-disactive");
+                    });
+                }, 90);
+            }
+
+            var favorite_towns = JSON.parse(localStorage.getItem("favorite-towns"));
+            let favorite_towns_for_loading_content = document.querySelector(".favorite-towns-for-loading__content-conteiner");
+
+            function create_notification() {
+                let notification_conteiner = document.createElement("span");
+                notification_conteiner.className = "favorite-towns-for-loading-notification__conteiner animate";
+
+
+                favorite_towns_for_loading_content.appendChild(notification_conteiner);
+
+                favorite_towns_for_loading_content.style = "display: flex";
+            }
+
+            if (!favorite_towns) {
+                create_notification();
+            } else if (favorite_towns.length == 0) {
+                create_notification();
+            } else {
+                for (let i = 0; i < favorite_towns.length; i++) {
+                let element = document.createElement("span");
+                element.className = "favorite-towns-for-loading__town-name animate";
+                favorite_towns_for_loading_content.appendChild(element);
+
+                if (favorite_towns.length <= 4) {
+                    favorite_towns_for_loading_content.style = "grid-template-columns: repeat(" + favorite_towns.length + ", 1fr);"
+                } else {
+                    favorite_towns_for_loading_content.style = "grid-template-columns: repeat(4, 1fr);"
+                }
+            }
+            }
+        </script>
+        <section class="weather-template disactive loading-disactive">
             <div class="weather-main">
                 <div class="weather-main__temp-conteiner">
                     <span class="weather-main__temp weather_data weather-temp-colors"></span>
                 </div>
                 <span class="weather-main__status weather_data weather-status-colors"></span>
             </div>
-            <div class="weather-other">
+            <div class="weather-other loading-disactive">
                 <div class="weather-other__data-block wind">
                     <span class="weather-other__label wind__label weather-info-label-colors">Скорость ветра:</span>
                     <span class="weather-other__data weather-info-colors">
@@ -172,7 +248,7 @@
                     </span>
                 </div>
             </div>
-            <div class="weather-forecast">
+            <div class="weather-forecast loading-disactive">
                 <div class="weather-forecast__content">
                     <button class="forecast-day forecast-day-colors">
                         <div class="forecast-day__main-block">
@@ -252,8 +328,8 @@
                 </div>
             </div>
         </section>
-        <section class="add-new-town" style="display: none;">
-            <div class="add-new-town__content">
+        <section class="add-new-town disactive loading-disactive">
+            <div class="add-new-town__content loading-disactive">
                 <input type="text" class="add-new-town__town-input add-new-town-input-colors" id="new_town_input" placeholder="Введите название города" autocomplete="off" value="">
                 <div class="add-new-town__center-conteiner">
                     <button class="add-new-town__button add-new-town-button-colors" id="new_town_button">
@@ -268,7 +344,7 @@
                 </div>
             </div>
         </section>
-        <section class="town-notification no-connection-notification">
+        <section class="town-notification no-connection-notification loading-disactive disactive">
             <span class="town-notification__icon no-connection-notification__icon"></span>
             <h1 class="town-notification__label town-notification-label-color no-connection-notification__label">Нет подключения к интернету</h1>
             <div class="town-notification__buttons-menu no-connection-notification__buttons-menu">
@@ -277,7 +353,7 @@
                 </button>
             </div>
         </section>
-        <section class="town-notification town-not-found-notification town-not-found-notification--disabled">
+        <section class="town-notification town-not-found-notification town-not-found-notification--disabled loading-disactive disactive">
             <span class="town-notification__icon town-not-found-notification__icon"></span>
             <h1 class="town-notification__label town-notification-label-color town-not-found-notification__label">
                 <span class="town-not-found-notification__label--before">Город </span>
@@ -290,7 +366,7 @@
                 </button>
             </div>
         </section>
-        <section class="town-notification enter-town-notification enter-town-notification--disabled">
+        <section class="town-notification enter-town-notification enter-town-notification--disabled loading-disactive disactive">
             <span class="town-notification__icon enter-town-notification__icon"></span>
             <h1 class="town-notification__label town-notification-label-color enter-town-notification__label">Введите название города</h1>
         </section>
@@ -299,5 +375,6 @@
     <script type="module" src="./js/product_js/settings.js"></script>
     <script src="./js/sourse_js/window_scroll.js"></script>
     <script src="./js/sourse_js/search_input_event.js"></script>
+    <!-- <script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script> -->
 </body>
 </html>

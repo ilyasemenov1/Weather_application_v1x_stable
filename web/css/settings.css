@@ -95,6 +95,7 @@
     animation: settings-menu-animation;
     animation-timing-function: ease;
     animation-duration: .2s;
+    z-index: 20;
 }
 .settings-close-animation .settings-block {
     animation: settings-remove-menu-animation;
@@ -286,4 +287,78 @@
 .fully_active,
 .fully_disactive {
     pointer-events: none;
+}
+.settings-section__input--conteiner {
+    display: grid;
+    grid-template-columns: 1fr 45px;
+    min-height: 45px;
+    grid-column-gap: 15px;
+    padding: 10px;
+}
+.settings-section__input--conteiner-no-content {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+.settings-section__input {
+    width: 100%;
+    padding: 10px 12px;
+    border: none;
+    border-radius: 15px;
+    outline: none;
+    background: #e7e7e71a;
+    color: #e4e4e4;
+    font-size: 16px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    transition: .2s ease;
+    box-sizing: border-box;
+}
+.settings-section__input--back-animation {
+    animation-name: settings-town-input-back;
+    animation-duration: .2s;
+    animation-timing-function: ease;
+}
+.settings-section__input--animation {
+    animation-name: settings-town-input;
+    animation-duration: .2s;
+    animation-timing-function: ease;
+}
+.settings-section__add-button {
+    width: 45px;
+    height: 45px;
+    padding: 10px;
+    border: none;
+    border-radius: 15px;
+    outline: none;
+    background: #e7e7e71a;
+    background-position: center;
+    background-size: 25px 25px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: .2s ease, background-size 1ms;
+    animation: settings-town-button .2s ease;
+}
+.settings-section__add-button--back {
+    animation: settings-town-button-back .2s ease;
+}
+.add-main-town-animation .animation span {
+    left: -4px;
+    top: -4px;
+    width: 25px;
+    height: 25px;
+    margin: 4px;
+    border-width: 3px;
+    border-color: transparent transparent transparent #838383;
+}
+.set-add-main-town-animation {
+    animation: display-dark-animation .2s ease;
+}
+.hide-add-main-town-animation {
+    animation: display-dark-disactive-animation .2s ease;
+}
+.settings-section__input:hover,
+.settings-section__input:focus,
+.settings-section__add-button:hover,
+.settings-section__add-button:focus {
+    background-color: #e7e7e727;
 }

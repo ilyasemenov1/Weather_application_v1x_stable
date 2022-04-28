@@ -176,17 +176,53 @@
 }
 @keyframes search-input-right {
     0% {
-        transform: translateX(0px); 
+        width: 100%; 
     }
     100% {
-        transform: translateX(35px); 
+        width: calc(100% + 70px); 
     }
 }
 @keyframes search-input-left {
     0% {
-        transform: translateX(35px); 
+        width: calc(100% + 70px); 
     }
     100% {
-        transform: translateX(0px); 
+        width: 100%; 
+    }
+}
+@keyframes settings-town-button-back {
+    0% {
+        transform: translateX(0px);
+        opacity: 1;
+    }
+    100% {
+        transform: translateX(100%);
+        opacity: 0; 
+    }
+}
+@keyframes settings-town-button {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0px);
+        opacity: 1; 
+    }
+}
+@keyframes settings-town-input {
+    0% {
+        width: 100%; 
+    }
+    100% {
+        width: calc(100% + 60px); 
+    }
+}
+@keyframes settings-town-input-back {
+    0% {
+        width: calc(100% + 60px);
+    }
+    100% {
+        width: 100%; 
     }
 }

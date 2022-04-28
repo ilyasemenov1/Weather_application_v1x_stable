@@ -15,7 +15,9 @@
 .search-scroll-back-button-colors {
     background: none;
 }
-.search-scroll-colors,
+.search-scroll-colors {
+    background: var(--search-scroll-background);
+}
 .search-scroll .search__modal-menu {
     background: var(--search-scroll-background);
     backdrop-filter: var(--search-scroll-blur);
@@ -131,9 +133,9 @@
 .town-not-found-notification-home-button-text-colors::before,
 .no-connection-notification-refresh-button-text-colors::before {
     background: var(--add-new-town-background-color);
-    background-position: 60% 80% !important;
+    background-position: 4px 4px !important;
     background-repeat: no-repeat;
-    background-size: 20px 20px;
+    background-size: 16px 16px;
 }
 .add-new-town-input-colors,
 .add-new-town-button-colors,
@@ -187,7 +189,6 @@
     background: linear-gradient(41deg, rgba(154,160,161,.2) 10%, rgba(166,175,180,.2) 56%, rgba(143,148,156,.2) 100%);
 }
 
-
 /** --Dark-theme-- **/
 
 
@@ -203,15 +204,16 @@ body {
 .search-clear-button-colors {
     background: none;
 }
+.search-scroll-input-conteiner-colors,
+.search__back-button--filter {
+    backdrop-filter: blur(5px);
+}
 body[data-theme="dark"] .search-scroll .modal-menu-town-button-colors {
     background: none;
 }
 .search-scroll-back-button-colors {
     box-shadow: none !important;
     background: none;
-}
-.search-scroll-input-conteiner-colors {
-    box-shadow: none !important;
 }
 
 /** Main-page **/
@@ -254,3 +256,4 @@ body[data-theme="dark"] .search-scroll .modal-menu-town-button-colors {
 body[theme="dark"] .settings-block {
     background: #0000005d;
 }
+

@@ -120,3 +120,18 @@ body[theme="dark"] .settings-button-colors {
 body[theme="dark"] .search__clear-button {
     background-image: url("../../svg/dark_theme/main_icons/clear_icon.svg");
 }
+
+/** Settings icons **/
+
+.settings-section__add-button--plus-img {
+    background-image: url("../../svg/settings_icons/plus_icon.svg");
+    background-size: 20px 20px;
+}
+.settings-section__add-button--complete {
+    background-image: url("../../svg/settings_icons/ok_icon.svg");
+}
+.settings-section__add-button--complete:hover,
+.settings-section__add-button--complete:focus {
+    background-image: url("../../svg/settings_icons/close_icon.svg");
+    background-size: 28px 28px;
+}

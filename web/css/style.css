@@ -1,23 +1,6 @@
-body {
-    margin: 0;
-    padding: 20px 0 0 0;
-}
-main {
-    position: relative;
-    display: grid;
-    grid-template-rows: repeat(auto-fit, auto);
-    grid-row-gap: clamp(20px, 5vw, 30px);
-    max-width: 830px;
-    padding: 15px;
-    margin: 0 auto;
-}
-.disactive {
-    display: none !important;
-}
 .search {
     display: grid;
     grid-template-columns: auto;
-    grid-column-gap: 20px;
     min-height: 50px;
     max-width: 830px;
     width: 100%;
@@ -123,6 +106,9 @@ main {
     border-radius: 20px; 
     transition: width .2s ease, height .2s ease, background .2s ease, transform .2s ease, margin .2s ease, box-shadow .2s ease;
 }
+.search__back-button--filter {
+    padding: 0 20px 0 0;
+}
 .search__back-button--img {
     width: 50px;
     height: 60px;
@@ -140,7 +126,7 @@ main {
     display: grid;
     grid-template-columns: 1fr min-content;
     grid-template-rows: 1fr;
-    height: 60px;
+    min-height: 60px;
     border: none;
     border-radius: 20px; 
     padding: 5px;
@@ -237,14 +223,13 @@ main {
 }
 .search-scroll {
     position: fixed;
-    grid-column-gap: 10px;
     top: 0;
     left: 0;
     max-width: 800px;
     width: 100vw;
     margin: 15px calc((50% - 400px)) 0 calc((50% - 400px));
     border-radius: 20px;
-    box-shadow: 0px 0px 18px #0000001f;
+    box-shadow: var(--box-shadow-active);
     animation-name: app_search;
     animation-duration: .1s;
     animation-timing-function: ease;
@@ -697,8 +682,8 @@ main {
     opacity: 1;
 }
 .search__animation-conteiner .animation {
-    top: -3px;
-    left: -4px;
+    top: -2px;
+    left: -5px;
     width: 50px;
     height: 50px;
 }
@@ -791,7 +776,7 @@ main {
 }
 .town-notification {
     position: absolute;
-    display: none;
+    display: flex;
     justify-content: center;
     top: 120px;
     flex-direction: column;
@@ -1130,8 +1115,6 @@ main {
     animation-duration: .1s;
     animation-timing-function: ease;
 }
-
-
 .input-value {
     grid-template-columns: 1fr 70px 50px;
 }

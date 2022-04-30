@@ -107,6 +107,9 @@
     transition: width .2s ease, height .2s ease, background .2s ease, transform .2s ease, margin .2s ease, box-shadow .2s ease;
 }
 .search__back-button--filter {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     padding: 0 20px 0 0;
 }
 .search__back-button--img {
@@ -259,7 +262,6 @@
     display: grid;
     grid-template-rows: min-content 1fr;
     grid-row-gap: clamp(10px, 5vw, 20px);
-    display: none;
     animation-name: main_section_app;
     animation-duration: .2s;
     animation-timing-function: ease;

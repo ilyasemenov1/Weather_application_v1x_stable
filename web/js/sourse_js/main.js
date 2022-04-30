@@ -515,7 +515,7 @@ function document_events() {
         let favorite_towns_load = document.querySelector(".favorite-towns-for-loading");
 
         if (!default_town) {
-            var block_arr = [favorite_towns, latest_towns];
+            var block_arr = [favorite_towns];
     
             block_arr.forEach(element => {
                 element.classList.remove("disactive");
@@ -1012,15 +1012,12 @@ function town_close_button_event(close_button_arr, town_button_arr) {
 function remove_favorite_towns_element(element) {
     element.remove();
     var town_button_count = document.querySelectorAll(".favorite-towns__button");
-    if (town_button_count.length == 3) {
-        favorite_towns_elements.className = "favorite-towns__content-conteiner favorite-towns__content-conteiner--3-colums";
-    } else if (town_button_count.length == 2) {
-        favorite_towns_elements.className = "favorite-towns__content-conteiner favorite-towns__content-conteiner--2-colums";
-    } else if (town_button_count.length == 1) {
-        favorite_towns_elements.className = "favorite-towns__content-conteiner favorite-towns__content-conteiner--1-colum";
-    } else if (town_button_count.length == 0) {
+
+    function element_action() {
         create_notification("removed-favorite-towns");
     }
+
+    remove_town_configuration(favorite_towns_elements, "favorite-towns", town_button_count.length, element_action)
 
     var favorite_towns_arr = JSON.parse(localStorage.getItem("favorite-towns"));
 
@@ -1032,22 +1029,40 @@ function remove_favorite_towns_element(element) {
     }
 }
 
+function remove_town_configuration(element_name, element_type, town_count, action) {
+    switch (town_count) {
+        case 3:
+            element_name.classList.add(element_type + "__content-conteiner--3-colums");
+            break;
+        case 2:
+            element_name.classList.add(element_type + "__content-conteiner--2-colums");
+            break;
+        case 1:
+            if (element_type != "latest-towns") {
+                element_name.classList.add(element_type + "__content-conteiner--1-colum");
+            }
+            break;
+        case 0:
+            action();
+            element_name.classList.remove((element_type + "__content-conteiner--1-colum"), (element_type + "__content-conteiner--2-colums"));
+            break;
+    }
+}
+
 function remove_latest_towns_element(element, index) {
     element.remove();
     last_places_array.splice(index, 1);
     sessionStorage.setItem("last-places", JSON.stringify(last_places_array));
 
-    const latest_towns_content = document.querySelector(".latest-towns__content-conteiner");
     var town_button_count = document.querySelectorAll(".latest-towns__town-button");
-    if (town_button_count.length == 3) {
-        latest_towns_content.className = "latest-towns__content-conteiner latest-towns__content-conteiner--3-colums";
-    } else if (town_button_count.length == 2) {
-        latest_towns_content.className = "latest-towns__content-conteiner latest-towns__content-conteiner--2-colums";
-    } else if (town_button_count.length == 1) {
-        latest_towns_content.className = "latest-towns__content-conteiner latest-towns__content-conteiner--2-colums";
-    } else if (town_button_count.length == 0) {
-        latest_towns_content.parentElement.style = "display: none;";
+
+    function element_action() {
+        latest_towns.classList.add("disactive");
     }
+
+    const latest_towns_content = document.querySelector(".latest-towns__content-conteiner");
+    remove_town_configuration(latest_towns_content, "latest-towns", town_button_count.length, element_action);
+
 }
 
 function town_name_button_event(town_button_arr, button_type) {

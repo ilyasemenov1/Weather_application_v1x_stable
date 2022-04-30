@@ -146,7 +146,7 @@
         <div class="search-background loading-disactive">
 
         </div>
-        <section class="latest-towns disactive loading-disactive">
+        <section class="latest-towns disactive loading-disactive disactive">
             <h2 class="latest-towns__label label-colors">недавние города:</h2>
             <div class="latest-towns__content-conteiner">
             </div>
@@ -213,11 +213,22 @@
                 element.className = "favorite-towns-for-loading__town-name animate";
                 favorite_towns_for_loading_content.appendChild(element);
 
-                if (favorite_towns.length <= 4) {
-                    favorite_towns_for_loading_content.style = "grid-template-columns: repeat(" + favorite_towns.length + ", 1fr);"
-                } else {
-                    favorite_towns_for_loading_content.style = "grid-template-columns: repeat(4, 1fr);"
+                switch (favorite_towns.length) {
+                    case 3:
+                        favorite_towns_for_loading_content.classList.add("favorite-towns-for-loading__content-conteiner-3-colums");
+                        break;
+                    case 2:
+                        favorite_towns_for_loading_content.classList.add("favorite-towns-for-loading__content-conteiner-2-colums");
+                        break;
+                    case 1:
+                        favorite_towns_for_loading_content.classList.add("favorite-towns-for-loading__content-conteiner-1-colum");
+                        break;
                 }
+
+                if (favorite_towns.length >= 4) {
+                    favorite_towns_for_loading_content.classList.add("favorite-towns-for-loading__content-conteiner-4-colums");
+                }
+
             }
             }
         </script>

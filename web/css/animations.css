@@ -226,3 +226,19 @@
         width: 100%; 
     }
 }
+@keyframes search-scroll-add-animation {
+    0% {
+        transform: translateY(calc(-100% - 15px));
+    }
+    100% {
+        transform: translateY(0%);
+    }
+}
+@keyframes search-scroll-remove-animation {
+    0% {
+        transform: translateY(0%);
+    }
+    100% {
+        transform: translateY(calc(-100% - 15px));
+    }
+}

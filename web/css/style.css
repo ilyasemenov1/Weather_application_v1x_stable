@@ -108,6 +108,7 @@
 }
 .search__back-button--filter {
     display: flex;
+    flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     padding: 0 20px 0 0;
@@ -233,9 +234,6 @@
     margin: 15px calc((50% - 400px)) 0 calc((50% - 400px));
     border-radius: 20px;
     box-shadow: var(--box-shadow-active);
-    animation-name: app_search;
-    animation-duration: .1s;
-    animation-timing-function: ease;
 }
 .search-scroll .search__modal-menu {
     top: 84px;
@@ -257,6 +255,12 @@
 .search-scroll__back-button:hover,
 .search-scroll__back-button:focus {
     transform: translateX(0px);
+}
+.search-scroll__add-animation {
+    animation: search-scroll-add-animation .3s ease;
+}
+.search-scroll__remove-animation {
+    animation: search-scroll-remove-animation .3s ease;
 }
 .latest-towns {
     display: grid;

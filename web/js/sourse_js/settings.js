@@ -263,9 +263,11 @@ function try_to_get_towns() {
     })
 }
 
+
 try_to_get_towns();
 default_town_input();
 default_town();
+
 
 function default_town() {
     let default_town_ = localStorage.getItem("default-town");

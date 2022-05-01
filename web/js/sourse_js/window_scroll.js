@@ -8,17 +8,15 @@ const search_animation = document.querySelector(".search__animation-conteiner");
 const search_input = document.querySelector(".search__input");
 
 let search_scroll_rule = true;
-let search_scroll_rule_2 = false;
 
-sessionStorage.setItem("search-scroll-rule", search_scroll_rule_2);
+sessionStorage.setItem("search-scroll-rule", search_scroll_rule);
 
 window.addEventListener('load', function() {
-    search_scroll_rule = search_scroll(search_scroll_rule);
+    detect_window_scroll(search_scroll_rule);
 });
 
 window.addEventListener('scroll', function() {
-    search_scroll_rule = search_scroll(search_scroll_rule);
-    detect_window_scroll(search_scroll_rule_2);
+    detect_window_scroll(search_scroll_rule);
 });
 
 function hide_search() {
@@ -27,7 +25,7 @@ function hide_search() {
     search_input_conteiner.classList.remove("search-scroll__input-conteiner", "search-scroll-input-conteiner-colors")
     search_button.classList.remove("search-scroll__button");
     search_input.classList.remove("search-scroll__input");
-    search_backgound.style = "display: none;"
+    search_backgound.classList.add("disactive");
     search.classList.remove("search-scroll__add-animation");
 }
 
@@ -37,48 +35,34 @@ function add_search() {
     search_input_conteiner.classList.add("search-scroll__input-conteiner", "search-scroll-input-conteiner-colors")
     search_button.classList.add("search-scroll__button");
     search_input.classList.add("search-scroll__input");
-    search_backgound.style = "display: block;"
-}
-
-function search_scroll(scroll_rule) {
-    if (window.pageYOffset >= 35) {
-        if (scroll_rule) {
-            add_search();
-            scroll_rule = false;
-            sessionStorage.setItem("search-scroll-rule", false);
-        }
-    } else if (window.pageYOffset < 35) {
-        if (!scroll_rule) {
-            hide_search();
-            scroll_rule = true;
-            sessionStorage.setItem("search-scroll-rule", true);
-        }
-    }
-    return scroll_rule
+    search_backgound.classList.add("disactive");
 }
 
 function detect_window_scroll() {
     let window_scroll_time_1 = window.pageYOffset;
     let window_scroll_time_2 = 0;
-    search_scroll_rule_2 = JSON.parse(sessionStorage.getItem("search-scroll-rule"));
+    search_scroll_rule = JSON.parse(sessionStorage.getItem("search-scroll-rule"));
 
     setTimeout(function() {
-        console.log(search_scroll_rule_2);
         window_scroll_time_2 = window.pageYOffset;
-        if (window_scroll_time_1 - window_scroll_time_2 < 0 && !search_scroll_rule_2) {
+        console.log(search_scroll_rule);
+        if (window_scroll_time_1 - window_scroll_time_2 < 0 && !search_scroll_rule && window.pageYOffset > 95) {
+            console.log(search_scroll_rule);
             search.classList.add("search-scroll__remove-animation");
             sessionStorage.setItem("search-scroll-rule", true);
             setTimeout(function() {
                 search.classList.remove("search-scroll__remove-animation");
                 hide_search();
             }, 300);
-        } else if (window_scroll_time_1 - window_scroll_time_2 > 0 && search_scroll_rule_2 && window.pageYOffset > 100) {
+        } else if (window_scroll_time_1 - window_scroll_time_2 > 0 && search_scroll_rule && window.pageYOffset > 95) {
             add_search();
             sessionStorage.setItem("search-scroll-rule", false);
             search.classList.add("search-scroll__add-animation");
             setTimeout(function() {
                 search.classList.remove("search-scroll__add-animation");
             }, 300);
+        } else if (window_scroll_time_1 - window_scroll_time_2 > 0 && !search_scroll_rule && window.pageYOffset <= 20) {
+            hide_search();
         }
     }, 50);
 }

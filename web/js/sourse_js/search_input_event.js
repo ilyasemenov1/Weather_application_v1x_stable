@@ -10,6 +10,7 @@ search_input.addEventListener("input", function() {
 search_input.addEventListener("focus", function() { 
     if (JSON.parse(localStorage.getItem("display-search-clear-button"))) {
         add_search_clear_button();
+        document.body.style = "overflow: hidden;";
     }
 });
 search_input.addEventListener("blur", function() { 

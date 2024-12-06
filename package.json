@@ -4,7 +4,7 @@
   "description": "Weather_app - v1.3.8.3",
   "main": "server.js",
   "dependencies": {
-    "browserify": "^17.0.0",
+    "browserify": "^17.0.1",
     "core-js": "^3.38.1",
     "geonames.js": "^3.0.6",
     "querystring": "^0.2.1",

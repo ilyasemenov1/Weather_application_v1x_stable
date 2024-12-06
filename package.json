@@ -5,7 +5,7 @@
   "main": "server.js",
   "dependencies": {
     "browserify": "^17.0.0",
-    "core-js": "^3.38.1",
+    "core-js": "^3.39.0",
     "geonames.js": "^3.0.6",
     "querystring": "^0.2.1",
     "underscore": "^1.13.7"
